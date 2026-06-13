@@ -916,6 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
             timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
             garment: activeGarmentType,
             fabric: activeFabricType,
+            size: activeGarmentSize,
             colors: {
                 body: { hex: colorBodyHex, name: colorBodyName },
                 sleeves: { hex: colorSleevesHex, name: colorSleevesName },
@@ -982,6 +983,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (typeof updateGarmentFabric === 'function') {
             updateGarmentFabric(design.fabric);
+        }
+
+        // Load size and trigger smooth scale transitions
+        const designSize = design.size || 'M';
+        activeGarmentSize = designSize;
+        sizePills.forEach(pill => {
+            if (pill.dataset.size === designSize.toLowerCase()) {
+                pill.classList.add('active');
+            } else {
+                pill.classList.remove('active');
+            }
+        });
+        if (typeof window.updateGarmentSize === 'function') {
+            window.updateGarmentSize(designSize.toLowerCase());
         }
 
         // Load colors
