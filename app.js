@@ -13,6 +13,18 @@ let currentLighting = 'studio';
 let garmentGroup;
 let badgeMesh; // Mesh for chest decal
 let bodyMesh; // Torso mesh reference for drag raycast
+let decalOutline; // Local selection helper outline for the decal
+
+// Global state for text and logo customizer (Holy Trinity)
+let activeLogoType = 'preset'; // 'preset', 'custom', or 'none'
+let activePresetLogo = 'fitcraft'; // 'fitcraft', 'nexus', 'quantum', 'apex'
+let activeCustomImage = null; // HTML Image element when custom logo uploaded
+let customText = ''; // Slogan/initials typed by the user
+let customTextFont = 'Space Grotesk'; // 'Space Grotesk', 'Outfit', or 'Playfair Display'
+let customTextColor = 'match'; // 'match' or HEX value
+
+// Studio is always active on studio.html — no SPA state needed
+
 let isDraggingDecal = false;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -27,6 +39,7 @@ let activeDecalTexture = null;
 // Controls values
 let autoRotate = true;
 let isScaleView = false;
+let isPointerDown = false; // Tracks if user is actively interacting with the 3D viewport
 
 // FPS tracking
 let lastFrameTime = performance.now();
@@ -43,9 +56,9 @@ function init3D() {
     scene = new THREE.Scene();
     scene.background = null; // Transparent so CSS handles background gradient
 
-    // Create Camera
+    // Create Camera — studio mode always
     camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.set(0, 0, 8); // Look straight at the garment
+    camera.position.set(0, 0, 8);
 
     // Create Renderer
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
@@ -57,18 +70,42 @@ function init3D() {
     renderer.toneMappingExposure = 1.0;
     container.appendChild(renderer.domElement);
 
-    // Create Controls
+    // Create Controls — always enabled in studio
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.minDistance = 4;
     controls.maxDistance = 12;
-    controls.maxPolarAngle = Math.PI / 2 + 0.1; // Don't go too far below floor
+    controls.maxPolarAngle = Math.PI / 2 + 0.1;
     controls.target.set(0, 0, 0);
+    controls.enabled = true;
 
     // Create main clothing group
     garmentGroup = new THREE.Group();
     scene.add(garmentGroup);
+
+    // Create soft ground shadow texture using canvas (adds contact depth)
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = 128;
+    shadowCanvas.height = 128;
+    const shadowCtx = shadowCanvas.getContext('2d');
+    const gradient = shadowCtx.createRadialGradient(64, 64, 5, 64, 64, 60);
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 0.45)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    shadowCtx.fillStyle = gradient;
+    shadowCtx.fillRect(0, 0, 128, 128);
+
+    const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
+    const shadowPlaneGeom = new THREE.PlaneGeometry(4, 4);
+    const shadowPlaneMat = new THREE.MeshBasicMaterial({
+        map: shadowTexture,
+        transparent: true,
+        depthWrite: false
+    });
+    const shadowPlane = new THREE.Mesh(shadowPlaneGeom, shadowPlaneMat);
+    shadowPlane.rotation.x = -Math.PI / 2;
+    shadowPlane.position.y = -2.0; // Place it right under the garment
+    scene.add(shadowPlane);
 
     // Initialize Fabric Textures
     initFabricTextures();
@@ -102,14 +139,31 @@ function init3D() {
     // Start rendering loop
     animate();
 
-    // Handle Window Resize
-    window.addEventListener('resize', onWindowResize);
+    // Handle container resize automatically (handles CSS transitions smoothly)
+    const viewportSec = document.querySelector('.viewport-section');
+    if (viewportSec) {
+        const resizeObserver = new ResizeObserver(() => {
+            onWindowResize();
+        });
+        resizeObserver.observe(viewportSec);
+    } else {
+        window.addEventListener('resize', onWindowResize);
+    }
 
-    // Pointer events for direct 3D decal dragging
+    // Pointer events for direct 3D decal dragging and auto-rotate pausing
     const dom = renderer.domElement;
-    dom.addEventListener('pointerdown', onPointerDown);
+    dom.addEventListener('pointerdown', (e) => {
+        isPointerDown = true;
+        onPointerDown(e);
+    });
     dom.addEventListener('pointermove', onPointerMove);
-    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointerup', (e) => {
+        isPointerDown = false;
+        onPointerUp(e);
+    });
+    window.addEventListener('pointercancel', () => {
+        isPointerDown = false;
+    });
 }
 
 // Generate procedural fabric bump textures on HTML5 canvases
@@ -198,6 +252,13 @@ function updateLighting(type) {
         mainLight.shadow.mapSize.width = 2048;
         mainLight.shadow.mapSize.height = 2048;
         mainLight.shadow.bias = -0.001;
+        // Tight shadow camera frustum for sharp rendering on garment
+        mainLight.shadow.camera.left = -2.2;
+        mainLight.shadow.camera.right = 2.2;
+        mainLight.shadow.camera.top = 2.2;
+        mainLight.shadow.camera.bottom = -2.2;
+        mainLight.shadow.camera.near = 0.5;
+        mainLight.shadow.camera.far = 15;
 
         fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
         fillLight.position.set(-4, 2, 2);
@@ -212,9 +273,16 @@ function updateLighting(type) {
         mainLight = new THREE.DirectionalLight(0xf97316, 1.4); // Orange sun
         mainLight.position.set(4, 3, 4);
         mainLight.castShadow = true;
-        mainLight.shadow.mapSize.width = 1024;
-        mainLight.shadow.mapSize.height = 1024;
+        mainLight.shadow.mapSize.width = 2048; // Increased for crispness
+        mainLight.shadow.mapSize.height = 2048;
         mainLight.shadow.bias = -0.001;
+        // Tight shadow camera frustum for sharp rendering on garment
+        mainLight.shadow.camera.left = -2.2;
+        mainLight.shadow.camera.right = 2.2;
+        mainLight.shadow.camera.top = 2.2;
+        mainLight.shadow.camera.bottom = -2.2;
+        mainLight.shadow.camera.near = 0.5;
+        mainLight.shadow.camera.far = 15;
 
         fillLight = new THREE.DirectionalLight(0x8b5cf6, 0.95); // Deep purple shadow fill
         fillLight.position.set(-4, 1, 3);
@@ -229,7 +297,16 @@ function updateLighting(type) {
         mainLight = new THREE.DirectionalLight(0x38bdf8, 1.25); // Cool cyan spotlight
         mainLight.position.set(-2, 5, 4);
         mainLight.castShadow = true;
+        mainLight.shadow.mapSize.width = 2048; // Set map size explicitly for high-quality shadows
+        mainLight.shadow.mapSize.height = 2048;
         mainLight.shadow.bias = -0.001;
+        // Tight shadow camera frustum for sharp rendering on garment
+        mainLight.shadow.camera.left = -2.2;
+        mainLight.shadow.camera.right = 2.2;
+        mainLight.shadow.camera.top = 2.2;
+        mainLight.shadow.camera.bottom = -2.2;
+        mainLight.shadow.camera.near = 0.5;
+        mainLight.shadow.camera.far = 15;
 
         fillLight = new THREE.DirectionalLight(0x475569, 0.7); // Neutral grey fill
         fillLight.position.set(4, 2, 2);
@@ -430,6 +507,18 @@ function buildGarment() {
 
 // Separate curved/aligned plane on body for chest decals
 function rebuildBadgePlane() {
+    // Clean up existing badge mesh and free WebGL resources
+    if (badgeMesh) {
+        if (garmentGroup) garmentGroup.remove(badgeMesh);
+        if (badgeMesh.geometry) badgeMesh.geometry.dispose();
+        if (badgeMesh.material) {
+            if (badgeMesh.material.map) badgeMesh.material.map.dispose();
+            badgeMesh.material.dispose();
+        }
+        badgeMesh = null;
+        decalOutline = null;
+    }
+
     // Decal material setup
     const decalMat = new THREE.MeshStandardMaterial({
         transparent: true,
@@ -456,6 +545,13 @@ function rebuildBadgePlane() {
     badgeMesh = new THREE.Mesh(badgeGeom, decalMat);
     badgeMesh.position.set(0, 0.45, 1.29); // Directly on Hoodie's front chest
     badgeMesh.rotation.x = -0.05; // Lean slightly back conforming to body geometry
+
+    // Create local outline border helper for design visual feedback
+    const borderGeom = new THREE.EdgesGeometry(badgeGeom);
+    const borderMat = new THREE.LineBasicMaterial({ color: 0x528c66, linewidth: 2 });
+    decalOutline = new THREE.LineSegments(borderGeom, borderMat);
+    decalOutline.visible = false;
+    badgeMesh.add(decalOutline);
     
     // Add to group so it spins with garment
     garmentGroup.add(badgeMesh);
@@ -514,151 +610,156 @@ function updateGarmentFabric(type) {
     });
 }
 
-// Generate Preset Logo text dynamically via Canvas 2D
-function generateLogoTexture(presetName) {
+// Composite decal drawer (Combines Logo Graphic + Custom Slogan Text dynamically on a 512x512 Canvas)
+function redrawDecal() {
     const canvas = document.createElement('canvas');
     canvas.width = 512;
     canvas.height = 512;
     const ctx = canvas.getContext('2d');
     
-    // Transparent background
+    // Clear canvas
     ctx.clearRect(0, 0, 512, 512);
 
     // Determine branding color based on garment color luminance
     const isDark = isColorDark(currentColor);
-    const brandColor = isDark ? '#ffffff' : '#121212';
+    const defaultBrandColor = isDark ? '#ffffff' : '#121212';
     const accentColor = '#528c66'; // Premium Green
 
-    ctx.strokeStyle = brandColor;
-    ctx.fillStyle = brandColor;
-    ctx.lineWidth = 16;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+    // 1. DRAW LOGO (PRESET OR CUSTOM)
+    if (activeLogoType === 'preset') {
+        ctx.strokeStyle = defaultBrandColor;
+        ctx.fillStyle = defaultBrandColor;
+        ctx.lineWidth = 16;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
 
-    if (presetName === 'fitcraft') {
-        // FitCraft logo: stylized hanger shape + text
-        ctx.beginPath();
-        // Hook
-        ctx.arc(256, 120, 36, 0, Math.PI, true);
-        ctx.stroke();
-        
-        // Hanger bars
-        ctx.beginPath();
-        ctx.moveTo(256, 156);
-        ctx.lineTo(256, 200);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(256, 200);
-        ctx.lineTo(120, 260);
-        ctx.lineTo(392, 260);
-        ctx.closePath();
-        ctx.stroke();
-        
-        // Text
-        ctx.font = '800 38px "Space Grotesk", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('FITCRAFT', 256, 360);
-        
-        ctx.font = '500 20px "Outfit", sans-serif';
-        ctx.fillStyle = accentColor;
-        ctx.fillText('DIVISI KREATIF', 256, 396);
-
-    } else if (presetName === 'nexus') {
-        // Nexus AI logo: Double connected orbital rings
-        ctx.beginPath();
-        ctx.arc(256, 200, 70, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.strokeStyle = accentColor;
-        ctx.beginPath();
-        ctx.arc(256, 200, 40, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Node connections
-        ctx.fillStyle = brandColor;
-        const nodes = [0, Math.PI*0.66, Math.PI*1.33];
-        nodes.forEach(angle => {
-            const x = 256 + Math.cos(angle) * 70;
-            const y = 200 + Math.sin(angle) * 70;
-            ctx.beginPath();
-            ctx.arc(x, y, 16, 0, Math.PI*2);
-            ctx.fill();
-        });
-
-        // Text
-        ctx.font = '800 42px "Space Grotesk", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillStyle = brandColor;
-        ctx.fillText('NEXUS A.I.', 256, 350);
-
-        ctx.font = '600 20px "Outfit", sans-serif';
-        ctx.fillText('• LAB STARTUP •', 256, 390);
-
-    } else if (presetName === 'quantum') {
-        // Quantum: atom orbital paths
+        // Draw preset paths inside upper half (centered horizontally, Y-centered around 180)
+        // Offset Y slightly upwards to leave room for text below it
         ctx.save();
-        ctx.translate(256, 190);
-        ctx.lineWidth = 10;
+        ctx.translate(0, -30);
         
-        // Ring 1
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 80, 26, Math.PI / 4, 0, Math.PI * 2);
-        ctx.stroke();
-        
-        // Ring 2
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 80, 26, -Math.PI / 4, 0, Math.PI * 2);
-        ctx.stroke();
+        if (activePresetLogo === 'fitcraft') {
+            ctx.beginPath();
+            ctx.arc(256, 170, 36, 0, Math.PI, true);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(256, 206);
+            ctx.lineTo(256, 250);
+            ctx.stroke();
 
-        // Core nucleus
-        ctx.fillStyle = accentColor;
-        ctx.beginPath();
-        ctx.arc(0, 0, 22, 0, Math.PI * 2);
-        ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(256, 250);
+            ctx.lineTo(120, 310);
+            ctx.lineTo(392, 310);
+            ctx.closePath();
+            ctx.stroke();
+        } else if (activePresetLogo === 'nexus') {
+            ctx.beginPath();
+            ctx.arc(256, 220, 70, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(256, 220, 40, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = defaultBrandColor;
+            const nodes = [0, Math.PI * 0.66, Math.PI * 1.33];
+            nodes.forEach(angle => {
+                const x = 256 + Math.cos(angle) * 70;
+                const y = 220 + Math.sin(angle) * 70;
+                ctx.beginPath();
+                ctx.arc(x, y, 16, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        } else if (activePresetLogo === 'quantum') {
+            ctx.save();
+            ctx.translate(256, 210);
+            ctx.lineWidth = 10;
+            
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 80, 26, Math.PI / 4, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 80, 26, -Math.PI / 4, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.arc(0, 0, 22, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        } else if (activePresetLogo === 'apex') {
+            ctx.beginPath();
+            ctx.moveTo(256, 120);
+            ctx.lineTo(156, 280);
+            ctx.lineTo(356, 280);
+            ctx.closePath();
+            ctx.stroke();
+
+            ctx.fillStyle = accentColor;
+            ctx.beginPath();
+            ctx.moveTo(256, 170);
+            ctx.lineTo(196, 266);
+            ctx.lineTo(316, 266);
+            ctx.closePath();
+            ctx.fill();
+        }
         ctx.restore();
+    } else if (activeLogoType === 'custom' && activeCustomImage) {
+        // Draw uploaded custom logo centered on the upper-middle canvas (max 200x200)
+        const maxWidth = 200;
+        const maxHeight = 200;
+        let width = activeCustomImage.width;
+        let height = activeCustomImage.height;
 
-        // Text
-        ctx.font = '800 40px "Space Grotesk", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillStyle = brandColor;
-        ctx.fillText('QUANTUM', 256, 345);
+        if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+        }
+        if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+        }
 
-        ctx.font = '500 22px "Outfit", sans-serif';
-        ctx.fillStyle = accentColor;
-        ctx.fillText('SISTEM INOVATIF', 256, 385);
-
-    } else if (presetName === 'apex') {
-        // Apex Tech: minimal delta triangle
-        ctx.beginPath();
-        ctx.moveTo(256, 100);
-        ctx.lineTo(156, 260);
-        ctx.lineTo(356, 260);
-        ctx.closePath();
-        ctx.stroke();
-
-        // Inner core
-        ctx.fillStyle = accentColor;
-        ctx.beginPath();
-        ctx.moveTo(256, 150);
-        ctx.lineTo(196, 246);
-        ctx.lineTo(316, 246);
-        ctx.closePath();
-        ctx.fill();
-
-        // Text
-        ctx.font = '800 44px "Space Grotesk", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillStyle = brandColor;
-        ctx.fillText('APEX TECH', 256, 350);
-
-        ctx.font = '500 20px "Outfit", sans-serif';
-        ctx.fillText('PAKAIAN MASA DEPAN', 256, 390);
+        const x = 256 - width / 2;
+        const y = 180 - height / 2;
+        ctx.drawImage(activeCustomImage, x, y, width, height);
     }
 
+    // 2. DRAW CUSTOM TEXT below logo (Y-centered around 380, or centered vertically at 270 if no logo)
+    if (customText.trim() !== '') {
+        const fontName = customTextFont;
+        ctx.font = `800 36px "${fontName}", sans-serif`;
+        ctx.textAlign = 'center';
+        
+        let textColor = defaultBrandColor;
+        if (customTextColor !== 'match') {
+            textColor = customTextColor;
+        }
+        ctx.fillStyle = textColor;
+        
+        const textY = (activeLogoType === 'none' || (activeLogoType === 'custom' && !activeCustomImage)) ? 270 : 380;
+        ctx.fillText(customText.toUpperCase(), 256, textY);
+    }
+
+    // 3. GENERATE AND UPDATE TEXTURE
     const texture = new THREE.CanvasTexture(canvas);
-    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    return texture;
+    texture.minFilter = THREE.LinearFilter;
+    if (renderer) {
+        texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    }
+    
+    activeDecalTexture = texture;
+
+    if (badgeMesh) {
+        badgeMesh.material.map = activeDecalTexture;
+        badgeMesh.material.needsUpdate = true;
+    } else {
+        rebuildBadgePlane();
+    }
 }
 
 // Check background luminance to invert decal graphics colors
@@ -674,29 +775,16 @@ function isColorDark(colorHex) {
 
 // Function to update preset logo
 function updateDecalPreset(presetName) {
-    activeDecalTexture = generateLogoTexture(presetName);
-    
-    // If badge mesh already exists, update its material texture
-    if (badgeMesh) {
-        badgeMesh.material.map = activeDecalTexture;
-        badgeMesh.material.needsUpdate = true;
-    } else {
-        rebuildBadgePlane();
-    }
+    activeLogoType = 'preset';
+    activePresetLogo = presetName;
+    redrawDecal();
 }
 
 // Function to set custom uploaded logo image
 function updateCustomUploadedLogo(imgElement) {
-    const texture = new THREE.Texture(imgElement);
-    texture.needsUpdate = true;
-    activeDecalTexture = texture;
-    
-    if (badgeMesh) {
-        badgeMesh.material.map = activeDecalTexture;
-        badgeMesh.material.needsUpdate = true;
-    } else {
-        rebuildBadgePlane();
-    }
+    activeLogoType = 'custom';
+    activeCustomImage = imgElement;
+    redrawDecal();
 }
 
 // Read inputs from sliders and apply directly to Badge Mesh
@@ -818,6 +906,11 @@ function toggleScaleView() {
         
         if (progress < 1) {
             requestAnimationFrame(zoomCam);
+        } else {
+            // Sync OrbitControls target coordinate when zoom completes to prevent snapping back
+            if (controls) {
+                controls.target.set(0, targetY, 0);
+            }
         }
     }
     zoomCam();
@@ -851,9 +944,12 @@ function animate() {
         lastFpsUpdate = time;
     }
 
-    // Auto rotate garment group
-    if (autoRotate && garmentGroup) {
+    // Auto rotate garment group (pause during dragging or camera rotation)
+    if (autoRotate && garmentGroup && !isDraggingDecal && !isPointerDown) {
         garmentGroup.rotation.y += 0.007;
+        garmentGroup.rotation.x += (0 - garmentGroup.rotation.x) * 0.05;
+    } else if (garmentGroup) {
+        garmentGroup.rotation.x += (0 - garmentGroup.rotation.x) * 0.05;
     }
 
     if (controls) {
@@ -880,6 +976,7 @@ function onPointerDown(event) {
         isDraggingDecal = true;
         if (controls) controls.enabled = false;
         renderer.domElement.style.cursor = 'grabbing';
+        if (decalOutline) decalOutline.visible = true;
         event.stopPropagation();
     }
 }
@@ -890,6 +987,7 @@ function onPointerMove(event) {
     const rect = renderer.domElement.getBoundingClientRect();
     mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
 
     if (isDraggingDecal && bodyMesh) {
         raycaster.setFromCamera(mouse, camera);
@@ -919,13 +1017,16 @@ function onPointerMove(event) {
 
             updateDecalUIAdjustments();
         }
+        if (decalOutline) decalOutline.visible = true;
     } else if (badgeMesh) {
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObject(badgeMesh);
         if (intersects.length > 0) {
             renderer.domElement.style.cursor = 'grab';
+            if (decalOutline) decalOutline.visible = true;
         } else {
             renderer.domElement.style.cursor = 'default';
+            if (decalOutline) decalOutline.visible = false;
         }
     }
 }
@@ -936,9 +1037,142 @@ function onPointerUp(event) {
         if (controls) controls.enabled = true;
         if (renderer) renderer.domElement.style.cursor = 'default';
     }
+    if (decalOutline) decalOutline.visible = false;
 }
 
 // Initialize Three.js visualizer when page contents are loaded
 window.addEventListener('DOMContentLoaded', () => {
     init3D();
 });
+
+// Interpolate color changes for a smooth visual transition (lerp)
+function lerpGarmentColor(targetHex, zone = 'body', duration = 400) {
+    let mat = garmentMaterial;
+    if (zone === 'sleeves') mat = sleevesMaterial;
+    else if (zone === 'collar') mat = collarMaterial;
+    if (!mat) return;
+
+    const startColor = mat.color.clone();
+    const targetColor = new THREE.Color(targetHex);
+    const startTime = performance.now();
+
+    function step() {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+
+        mat.color.copy(startColor).lerp(targetColor, ease);
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        } else {
+            if (zone === 'body') {
+                currentColor = targetHex;
+                redrawDecal(); // Update decal text/graphic contrast if needed
+            }
+        }
+    }
+    step();
+}
+
+// Awwwards cinematic transition from Landing Page View to Studio View
+function transitionToStudio() {
+    activeViewState = 'studio';
+    
+    // Enable controls
+    if (controls) {
+        controls.enabled = true;
+    }
+    
+    // Smoothly turn off autoRotate
+    autoRotate = false;
+    const rotateToggle = document.getElementById('rotateToggle');
+    const rotateStatusText = document.getElementById('rotateStatus');
+    if (rotateToggle && rotateStatusText) {
+        rotateToggle.checked = false;
+        rotateStatusText.textContent = 'OFF';
+    }
+
+    const duration = 1200; // ms
+    const startTime = performance.now();
+    
+    const startX = camera.position.x;
+    const startY = camera.position.y;
+    const startZ = camera.position.z;
+    
+    const targetCamX = 0.0;
+    const targetCamY = 0.0;
+    const targetCamZ = 8.0;
+
+    function animateTransition() {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 4); // ease-out quartic
+        
+        camera.position.x = startX + (targetCamX - startX) * ease;
+        camera.position.y = startY + (targetCamY - startY) * ease;
+        camera.position.z = startZ + (targetCamZ - startZ) * ease;
+        
+        if (controls) {
+            controls.target.set(0, 0, 0);
+            controls.update();
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(animateTransition);
+        }
+    }
+    animateTransition();
+}
+
+// Expose camera autofocus transition globally for ui.js tabs
+function animateCameraTo(targetY, targetZ, targetLookAtY, duration = 800) {
+    if (!camera || !controls) return;
+    
+    // Disable controls during camera auto-movement to prevent fighting
+    controls.enabled = false;
+    
+    const startTime = performance.now();
+    const startPos = camera.position.clone();
+    const startTarget = controls.target.clone();
+    
+    // Obtain current spherical angles relative to start target to preserve rotation state
+    const relativePos = new THREE.Vector3().subVectors(camera.position, startTarget);
+    const spherical = new THREE.Spherical().setFromVector3(relativePos);
+    
+    const startRadius = spherical.radius;
+    const targetRadius = targetZ;
+    
+    function updateCam() {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        
+        // Lerp lookAt target height
+        controls.target.y = startTarget.y + (targetLookAtY - startTarget.y) * ease;
+        
+        // Lerp spherical radius (zoom)
+        spherical.radius = startRadius + (targetRadius - startRadius) * ease;
+        
+        // Recalculate camera position preserving current angles
+        const offset = new THREE.Vector3().setFromSpherical(spherical);
+        camera.position.copy(controls.target).add(offset);
+        
+        // Lerp absolute camera height offset
+        camera.position.y = startPos.y + (targetY - startPos.y) * ease;
+        
+        controls.update();
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateCam);
+        } else {
+            // Re-enable controls when done
+            controls.enabled = true;
+        }
+    }
+    
+    updateCam();
+}
+window.animateCameraTo = animateCameraTo;
+
+

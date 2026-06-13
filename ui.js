@@ -101,6 +101,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetPane) {
                 targetPane.classList.add('active');
             }
+
+            // Camera autofocus based on tab
+            if (typeof window.animateCameraTo === 'function') {
+                if (tab.dataset.tab === 'tab-decals') {
+                    window.animateCameraTo(0.4, 3.6, 0.4, 800);
+                    // Also turn off auto-rotate for decal editing focus
+                    autoRotate = false;
+                    if (rotateToggle) rotateToggle.checked = false;
+                    if (rotateStatusText) rotateStatusText.textContent = 'OFF';
+                } else {
+                    window.animateCameraTo(0, 8.0, 0, 800);
+                }
+            }
         });
     });
 
@@ -724,6 +737,420 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Success close button
     successCloseBtn.addEventListener('click', closeModal);
+
+    // --- INSTANT COLOR THEMES ---
+    const themeCards = document.querySelectorAll('.btn-theme-card');
+    themeCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const body = card.dataset.body;
+            const sleeves = card.dataset.sleeves;
+            const collar = card.dataset.collar;
+            const name = card.dataset.name;
+
+            // Smoothly lerp colors for all 3 zones in Three.js
+            if (typeof lerpGarmentColor === 'function') {
+                lerpGarmentColor(body, 'body', 500);
+                lerpGarmentColor(sleeves, 'sleeves', 500);
+                lerpGarmentColor(collar, 'collar', 500);
+            } else if (typeof updateGarmentColor === 'function') {
+                updateGarmentColor(body, 'body');
+                updateGarmentColor(sleeves, 'sleeves');
+                updateGarmentColor(collar, 'collar');
+            }
+
+            // Update local state variables
+            colorBodyHex = body;
+            colorBodyName = `Preset: ${name} (Badan)`;
+            colorSleevesHex = sleeves;
+            colorSleevesName = `Preset: ${name} (Lengan)`;
+            colorCollarHex = collar;
+            colorCollarName = `Preset: ${name} (Detail)`;
+
+            // Sync the hex input and tooltip if active zone matches
+            let activeHex = body;
+            let activeName = colorBodyName;
+            if (activeColorZone === 'sleeves') {
+                activeHex = sleeves;
+                activeName = colorSleevesName;
+            } else if (activeColorZone === 'collar') {
+                activeHex = collar;
+                activeName = colorCollarName;
+            }
+            selectedColorDisplay.textContent = activeName;
+            hexColorInput.value = activeHex.substring(1).toUpperCase();
+
+            // Remove active style from normal color dots
+            colorDots.forEach(d => d.classList.remove('active'));
+            customColorDot.classList.remove('active');
+            const recentDots = recentColorsGrid.querySelectorAll('.recent-color-dot');
+            recentDots.forEach(rd => rd.classList.remove('active'));
+        });
+    });
+
+    // --- CUSTOM TEXT CONTROLS ---
+    const customTextInput = document.getElementById('customTextInput');
+    const fontSelector = document.getElementById('fontSelector');
+    const textColorBtns = document.querySelectorAll('.btn-text-color');
+
+    if (customTextInput) {
+        customTextInput.addEventListener('input', function() {
+            customText = this.value;
+            if (typeof redrawDecal === 'function') redrawDecal();
+            activeDecalName = customText ? `Teks: "${customText}"` : (activeLogoType === 'preset' ? `Preset: ${activePresetLogo}` : 'Kustom');
+        });
+    }
+
+    if (fontSelector) {
+        fontSelector.addEventListener('change', function() {
+            customTextFont = this.value;
+            if (typeof redrawDecal === 'function') redrawDecal();
+        });
+    }
+
+    textColorBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            textColorBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            customTextColor = btn.dataset.color;
+            if (typeof redrawDecal === 'function') redrawDecal();
+        });
+    });
+
+    // --- SAVED DESIGNS GALLERY SYSTEM ---
+    const saveDesignBtn = document.getElementById('saveDesignBtn');
+    
+    if (saveDesignBtn) {
+        saveDesignBtn.addEventListener('click', saveCurrentDesign);
+    }
+
+    function renderSavedDesigns() {
+        const savedDesignsGrid = document.getElementById('savedDesignsGrid');
+        const galleryEmptyState = document.getElementById('galleryEmptyState');
+        if (!savedDesignsGrid) return;
+
+        let designs = [];
+        try {
+            designs = JSON.parse(localStorage.getItem('fitcraft_saved_designs')) || [];
+        } catch (e) {
+            designs = [];
+        }
+
+        // Clear existing cards
+        savedDesignsGrid.querySelectorAll('.saved-design-card').forEach(c => c.remove());
+
+        if (designs.length === 0) {
+            if (galleryEmptyState) galleryEmptyState.classList.remove('hidden');
+            return;
+        }
+
+        if (galleryEmptyState) galleryEmptyState.classList.add('hidden');
+
+        designs.forEach(design => {
+            const card = document.createElement('div');
+            card.className = 'saved-design-card';
+            card.dataset.id = design.id;
+
+            card.innerHTML = `
+                <button class="btn-delete-saved-design" title="Hapus Desain">&times;</button>
+                <img src="${design.thumbnail}" alt="Desain" class="saved-design-thumbnail">
+                <div class="saved-design-info">
+                    <span class="saved-design-title">${design.decal.text ? design.decal.text.toUpperCase() : design.garment.toUpperCase()}</span>
+                    <span class="saved-design-meta">${design.timestamp} • Rp ${design.price.toLocaleString('id-ID')}</span>
+                </div>
+            `;
+
+            // Delete handler
+            card.querySelector('.btn-delete-saved-design').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteDesign(design.id);
+            });
+
+            // Load handler
+            card.addEventListener('click', () => {
+                loadDesignConfig(design);
+            });
+
+            savedDesignsGrid.appendChild(card);
+        });
+    }
+
+    function deleteDesign(id) {
+        let designs = [];
+        try {
+            designs = JSON.parse(localStorage.getItem('fitcraft_saved_designs')) || [];
+        } catch (e) {
+            designs = [];
+        }
+        designs = designs.filter(d => d.id !== id);
+        localStorage.setItem('fitcraft_saved_designs', JSON.stringify(designs));
+        renderSavedDesigns();
+    }
+
+    function saveCurrentDesign() {
+        const canvas3d = document.querySelector('#canvas-container canvas');
+        if (!canvas3d) return;
+
+        let screenshotDataUrl = '';
+        try {
+            screenshotDataUrl = canvas3d.toDataURL('image/png');
+        } catch (err) {
+            console.error('Gagal snapshot canvas:', err);
+            alert('Gagal mengambil gambar kustomisasi.');
+            return;
+        }
+
+        const newDesign = {
+            id: 'design_' + Date.now(),
+            timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+            garment: activeGarmentType,
+            fabric: activeFabricType,
+            colors: {
+                body: { hex: colorBodyHex, name: colorBodyName },
+                sleeves: { hex: colorSleevesHex, name: colorSleevesName },
+                collar: { hex: colorCollarHex, name: colorCollarName }
+            },
+            decal: {
+                name: activeDecalName,
+                logoType: activeLogoType,
+                presetLogo: activePresetLogo,
+                customImageSrc: activeLogoType === 'custom' && activeCustomImage ? activeCustomImage.src : null,
+                text: customText,
+                textFont: customTextFont,
+                textColor: customTextColor,
+                adjustments: {
+                    scale: parseFloat(rangeScale.value),
+                    vertical: parseFloat(rangeVertical.value),
+                    horizontal: parseFloat(rangeHorizontal.value),
+                    opacity: parseFloat(rangeOpacity.value)
+                }
+            },
+            price: activeGarmentPrice + activeFabricPriceAdd,
+            thumbnail: screenshotDataUrl
+        };
+
+        let designs = [];
+        try {
+            designs = JSON.parse(localStorage.getItem('fitcraft_saved_designs')) || [];
+        } catch (e) {
+            designs = [];
+        }
+        designs.push(newDesign);
+        localStorage.setItem('fitcraft_saved_designs', JSON.stringify(designs));
+
+        renderSavedDesigns();
+    }
+
+    function loadDesignConfig(design) {
+        // Load garment type
+        activeGarmentType = design.garment;
+        const gIndex = modelOptions.findIndex(m => m.garmentType === design.garment);
+        if (gIndex > -1) {
+            currentModelIndex = gIndex;
+            const model = modelOptions[currentModelIndex];
+            activeGarmentPrice = model.price;
+            carouselModelTitle.textContent = model.name;
+            carouselModelCategory.textContent = model.category;
+            carouselModelPrice.textContent = 'Rp ' + model.price.toLocaleString('id-ID');
+            canvasGarmentTitle.textContent = model.name;
+            
+            if (typeof updateGarmentSilhouette === 'function') {
+                updateGarmentSilhouette(model.garmentType);
+            }
+        }
+
+        // Load fabric
+        activeFabricType = design.fabric;
+        fabricCards.forEach(c => {
+            if (c.dataset.fabric === design.fabric) {
+                c.classList.add('active');
+                activeFabricPriceAdd = parseFloat(c.dataset.priceAdd);
+            } else {
+                c.classList.remove('active');
+            }
+        });
+        if (typeof updateGarmentFabric === 'function') {
+            updateGarmentFabric(design.fabric);
+        }
+
+        // Load colors
+        colorBodyHex = design.colors.body.hex;
+        colorBodyName = design.colors.body.name;
+        colorSleevesHex = design.colors.sleeves.hex;
+        colorSleevesName = design.colors.sleeves.name;
+        colorCollarHex = design.colors.collar.hex;
+        colorCollarName = design.colors.collar.name;
+
+        if (typeof updateGarmentColor === 'function') {
+            updateGarmentColor(colorBodyHex, 'body');
+            updateGarmentColor(colorSleevesHex, 'sleeves');
+            updateGarmentColor(colorCollarHex, 'collar');
+        }
+
+        let activeHex = colorBodyHex;
+        let activeName = colorBodyName;
+        if (activeColorZone === 'sleeves') {
+            activeHex = colorSleevesHex;
+            activeName = colorSleevesName;
+        } else if (activeColorZone === 'collar') {
+            activeHex = colorCollarHex;
+            activeName = colorCollarName;
+        }
+        selectedColorDisplay.textContent = activeName;
+        hexColorInput.value = activeHex.substring(1).toUpperCase();
+
+        // Load decal config
+        activeDecalName = design.decal.name;
+        activeLogoType = design.decal.logoType;
+        activePresetLogo = design.decal.presetLogo;
+        
+        customText = design.decal.text || '';
+        customTextFont = design.decal.textFont || 'Space Grotesk';
+        customTextColor = design.decal.textColor || 'match';
+
+        if (customTextInput) customTextInput.value = customText;
+        if (fontSelector) fontSelector.value = customTextFont;
+
+        textColorBtns.forEach(btn => {
+            if (btn.dataset.color === customTextColor) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Sliders
+        rangeScale.value = design.decal.adjustments.scale;
+        rangeVertical.value = design.decal.adjustments.vertical;
+        rangeHorizontal.value = design.decal.adjustments.horizontal;
+        rangeOpacity.value = design.decal.adjustments.opacity;
+
+        valScale.textContent = design.decal.adjustments.scale.toFixed(1) + 'x';
+        valVertical.textContent = design.decal.adjustments.vertical.toFixed(2);
+        valHorizontal.textContent = design.decal.adjustments.horizontal.toFixed(2);
+        valOpacity.textContent = Math.round(design.decal.adjustments.opacity * 100) + '%';
+
+        // Load custom image base64 if it exists
+        if (activeLogoType === 'custom' && design.decal.customImageSrc) {
+            const img = new Image();
+            img.onload = function() {
+                activeCustomImage = img;
+                if (typeof redrawDecal === 'function') redrawDecal();
+                presetDecalBtns.forEach(b => b.classList.remove('active'));
+                uploadedFileName.textContent = 'desain_muat.png';
+                uploadPreviewContainer.classList.remove('hidden');
+            };
+            img.src = design.decal.customImageSrc;
+        } else {
+            logoUploadInput.value = '';
+            uploadPreviewContainer.classList.add('hidden');
+            presetDecalBtns.forEach(btn => {
+                if (activeLogoType === 'preset' && btn.dataset.preset === activePresetLogo) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (typeof redrawDecal === 'function') redrawDecal();
+        }
+
+        updatePrice();
+    }
+
+    // Initialize gallery on startup
+    renderSavedDesigns();
+
+    // --- STUDIO PAGE INIT: Restore user session from localStorage ---
+    const storedUser = (() => {
+        try { return JSON.parse(localStorage.getItem('fitcraft_user')); } catch(e) { return null; }
+    })();
+    
+    if (storedUser && storedUser.name) {
+        const nameEl = document.getElementById('studioUserName');
+        if (nameEl) nameEl.textContent = storedUser.name;
+        
+        // Update avatar seed with username for personalization
+        const avatarEl = document.getElementById('userAvatar');
+        if (avatarEl) avatarEl.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(storedUser.name)}`;
+    }
+
+    // --- MAGNETIC BUTTONS INTERACTION ---
+    if (startCustomBtn) {
+        startCustomBtn.addEventListener('mousemove', (e) => {
+            const rect = startCustomBtn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            // Pull button slightly towards cursor (magnetic effect)
+            startCustomBtn.style.transform = `translate(${x * 0.35}px, ${y * 0.35}px)`;
+            startCustomBtn.style.transition = 'none';
+        });
+        
+        startCustomBtn.addEventListener('mouseleave', () => {
+            startCustomBtn.style.transform = 'translate(0px, 0px)';
+            startCustomBtn.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+        });
+    }
+
+    // --- CUSTOM CURSOR FOLLOWER ---
+    const customCursor = document.getElementById('customCursor');
+    let mX = 0, mY = 0;
+    let cX = 0, cY = 0;
+
+    if (customCursor) {
+        document.addEventListener('mousemove', (e) => {
+            mX = e.clientX;
+            mY = e.clientY;
+            
+            // Fade in cursor follower on first mouse move
+            if (customCursor.style.opacity === '0' || !customCursor.style.opacity) {
+                customCursor.style.opacity = '1';
+            }
+        });
+
+        // Smooth follow tick loop (lerp)
+        function updateCursorFollower() {
+            const ease = 0.16; // Lerp weight
+            cX += (mX - cX) * ease;
+            cY += (mY - cY) * ease;
+            
+            customCursor.style.left = cX + 'px';
+            customCursor.style.top = cY + 'px';
+            
+            requestAnimationFrame(updateCursorFollower);
+        }
+        updateCursorFollower();
+
+        // Bind hover expansion triggers on interactive DOM nodes
+        function bindCursorHoverEffect() {
+            const interactives = document.querySelectorAll('button, a, select, input, .fabric-card, .color-dot-wrapper, .btn-carousel-nav, .recent-color-dot');
+            interactives.forEach(el => {
+                // Prevent duplicate listeners
+                el.removeEventListener('mouseenter', addHoverClass);
+                el.removeEventListener('mouseleave', removeHoverClass);
+                
+                el.addEventListener('mouseenter', addHoverClass);
+                el.addEventListener('mouseleave', removeHoverClass);
+            });
+        }
+        
+        function addHoverClass() {
+            if (customCursor) customCursor.classList.add('hover');
+        }
+        
+        function removeHoverClass() {
+            if (customCursor) customCursor.classList.remove('hover');
+        }
+
+        // Initialize hovers
+        bindCursorHoverEffect();
+
+        // Re-bind when tabs switch or gallery loads new elements dynamically
+        const mutationObserver = new MutationObserver(() => {
+            bindCursorHoverEffect();
+        });
+        mutationObserver.observe(document.body, { childList: true, subtree: true });
+    }
 
     // Initialize pricing on startup
     updatePrice();

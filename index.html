@@ -3,477 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitCraft 3D - Minimalist Customization Studio</title>
+    <title>FitCraft 3D — Studio Kustomisasi Pakaian Premium</title>
+    <meta name="description" content="Rancang pakaian kustom premium untuk startup dan tim kreatif secara instan dari browser Anda dengan visualisasi 3D PBR real-time.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Main Style -->
-    <link rel="stylesheet" href="index.css">
-    <!-- Three.js and OrbitControls -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="landing.css">
 </head>
 <body>
-    <!-- Main Container -->
-    <div class="app-container">
-        
-        <!-- Header -->
-        <header class="app-header">
-            <div class="header-left">
-                <div class="logo-container">
-                    <div class="logo-icon">
-                        <!-- Custom T-Shirt Icon SVG -->
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+
+    <!-- Animated Background -->
+    <div class="bg-gradient-mesh" aria-hidden="true">
+        <div class="mesh-orb orb-1"></div>
+        <div class="mesh-orb orb-2"></div>
+        <div class="mesh-orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-bar" id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
+                    </svg>
+                </div>
+                <span class="nav-logo-text">FITCRAFT <em>3D</em></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Fitur</a>
+                <a href="#how-it-works" class="nav-link">Cara Kerja</a>
+                <a href="#showcase" class="nav-link">Showcase</a>
+            </div>
+
+            <a href="studio.html" class="btn-nav-cta" id="navCta">
+                <span>Mulai Gratis</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                ✦ STUDIO KUSTOMISASI 3D PREMIUM
+            </div>
+
+            <h1 class="hero-title">
+                <span class="line-reveal" data-delay="0">CRAFT YOUR</span>
+                <span class="line-reveal accent-word" data-delay="100">BRAND</span>
+                <span class="line-reveal" data-delay="200">IDENTITY IN<br><span class="outline-text">3D</span></span>
+            </h1>
+
+            <p class="hero-desc">
+                Rancang pakaian kustom premium untuk startup dan tim kreatif Anda secara instan langsung dari browser — dengan presisi visualisasi 3D PBR real-time.
+            </p>
+
+            <div class="hero-cta-group">
+                <a href="studio.html" class="btn-hero-primary magnetic-btn" id="heroCta">
+                    <span>Mulai Kustomisasi</span>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <button class="btn-hero-secondary" id="watchDemoBtn">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <polygon points="10 8 16 12 10 16 10 8"/>
+                    </svg>
+                    <span>Lihat Demo</span>
+                </button>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-value">3D</span>
+                    <span class="stat-label">Real-time PBR</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">3+</span>
+                    <span class="stat-label">Model Pakaian</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">∞</span>
+                    <span class="stat-label">Kombinasi Warna</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Visual -->
+        <div class="hero-visual" id="heroVisual">
+            <div class="visual-card-stack">
+                <!-- Main 3D Preview Card -->
+                <div class="preview-card main-card">
+                    <div class="card-header">
+                        <div class="card-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span class="card-title-badge">FitCraft 3D Studio</span>
+                    </div>
+                    <div class="card-viewport">
+                        <!-- Animated Hoodie SVG Illustration -->
+                        <div class="hoodie-showcase" id="hoodieShowcase">
+                            <svg class="hoodie-svg" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Shadow -->
+                                <ellipse cx="100" cy="230" rx="55" ry="8" fill="rgba(0,0,0,0.15)"/>
+                                <!-- Body -->
+                                <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill="var(--hoodie-body, #1b2e3c)"/>
+                                <!-- Left Sleeve -->
+                                <path d="M45 85 L70 75 L65 100 L20 130 L15 160 L35 165 L50 135 L55 110 Z" fill="var(--hoodie-sleeve, #1b2e3c)"/>
+                                <!-- Right Sleeve -->
+                                <path d="M155 85 L130 75 L135 100 L180 130 L185 160 L165 165 L150 135 L145 110 Z" fill="var(--hoodie-sleeve, #1b2e3c)"/>
+                                <!-- Collar/Hood Base -->
+                                <path d="M70 75 C75 55 90 45 100 45 C110 45 125 55 130 75 C125 95 115 105 100 105 C85 105 75 95 70 75Z" fill="var(--hoodie-collar, #2a4050)"/>
+                                <!-- Hood -->
+                                <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill="var(--hoodie-collar, #2a4050)"/>
+                                <!-- Pocket -->
+                                <rect x="70" y="155" width="60" height="30" rx="6" fill="rgba(0,0,0,0.15)"/>
+                                <!-- Logo/Decal Area -->
+                                <g class="hoodie-decal" transform="translate(82, 115)">
+                                    <rect x="0" y="0" width="36" height="22" rx="4" fill="rgba(255,255,255,0.12)"/>
+                                    <text x="18" y="15" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-size="8" font-family="Space Grotesk, sans-serif" font-weight="700">FITCRAFT</text>
+                                </g>
+                                <!-- Highlight/Sheen -->
+                                <path d="M80 90 C90 88 110 88 120 92" stroke="rgba(255,255,255,0.12)" stroke-width="8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+
+                        <!-- Color orbit rings (animated) -->
+                        <div class="orbit-rings" aria-hidden="true">
+                            <div class="orbit-ring ring-1"></div>
+                            <div class="orbit-ring ring-2"></div>
+                        </div>
+                    </div>
+                    <!-- Color swatches below card -->
+                    <div class="card-swatches">
+                        <button class="swatch active" style="--c:#1b2e3c" data-body="#1b2e3c" data-sleeve="#1b2e3c" data-collar="#2a4050" title="Tech Navy"></button>
+                        <button class="swatch" style="--c:#3b6352" data-body="#3b6352" data-sleeve="#3b6352" data-collar="#4a7a65" title="Eco Sage"></button>
+                        <button class="swatch" style="--c:#7f1d1d" data-body="#7f1d1d" data-sleeve="#7f1d1d" data-collar="#991b1b" title="Crimson"></button>
+                        <button class="swatch" style="--c:#121212" data-body="#121212" data-sleeve="#121212" data-collar="#1e1e1e" title="Obsidian"></button>
+                        <button class="swatch" style="--c:#f7f4eb" data-body="#f7f4eb" data-sleeve="#e8e5d8" data-collar="#d8d4c3" title="Cream"></button>
+                    </div>
+                </div>
+
+                <!-- Floating Info Cards -->
+                <div class="float-card float-card-1">
+                    <div class="float-icon">✦</div>
+                    <div class="float-info">
+                        <span class="float-label">Bahan</span>
+                        <span class="float-value">PBR Cotton Premium</span>
+                    </div>
+                </div>
+
+                <div class="float-card float-card-2">
+                    <div class="float-icon">🎨</div>
+                    <div class="float-info">
+                        <span class="float-label">Zona Warna</span>
+                        <span class="float-value">3 area kustom</span>
+                    </div>
+                </div>
+
+                <div class="float-card float-card-3">
+                    <div class="float-icon">💾</div>
+                    <div class="float-info">
+                        <span class="float-label">Simpan Desain</span>
+                        <span class="float-value">Galeri lokal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features-section" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-eyebrow">KENAPA FITCRAFT 3D</span>
+                <h2 class="section-title">Dirancang untuk <br><span class="accent">Startup Modern</span></h2>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card feature-large">
+                    <div class="feature-icon-bg">
+                        <svg viewBox="0 0 48 48" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M24 4 L8 12 V24 C8 33.5 14.5 42.3 24 46 C33.5 42.3 40 33.5 40 24 V12 Z"/>
+                            <path d="M16 24 L21 29 L32 18"/>
+                        </svg>
+                    </div>
+                    <h3>Visualisasi 3D Real-Time</h3>
+                    <p>Lihat hasil desain pakaian Anda secara instan dengan rendering PBR berkualitas tinggi. Putar, zoom, dan eksplorasi dari segala sudut.</p>
+                    <div class="feature-tag">Three.js PBR Engine</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-bg">
+                        <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="24" cy="24" r="10"/>
+                            <path d="M24 4 V8 M24 40 V44 M4 24 H8 M40 24 H44"/>
+                        </svg>
+                    </div>
+                    <h3>3 Zona Warna Kustom</h3>
+                    <p>Atur warna Badan, Lengan, dan Detail secara terpisah dengan 8 warna kurator + picker tak terbatas.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-bg">
+                        <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="8" y="8" width="32" height="32" rx="4"/>
+                            <path d="M16 24 H32 M24 16 V32"/>
+                        </svg>
+                    </div>
+                    <h3>Upload Logo Brand</h3>
+                    <p>Unggah logo startup Anda (PNG/JPG/WEBP) dan lihat langsung pada model 3D. Atur ukuran dan posisi dengan slider.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-bg">
+                        <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M8 40 L40 8 M16 8 H40 V32"/>
+                        </svg>
+                    </div>
+                    <h3>Teks & Tipografi Kustom</h3>
+                    <p>Tambahkan slogan atau inisial startup dengan pilihan 3 font premium dan kontrol warna teks yang fleksibel.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-bg">
+                        <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M24 4 L28 16 H40 L30 24 L34 36 L24 28 L14 36 L18 24 L8 16 H20 Z"/>
+                        </svg>
+                    </div>
+                    <h3>Tema Warna Instan</h3>
+                    <p>4 preset tema warna kurator — Earth Sage, Cyber Crimson, Minimal Cream, SaaS Coral — terapkan dengan satu klik.</p>
+                </div>
+
+                <div class="feature-card feature-wide">
+                    <div class="feature-icon-bg">
+                        <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="8" y="8" width="14" height="14" rx="2"/>
+                            <rect x="26" y="8" width="14" height="14" rx="2"/>
+                            <rect x="8" y="26" width="14" height="14" rx="2"/>
+                            <rect x="26" y="26" width="14" height="14" rx="2"/>
+                        </svg>
+                    </div>
+                    <h3>Galeri Desain Lokal</h3>
+                    <p>Simpan multiple variasi desain Anda dengan snapshot thumbnail otomatis. Bandingkan, muat ulang, atau hapus kapan saja — tersimpan di browser Anda.</p>
+                    <div class="feature-tag">localStorage Gallery</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="how-section" id="how-it-works">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-eyebrow">ALUR KERJA</span>
+                <h2 class="section-title">3 Langkah <br><span class="accent">Desain Selesai</span></h2>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Pilih Model & Warna</h3>
+                        <p>Pilih dari 3 model pakaian (Hoodie, Kaos, Sweater), atur 3 zona warna, dan pilih bahan premium yang Anda inginkan.</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Tambahkan Branding</h3>
+                        <p>Upload logo startup, ketik teks kustom, atur ukuran dan posisi langsung pada model 3D secara interaktif.</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Simpan & Pesan</h3>
+                        <p>Simpan desain ke galeri lokal, unduh sebagai PNG, atau langsung pesan dengan mengisi form pemesanan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOWCASE SECTION -->
+    <section class="showcase-section" id="showcase">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-eyebrow">SHOWCASE</span>
+                <h2 class="section-title">Inspirasi <br><span class="accent">Desain Terbaik</span></h2>
+            </div>
+
+            <div class="showcase-grid">
+                <div class="showcase-card" style="--card-color: #1b2e3c;">
+                    <div class="showcase-garment">
+                        <span class="sc-label">Tech Navy</span>
+                        <div class="sc-swatch" style="background: #1b2e3c;"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <span class="sc-name">Hoodie Startup</span>
+                        <span class="sc-brand">Nexus AI</span>
+                    </div>
+                </div>
+                <div class="showcase-card" style="--card-color: #3b6352;">
+                    <div class="showcase-garment">
+                        <span class="sc-label">Eco Sage</span>
+                        <div class="sc-swatch" style="background: #3b6352;"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <span class="sc-name">Sweater Crewneck</span>
+                        <span class="sc-brand">GreenTech</span>
+                    </div>
+                </div>
+                <div class="showcase-card" style="--card-color: #7f1d1d;">
+                    <div class="showcase-garment">
+                        <span class="sc-label">Cyber Crimson</span>
+                        <div class="sc-swatch" style="background: #7f1d1d;"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <span class="sc-name">Kaos Kinerja</span>
+                        <span class="sc-brand">Apex Tech</span>
+                    </div>
+                </div>
+                <div class="showcase-card" style="--card-color: #f7f4eb; --text-dark: #1e2522;">
+                    <div class="showcase-garment">
+                        <span class="sc-label" style="color: #1e2522;">Minimal Cream</span>
+                        <div class="sc-swatch" style="background: #f7f4eb; border: 1px solid #e0ddd4;"></div>
+                    </div>
+                    <div class="showcase-info">
+                        <span class="sc-name" style="color: #1e2522;">Hoodie Minimalis</span>
+                        <span class="sc-brand" style="color: #5a6460;">Quantum Labs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <div class="cta-inner">
+            <span class="cta-eyebrow">✦ MULAI SEKARANG — GRATIS</span>
+            <h2 class="cta-title">Wujudkan Identitas<br>Brand Anda Hari Ini</h2>
+            <p class="cta-desc">Tidak perlu akun, tidak perlu install. Langsung buka studio 3D dan mulai desain pakaian impian startup Anda.</p>
+            <a href="studio.html" class="btn-cta-final magnetic-btn" id="ctaFinalBtn">
+                <span>Buka Studio 3D</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </div>
+        <div class="cta-bg-orbs" aria-hidden="true">
+            <div class="cta-orb cta-orb-1"></div>
+            <div class="cta-orb cta-orb-2"></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <div class="nav-logo-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
+                    </svg>
+                </div>
+                <span>FITCRAFT <em>3D</em></span>
+            </div>
+            <p class="footer-copy">© 2026 FitCraft 3D — Studio Kustomisasi Pakaian Premium. Dibuat dengan Three.js & Vanilla JS.</p>
+        </div>
+    </footer>
+
+    <!-- Auth Modal (Login/Register) -->
+    <div class="auth-modal-overlay hidden" id="authOverlay">
+        <div class="auth-modal-card" id="authModal">
+            <button class="auth-modal-close" id="authModalClose">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="auth-modal-header">
+                <div class="auth-modal-logo">
+                    <div class="nav-logo-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
                         </svg>
                     </div>
-                    <div class="logo-text">
-                        <span class="logo-brand">FITCRAFT <span class="accent-text">3D</span></span>
-                        <span class="logo-badge">EDISI LIGHT</span>
-                    </div>
+                    <span>FitCraft 3D</span>
                 </div>
-                <span class="header-subtitle">Studio Kustomisasi Minimalis</span>
+                <h2 class="auth-modal-title" id="authModalTitle">Masuk ke Studio</h2>
+                <p class="auth-modal-sub">Gunakan email startup Anda untuk masuk dan mulai menyimpan desain.</p>
             </div>
-            
-            <div class="header-right">
-                <button id="checkoutBtn" class="btn-checkout">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart-icon">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                    </svg>
-                    <span>BAYAR SEKARANG</span>
+
+            <form class="auth-modal-form" id="landingAuthForm">
+                <div class="auth-field">
+                    <label for="landingEmail">Alamat Email</label>
+                    <input type="email" id="landingEmail" placeholder="nama@startupanda.com" required>
+                </div>
+                <div class="auth-field">
+                    <label for="landingPassword">Kata Sandi</label>
+                    <input type="password" id="landingPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-auth-submit" id="btnAuthSubmit">
+                    Masuk &amp; Buka Studio
                 </button>
-                
-                <div class="user-profile">
-                    <div class="user-details">
-                        <span class="user-name">Alex Rivera</span>
-                        <span class="user-role"><span class="star-icon">✦</span> JURI #449</span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200" alt="Alex Rivera Profile" class="user-avatar" onerror="this.src='https://api.dicebear.com/7.x/adventurer/svg?seed=Alex';">
-                </div>
+            </form>
+
+            <div class="auth-modal-switch">
+                Belum memiliki akun? <a href="#" id="toggleLandingAuth">Daftar Sekarang</a>
             </div>
-        </header>
-
-        <!-- Studio Workspace -->
-        <main class="studio-workspace">
-            
-            <!-- Left 3D Viewport -->
-            <section class="viewport-section">
-                <!-- 3D Canvas Area -->
-                <div id="canvas-container" class="canvas-container">
-                    <!-- Loading overlay -->
-                    <div id="loader" class="loader-overlay">
-                        <div class="spinner"></div>
-                        <p>Memuat Engine 3D...</p>
-                    </div>
-                    
-                    <!-- Floating Garment Info Badge -->
-                    <div class="floating-info-badge">
-                        <h2 id="activeGarmentName">Hoodie Kustom Cozy</h2>
-                        <div class="badge-stats">
-                            <span>Bahan: <strong>PBR v4</strong></span>
-                            <span>Tampilan: <strong>3D Real-time</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Customization Toolbar Wrapper -->
-                <div class="toolbar-container">
-                    <div class="customization-toolbar">
-                        <div class="toolbar-group">
-                            <span class="toolbar-label">PENCAHAYAAN:</span>
-                            <div class="btn-toggle-group" id="lightingGroup">
-                                <button class="btn-toggle active" data-light="studio">STUDIO</button>
-                                <button class="btn-toggle" data-light="sunset">SUNSET</button>
-                                <button class="btn-toggle" data-light="industrial">INDUSTRI</button>
-                            </div>
-                        </div>
-
-                        <div class="toolbar-divider"></div>
-
-                        <div class="toolbar-group">
-                            <span class="toolbar-label">ROTASI:</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="rotateToggle" checked>
-                                <span class="slider-toggle"></span>
-                            </label>
-                            <span class="toggle-text" id="rotateStatus">AKTIF</span>
-                        </div>
-
-                        <div class="toolbar-divider"></div>
-
-                        <div class="toolbar-group actions-group">
-                            <button class="btn-action-tool" id="clickDragIndicator" title="Klik & Geser untuk Memutar">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <path d="M12 8l-4 4 4 4M16 12H8"></path>
-                                </svg>
-                                <span>Klik & Geser</span>
-                            </button>
-                            <button class="btn-action-tool" id="scaleViewBtn" title="Perbesar Tampilan">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="15 3 21 3 21 9"></polyline>
-                                    <polyline points="9 21 3 21 3 15"></polyline>
-                                    <line x1="21" y1="3" x2="14" y2="10"></line>
-                                    <line x1="3" y1="21" x2="10" y2="14"></line>
-                                </svg>
-                                <span>Perbesar</span>
-                            </button>
-                            <button class="btn-action-tool" id="resetViewBtn" title="Atur Ulang Kamera">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-                                </svg>
-                                <span>Atur Ulang</span>
-                            </button>
-                            <button class="btn-action-tool" id="exportPngBtn" title="Unduh Gambar Desain">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-                                </svg>
-                                <span>Unduh PNG</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="viewport-instructions">Klik kiri + geser untuk memutar • Scroll untuk memperbesar</div>
-                </div>
-            </section>
-
-            <!-- Right Sidebar Panel -->
-            <aside class="sidebar-section">
-                <!-- Tabs Header -->
-                <div class="sidebar-tabs">
-                    <button class="tab-btn active" data-tab="tab-shell">
-                        MODEL & WARNA
-                    </button>
-                    <button class="tab-btn" data-tab="tab-decals">
-                        BRANDING & LOGO
-                    </button>
-                </div>
-
-                <!-- Tab Contents Container -->
-                <div class="tab-contents">
-                    
-                    <!-- TAB 1: SHELL & PALETTE -->
-                    <div id="tab-shell" class="tab-pane active">
-                        
-                        <!-- Section: SELECT CUT / SILHOUETTE -->
-                        <div class="config-section">
-                            <h3 class="section-title">
-                                <span class="title-icon">⚏</span> PILIH MODEL PAKAIAN
-                            </h3>
-                            <div class="model-selector-carousel">
-                                <button class="btn-carousel-nav" id="prevModelBtn" title="Model Sebelumnya">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="15 18 9 12 15 6"></polyline>
-                                    </svg>
-                                </button>
-                                <div class="model-carousel-content">
-                                    <span class="model-category" id="carouselModelCategory">Outerwear</span>
-                                    <h4 class="model-title" id="carouselModelTitle">Hoodie Kustom Cozy</h4>
-                                    <span class="model-price" id="carouselModelPrice">Rp 349.000</span>
-                                </div>
-                                <button class="btn-carousel-nav" id="nextModelBtn" title="Model Selanjutnya">
-                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="9 18 15 12 9 6"></polyline>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Section: FABRIC PREMIUM SPECIFICATIONS -->
-                        <div class="config-section">
-                            <h3 class="section-title">
-                                <span class="title-icon">⚎</span> SPESIFIKASI BAHAN PREMIUM
-                            </h3>
-                            <div class="fabric-grid">
-                                <div class="fabric-card active" data-fabric="cotton" data-price-add="0">
-                                    <div class="fabric-info">
-                                        <h4 class="fabric-title">Katun Premium</h4>
-                                        <p class="fabric-desc">Tekstur matte lembut, sangat sejuk, 100% serat katun organik.</p>
-                                        <span class="fabric-badge">MATTE MTE</span>
-                                    </div>
-                                    <div class="fabric-action">
-                                        <span>Termasuk</span>
-                                    </div>
-                                </div>
-                                <div class="fabric-card" data-fabric="fleece" data-price-add="75000">
-                                    <div class="fabric-info">
-                                        <h4 class="fabric-title">Fleece Tebal</h4>
-                                        <p class="fabric-desc">Bahan tebal berbulu halus mewah, kehangatan ekstra & nyaman.</p>
-                                        <span class="fabric-badge">WARM FLEECE</span>
-                                    </div>
-                                    <div class="fabric-action">
-                                        <span>+Rp 75.000</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Section: APPAREL PALETTE SELECTION -->
-                        <div class="config-section">
-                            <h3 class="section-title">
-                                <span class="title-icon">⚃</span> PILIHAN PALET WARNA
-                            </h3>
-                            <div class="palette-container">
-                                <div class="color-zone-selector">
-                                    <button class="btn-zone-pill active" data-zone="body">Badan</button>
-                                    <button class="btn-zone-pill" data-zone="sleeves">Lengan</button>
-                                    <button class="btn-zone-pill" data-zone="collar">Detail</button>
-                                </div>
-                                <div class="palette-grid" id="colorPalette">
-                                    <button class="color-dot-wrapper active" data-color="#1b2e3c" data-color-name="Tech Navy (Tren SaaS)" style="--dot-color: #1b2e3c;">
-                                        <span class="color-tooltip">Tech Navy (SaaS)</span>
-                                    </button>
-                                    <button class="color-dot-wrapper" data-color="#3b6352" data-color-name="Eco Sage (Tren Organik)" style="--dot-color: #3b6352;">
-                                        <span class="color-tooltip">Eco Sage (Organik)</span>
-                                    </button>
-                                    <button class="color-dot-wrapper" data-color="#695f4e" data-color-name="Khaki Zaitun (Tren Lifestyle)" style="--dot-color: #695f4e;">
-                                        <span class="color-tooltip">Khaki Zaitun (Lifestyle)</span>
-                                    </button>
-                                    <button class="color-dot-wrapper" data-color="#e27c70" data-color-name="Creative Coral (Tren Gen-Z)" style="--dot-color: #e27c70;">
-                                        <span class="color-tooltip">Creative Coral (Gen-Z)</span>
-                                    </button>
-                                    <button class="color-dot-wrapper" data-color="#7f1d1d" data-color-name="Premium Burgundy (Tren Mewah)" style="--dot-color: #7f1d1d;">
-                                        <span class="color-tooltip">Premium Burgundy (Mewah)</span>
-                                    </button>
-                                    <button class="color-dot-wrapper" data-color="#f7f4eb" data-color-name="Aesthetic Cream (Tren Minimalis)" style="--dot-color: #f7f4eb;">
-                                        <span class="color-tooltip">Aesthetic Cream (Minimalis)</span>
-                                    </button>
-                                    <button class="color-dot-wrapper" data-color="#a8a29e" data-color-name="Heather Grey (Tren Atletik)" style="--dot-color: #a8a29e;">
-                                        <span class="color-tooltip">Heather Grey (Atletik)</span>
-                                    </button>
-                                    <button class="color-dot-wrapper" data-color="#121212" data-color-name="Obsidian Black (Tren Cyberpunk)" style="--dot-color: #121212;">
-                                        <span class="color-tooltip">Obsidian Black (Cyberpunk)</span>
-                                    </button>
-                                    
-                                    <!-- Custom Color Picker -->
-                                    <div class="color-dot-wrapper custom-color-picker" id="customColorDot">
-                                        <input type="color" id="customColorInput" value="#1b2e3c" style="display: none;">
-                                        <span class="color-tooltip">Warna Kustom</span>
-                                    </div>
-                                </div>
-                                <div class="color-name-display">
-                                    <div class="color-display-label">Skema: <strong id="selectedColorName">Tech Navy (Tren SaaS)</strong></div>
-                                    <div class="hex-input-wrapper">
-                                        <span class="hex-hash">#</span>
-                                        <input type="text" id="hexColorInput" value="1B2E3C" maxlength="6" placeholder="HEX">
-                                    </div>
-                                </div>
-                                <!-- Recent Custom Colors History -->
-                                <div class="recent-colors-container hidden" id="recentColorsContainer">
-                                    <div class="recent-colors-label">WARNA KUSTOM TERBARU:</div>
-                                    <div class="recent-colors-grid" id="recentColorsGrid"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- TAB 2: BRANDING DECALS -->
-                    <div id="tab-decals" class="tab-pane">
-                        
-                        <!-- Section: STARTUP BRANDING PRESSETS -->
-                        <div class="config-section">
-                            <h3 class="section-title">
-                                <span class="title-icon">✦</span> PRESET LOGO STARTUP
-                            </h3>
-                            <p class="section-intro">Pilih logo startup inovatif di bawah ini untuk ditampilkan pada baju Anda:</p>
-                            <div class="preset-decals-grid" id="presetDecals">
-                                <button class="btn-decal-preset active" data-preset="fitcraft">
-                                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46"></path>
-                                        <path d="M12 9v11m-4-6h8"></path>
-                                    </svg>
-                                    <span>FitCraft</span>
-                                </button>
-                                <button class="btn-decal-preset" data-preset="nexus">
-                                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                                        <polyline points="2 17 12 22 22 17"></polyline>
-                                        <polyline points="2 12 12 17 22 12"></polyline>
-                                    </svg>
-                                    <span>Nexus AI</span>
-                                </button>
-                                <button class="btn-decal-preset" data-preset="quantum">
-                                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <circle cx="12" cy="12" r="9"></circle>
-                                        <path d="M9 12h6m-3-3v6"></path>
-                                        <circle cx="12" cy="12" r="3" fill="currentColor"></circle>
-                                    </svg>
-                                    <span>Quantum</span>
-                                </button>
-                                <button class="btn-decal-preset" data-preset="apex">
-                                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <path d="M12 2L2 22h20L12 2zM12 6l7 13H5l7-13z"></path>
-                                    </svg>
-                                    <span>Apex Tech</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Section: UPLOAD CUSTOM LOGO -->
-                        <div class="config-section">
-                            <h3 class="section-title">
-                                <span class="title-icon">📤</span> UNGGAH LOGO BRAND KUSTOM
-                            </h3>
-                            <div class="upload-zone" id="uploadZone">
-                                <input type="file" id="logoUpload" accept="image/png, image/jpeg, image/webp" style="display: none;">
-                                <div class="upload-inner">
-                                    <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload-icon">
-                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                        <polyline points="17 8 12 3 7 8"></polyline>
-                                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                                    </svg>
-                                    <p class="upload-main-text">Tarik & lepas file logo Anda di sini</p>
-                                    <p class="upload-sub-text">Mendukung PNG/JPG/WEBP (Disarankan background transparan)</p>
-                                    <button class="btn-secondary" id="browseLogoBtn">Pilih File</button>
-                                </div>
-                            </div>
-                            <div class="upload-preview-container hidden" id="uploadPreviewContainer">
-                                <span>File terpilih: <strong id="uploadedFileName">logo.png</strong></span>
-                                <button class="btn-remove-logo" id="removeLogoBtn">Hapus</button>
-                            </div>
-                        </div>
-
-                        <!-- Section: DECAL POSITION & SIZE -->
-                        <div class="config-section">
-                            <h3 class="section-title">
-                                <span class="title-icon">⚅</span> ATUR UKURAN & POSISI LOGO
-                            </h3>
-                            <div class="decal-adjustments">
-                                <!-- Size / Scale -->
-                                <div class="adjust-control">
-                                    <div class="adjust-label-row">
-                                        <span class="adjust-name">Ukuran Logo</span>
-                                        <span class="adjust-value" id="valScale">1.0x</span>
-                                    </div>
-                                    <input type="range" id="rangeScale" min="0.3" max="2.0" step="0.05" value="1.0" class="premium-slider">
-                                </div>
-                                <!-- Vertical Position -->
-                                <div class="adjust-control">
-                                    <div class="adjust-label-row">
-                                        <span class="adjust-name">Posisi Vertikal</span>
-                                        <span class="adjust-value" id="valVertical">0.00</span>
-                                    </div>
-                                    <input type="range" id="rangeVertical" min="-0.6" max="0.6" step="0.02" value="0.0" class="premium-slider">
-                                </div>
-                                <!-- Horizontal Position -->
-                                <div class="adjust-control">
-                                    <div class="adjust-label-row">
-                                        <span class="adjust-name">Posisi Horizontal</span>
-                                        <span class="adjust-value" id="valHorizontal">0.00</span>
-                                    </div>
-                                    <input type="range" id="rangeHorizontal" min="-0.5" max="0.5" step="0.02" value="0.0" class="premium-slider">
-                                </div>
-                                <!-- Opacity -->
-                                <div class="adjust-control">
-                                    <div class="adjust-label-row">
-                                        <span class="adjust-name">Transparansi</span>
-                                        <span class="adjust-value" id="valOpacity">100%</span>
-                                    </div>
-                                    <input type="range" id="rangeOpacity" min="0.2" max="1.0" step="0.05" value="1.0" class="premium-slider">
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- Footer Sidebar (Price and CTA) -->
-                <div class="sidebar-footer">
-                    <div class="price-container">
-                        <span class="price-label">TOTAL HARGA:</span>
-                        <span class="price-value" id="sidebarTotalPrice">Rp 349.000</span>
-                    </div>
-                    <button class="btn-checkout-primary" id="checkoutBtnPrimary">
-                        <span>Pesan Desain Ini</span>
-                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" class="arrow-right">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </button>
-                </div>
-            </aside>
-
-        </main>
-    </div>
-
-    <!-- Checkout Modal -->
-    <div id="checkoutModal" class="modal-overlay hidden">
-        <div class="modal-card">
-            <button class="btn-close-modal" id="closeModalBtn">×</button>
-            
-            <div id="modalOrderSummary">
-                <h2 class="modal-title">📦 Ringkasan Desain FitCraft 3D</h2>
-                <p class="modal-subtitle">Periksa kembali detail kustomisasi Anda sebelum melanjutkan pemesanan.</p>
-                
-                <div class="summary-details">
-                    <div class="summary-item">
-                        <span class="summary-label">Model Potongan:</span>
-                        <span class="summary-val" id="summaryGarment">Cozy Custom Hoodie</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Jenis Bahan:</span>
-                        <span class="summary-val" id="summaryFabric">Premium Cotton</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Warna Pakaian:</span>
-                        <span class="summary-val" id="summaryColor">Deep Blue</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Decal Branding:</span>
-                        <span class="summary-val" id="summaryDecal">FitCraft Preset</span>
-                    </div>
-                    
-                    <div class="summary-divider"></div>
-                    
-                    <div class="summary-item total-row">
-                        <span class="summary-label">Total Pembayaran:</span>
-                        <span class="summary-val price-accent" id="summaryPrice">Rp 349.000</span>
-                    </div>
-                </div>
-
-                <form id="checkoutForm" class="checkout-form">
-                    <div class="form-group">
-                        <label for="custName">Nama Lengkap</label>
-                        <input type="text" id="custName" placeholder="Masukkan nama lengkap Anda" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="custStartup">Nama Startup / Instansi</label>
-                        <input type="text" id="custStartup" placeholder="Contoh: FitCraft Corp / Universitas Gadjah Mada" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="custEmail">Alamat Email</label>
-                        <input type="email" id="custEmail" placeholder="nama@startupanda.com" required>
-                    </div>
-                    
-                    <button type="submit" class="btn-submit-order">
-                        Konfirmasi & Bayar Sekarang
-                    </button>
-                </form>
-            </div>
-            
-            <!-- Success Screen (Hidden initially) -->
-            <div id="modalSuccess" class="success-screen hidden">
-                <div class="success-icon">
-                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                </div>
-                <h2 class="success-title">Pesanan Berhasil Dibuat!</h2>
-                <p class="success-desc">Terima kasih telah memesan di FitCraft 3D. Detail desain dan invoice digital telah dikirimkan ke email <strong id="successEmailDisplay">user@example.com</strong>.</p>
-                <div class="success-summary">
-                    <p>Kode Pesanan: <strong class="order-code">FC-3D-2026-X89A</strong></p>
-                </div>
-                <button class="btn-success-close" id="successCloseBtn">Selesai & Kembali ke Studio</button>
-            </div>
-            
         </div>
     </div>
-    <!-- Scripts -->
-    <script src="app.js"></script>
-    <script src="ui.js"></script>
+
+    <script src="landing.js"></script>
 </body>
 </html>
