@@ -881,16 +881,21 @@ function resetView() {
 
 // Toggle Zoom/Scale View
 function toggleScaleView() {
+    if (!camera || !controls) return;
+
     isScaleView = !isScaleView;
     const btn = document.getElementById('scaleViewBtn');
     
     let targetZ = isScaleView ? 4.5 : 8.0;
     let targetY = isScaleView ? 0.35 : 0;
     
+    // Disable controls during zoom to prevent fighting
+    controls.enabled = false;
+    
     const startTime = performance.now();
     const duration = 600;
-    const startZ = camera.position.z;
-    const startY = camera.position.y;
+    const startPos = camera.position.clone();
+    const startTarget = controls.target.clone();
 
     if (isScaleView) {
         btn.classList.add('active');
@@ -901,18 +906,24 @@ function toggleScaleView() {
     function zoomCam() {
         const elapsed = performance.now() - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        const ease = 1 - Math.pow(1 - progress, 3);
+        const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
         
-        camera.position.z = startZ + (targetZ - startZ) * ease;
-        camera.position.y = startY + (targetY - startY) * ease;
+        // Smoothly interpolate the controls look-at target to prevent snapping
+        controls.target.x = startTarget.x + (0 - startTarget.x) * ease;
+        controls.target.y = startTarget.y + (targetY - startTarget.y) * ease;
+        controls.target.z = startTarget.z + (0 - startTarget.z) * ease;
+        
+        // Smoothly interpolate the camera coordinates
+        camera.position.y = startPos.y + (targetY - startPos.y) * ease;
+        camera.position.z = startPos.z + (targetZ - startPos.z) * ease;
+        
+        controls.update();
         
         if (progress < 1) {
             requestAnimationFrame(zoomCam);
         } else {
-            // Sync OrbitControls target coordinate when zoom completes to prevent snapping back
-            if (controls) {
-                controls.target.set(0, targetY, 0);
-            }
+            // Re-enable controls upon completion
+            controls.enabled = true;
         }
     }
     zoomCam();
