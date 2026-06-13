@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Pricing
     const sidebarTotalPrice = document.getElementById('sidebarTotalPrice');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
     
     // Modal
     const checkoutBtn = document.getElementById('checkoutBtn');
@@ -1218,6 +1219,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === sizeChartModal) {
                 sizeChartModal.classList.add('hidden');
             }
+        });
+    }
+
+    // --- THEME TOGGLE LOGIC ---
+    if (themeToggleBtn) {
+        // Apply saved theme state on load (in case of delay)
+        const savedTheme = localStorage.getItem('fitcraft_theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else if (savedTheme === 'light') {
+            document.body.classList.remove('dark-theme');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-theme');
+            localStorage.setItem('fitcraft_theme', isDark ? 'dark' : 'light');
         });
     }
 

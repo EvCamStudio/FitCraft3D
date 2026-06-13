@@ -33,6 +33,24 @@
     --font-heading: 'Space Grotesk', sans-serif;
 }
 
+/* Dark Mode Override variables (Matches Landing Page obsidian aesthetic) */
+body.dark-theme {
+    --bg-app: #080b0f; /* Pitch dark obsidian matching landing page */
+    --bg-panel: rgba(14, 19, 24, 0.82); /* Glassmorphic dark panel */
+    --bg-card: #0e1318; /* Dark card surface */
+    --bg-card-selected: rgba(82, 140, 102, 0.12);
+    
+    --text-primary: #cdd4d0; /* Soft light primary text */
+    --text-secondary: #8a9892; /* Secondary text */
+    --text-muted: #4a5550; /* Muted details */
+    
+    --border-color: rgba(255, 255, 255, 0.08); /* Dark subtle border */
+    --border-color-selected: var(--primary);
+    
+    background-image: radial-gradient(circle at 80% 20%, rgba(82, 140, 102, 0.08) 0%, transparent 50%),
+                      radial-gradient(circle at 20% 80%, rgba(27, 46, 60, 0.35) 0%, transparent 60%);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -2251,6 +2269,75 @@ body.state-studio #landing-view {
     body.state-auth .viewport-section {
         height: 100vh;
     }
+}
+
+/* THEME TOGGLE BUTTON */
+.btn-theme-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--bg-card);
+    margin-right: 12px;
+}
+
+.btn-theme-toggle:hover {
+    color: var(--text-primary);
+    border-color: var(--border-color-selected);
+    background-color: var(--bg-app);
+}
+
+/* Icon visibility controls based on dark-theme class */
+body:not(.dark-theme) .theme-icon-sun {
+    display: none;
+}
+
+body.dark-theme .theme-icon-moon {
+    display: none;
+}
+
+/* Style adjustment to keep input text readable inside modal in dark mode */
+body.dark-theme .checkout-form input {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+body.dark-theme .checkout-form input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+body.dark-theme .modal-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+body.dark-theme .modal-subtitle {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .summary-item {
+    border-color: var(--border-color);
+}
+
+body.dark-theme .summary-val {
+    color: var(--text-primary);
+}
+
+body.dark-theme .summary-label {
+    color: var(--text-secondary);
+}
+
+body.dark-theme .checkout-form label {
+    color: var(--text-secondary);
 }
 
 /* SIZE SELECTOR COMPONENT */
