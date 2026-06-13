@@ -1103,6 +1103,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- MAGNETIC BUTTONS INTERACTION ---
+    const startCustomBtn = document.getElementById('startCustomBtn');
     if (startCustomBtn) {
         startCustomBtn.addEventListener('mousemove', (e) => {
             const rect = startCustomBtn.getBoundingClientRect();
@@ -1118,66 +1119,6 @@ document.addEventListener('DOMContentLoaded', () => {
             startCustomBtn.style.transform = 'translate(0px, 0px)';
             startCustomBtn.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
         });
-    }
-
-    // --- CUSTOM CURSOR FOLLOWER ---
-    const customCursor = document.getElementById('customCursor');
-    let mX = 0, mY = 0;
-    let cX = 0, cY = 0;
-
-    if (customCursor) {
-        document.addEventListener('mousemove', (e) => {
-            mX = e.clientX;
-            mY = e.clientY;
-            
-            // Fade in cursor follower on first mouse move
-            if (customCursor.style.opacity === '0' || !customCursor.style.opacity) {
-                customCursor.style.opacity = '1';
-            }
-        });
-
-        // Smooth follow tick loop (lerp)
-        function updateCursorFollower() {
-            const ease = 0.16; // Lerp weight
-            cX += (mX - cX) * ease;
-            cY += (mY - cY) * ease;
-            
-            customCursor.style.left = cX + 'px';
-            customCursor.style.top = cY + 'px';
-            
-            requestAnimationFrame(updateCursorFollower);
-        }
-        updateCursorFollower();
-
-        // Bind hover expansion triggers on interactive DOM nodes
-        function bindCursorHoverEffect() {
-            const interactives = document.querySelectorAll('button, a, select, input, .fabric-card, .color-dot-wrapper, .btn-carousel-nav, .recent-color-dot');
-            interactives.forEach(el => {
-                // Prevent duplicate listeners
-                el.removeEventListener('mouseenter', addHoverClass);
-                el.removeEventListener('mouseleave', removeHoverClass);
-                
-                el.addEventListener('mouseenter', addHoverClass);
-                el.addEventListener('mouseleave', removeHoverClass);
-            });
-        }
-        
-        function addHoverClass() {
-            if (customCursor) customCursor.classList.add('hover');
-        }
-        
-        function removeHoverClass() {
-            if (customCursor) customCursor.classList.remove('hover');
-        }
-
-        // Initialize hovers
-        bindCursorHoverEffect();
-
-        // Re-bind when tabs switch or gallery loads new elements dynamically
-        const mutationObserver = new MutationObserver(() => {
-            bindCursorHoverEffect();
-        });
-        mutationObserver.observe(document.body, { childList: true, subtree: true });
     }
 
     // --- SIZE SELECTOR BINDINGS ---
