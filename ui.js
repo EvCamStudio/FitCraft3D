@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let colorCollarName = 'Tech Navy (Tren SaaS)';
     
     let activeDecalName = 'Preset FitCraft';
+    let activeGarmentSize = 'M'; // 'S', 'M', 'L', 'XL', 'XXL'
 
     // --- DOM REFERENCES ---
     const sidebarTabs = document.querySelectorAll('.tab-btn');
@@ -65,6 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const valVertical = document.getElementById('valVertical');
     const valHorizontal = document.getElementById('valHorizontal');
     const valOpacity = document.getElementById('valOpacity');
+    
+    // Size customizer references
+    const sizePills = document.querySelectorAll('.btn-size-pill');
+    const sizeChartBtn = document.getElementById('sizeChartBtn');
+    const sizeChartModal = document.getElementById('sizeChartModal');
+    const closeSizeChartBtn = document.getElementById('closeSizeChartBtn');
+    const closeSizeChartBtnOk = document.getElementById('closeSizeChartBtnOk');
+    const summarySize = document.getElementById('summarySize');
     
     // Pricing
     const sidebarTotalPrice = document.getElementById('sidebarTotalPrice');
@@ -666,6 +675,9 @@ document.addEventListener('DOMContentLoaded', () => {
         summaryFabric.textContent = activeFabricType === 'cotton' ? 'Katun Premium (Termasuk)' : 'Fleece Tebal (+Rp 75.000)';
         summaryColor.textContent = `Badan: ${colorBodyName} | Lengan: ${colorSleevesName} | Detail: ${colorCollarName}`;
         summaryDecal.textContent = activeDecalName;
+        if (summarySize) {
+            summarySize.textContent = activeGarmentSize;
+        }
         summaryPrice.textContent = formattedPrice;
 
         // Open modal overlay
@@ -1150,6 +1162,48 @@ document.addEventListener('DOMContentLoaded', () => {
             bindCursorHoverEffect();
         });
         mutationObserver.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // --- SIZE SELECTOR BINDINGS ---
+    sizePills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            sizePills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            
+            const size = pill.dataset.size;
+            activeGarmentSize = size.toUpperCase();
+            
+            if (typeof window.updateGarmentSize === 'function') {
+                window.updateGarmentSize(size);
+            }
+        });
+    });
+
+    // --- SIZE CHART MODAL BINDINGS ---
+    if (sizeChartBtn && sizeChartModal) {
+        sizeChartBtn.addEventListener('click', () => {
+            sizeChartModal.classList.remove('hidden');
+        });
+    }
+    
+    if (closeSizeChartBtn && sizeChartModal) {
+        closeSizeChartBtn.addEventListener('click', () => {
+            sizeChartModal.classList.add('hidden');
+        });
+    }
+    
+    if (closeSizeChartBtnOk && sizeChartModal) {
+        closeSizeChartBtnOk.addEventListener('click', () => {
+            sizeChartModal.classList.add('hidden');
+        });
+    }
+    
+    if (sizeChartModal) {
+        sizeChartModal.addEventListener('click', (e) => {
+            if (e.target === sizeChartModal) {
+                sizeChartModal.classList.add('hidden');
+            }
+        });
     }
 
     // Initialize pricing on startup

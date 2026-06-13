@@ -8,6 +8,8 @@ let currentGarment = 'hoodie';
 let currentFabric = 'cotton';
 let currentColor = '#1b2e3c';
 let currentLighting = 'studio';
+let currentSize = 'm'; // 's', 'm', 'l', 'xl', 'xxl'
+
 
 // Group containing all parts of the garment
 let garmentGroup;
@@ -1174,5 +1176,39 @@ function animateCameraTo(targetY, targetZ, targetLookAtY, duration = 800) {
     updateCam();
 }
 window.animateCameraTo = animateCameraTo;
+
+// Smoothly animate the garment's physical 3D scale on the canvas
+function updateGarmentSize(size) {
+    currentSize = size;
+    if (!garmentGroup) return;
+
+    let targetScaleValue = 1.0;
+    if (size === 's') targetScaleValue = 0.92;
+    else if (size === 'm') targetScaleValue = 1.0;
+    else if (size === 'l') targetScaleValue = 1.08;
+    else if (size === 'xl') targetScaleValue = 1.15;
+    else if (size === 'xxl') targetScaleValue = 1.22;
+
+    const startScale = garmentGroup.scale.x; // scale is uniform
+    const targetScale = targetScaleValue;
+    const startTime = performance.now();
+    const duration = 400; // ms transition duration
+
+    function animateScale() {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        const currentVal = startScale + (targetScale - startScale) * ease;
+        
+        garmentGroup.scale.set(currentVal, currentVal, currentVal);
+
+        if (progress < 1) {
+            requestAnimationFrame(animateScale);
+        }
+    }
+    animateScale();
+}
+window.updateGarmentSize = updateGarmentSize;
+
 
 

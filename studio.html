@@ -262,6 +262,30 @@
                             </div>
                         </div>
 
+                        <!-- Section: CHOOSE SIZE -->
+                        <div class="config-section">
+                            <h3 class="section-title">
+                                <span class="title-icon">📏</span> UKURAN PAKAIAN
+                            </h3>
+                            <div class="size-selector-container">
+                                <div class="size-buttons-row">
+                                    <button class="btn-size-pill" data-size="s">S</button>
+                                    <button class="btn-size-pill active" data-size="m">M</button>
+                                    <button class="btn-size-pill" data-size="l">L</button>
+                                    <button class="btn-size-pill" data-size="xl">XL</button>
+                                    <button class="btn-size-pill" data-size="xxl">XXL</button>
+                                </div>
+                                <button class="btn-size-chart-link" id="sizeChartBtn">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 4px; display: inline-block; vertical-align: middle;">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                    </svg>
+                                    <span>Lihat Tabel Ukuran</span>
+                                </button>
+                            </div>
+                        </div>
+
                         <!-- Section: APPAREL PALETTE SELECTION -->
                         <div class="config-section">
                             <h3 class="section-title">
@@ -532,6 +556,10 @@
                         <span class="summary-label">Decal Branding:</span>
                         <span class="summary-val" id="summaryDecal">FitCraft Preset</span>
                     </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Ukuran Pakaian:</span>
+                        <span class="summary-val" id="summarySize">M</span>
+                    </div>
 
                     <div class="summary-divider"></div>
 
@@ -576,6 +604,60 @@
                 <button class="btn-success-close" id="successCloseBtn">Selesai &amp; Kembali ke Studio</button>
             </div>
 
+        </div>
+    </div>
+
+    <!-- Size Chart Modal -->
+    <div id="sizeChartModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <button class="btn-close-modal" id="closeSizeChartBtn">×</button>
+            <h2 class="modal-title">📏 Tabel Ukuran Pakaian (cm)</h2>
+            <p class="modal-subtitle">Ukuran standard fitting lokal (toleransi ±2 cm).</p>
+            
+            <table class="size-chart-table">
+                <thead>
+                    <tr>
+                        <th>Ukuran</th>
+                        <th>Lebar Dada</th>
+                        <th>Panjang Badan</th>
+                        <th>Panjang Lengan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>S</strong></td>
+                        <td>50 cm</td>
+                        <td>66 cm</td>
+                        <td>59 cm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>M</strong></td>
+                        <td>53 cm</td>
+                        <td>68 cm</td>
+                        <td>61 cm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L</strong></td>
+                        <td>56 cm</td>
+                        <td>70 cm</td>
+                        <td>63 cm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>XL</strong></td>
+                        <td>59 cm</td>
+                        <td>72 cm</td>
+                        <td>65 cm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>XXL</strong></td>
+                        <td>62 cm</td>
+                        <td>74 cm</td>
+                        <td>67 cm</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <button class="btn-submit-order" id="closeSizeChartBtnOk" style="margin-top: 10px; width: 100%;">Tutup</button>
         </div>
     </div>
 
