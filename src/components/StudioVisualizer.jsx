@@ -650,7 +650,7 @@ export default function StudioVisualizer({
 
     if (garmentType === 'hoodie' || garmentType === 'tshirt') {
       const glbPath = garmentType === 'hoodie'
-        ? './assets/models/hoodie3D.glb'
+        ? './assets/models/black hoodie 3d model.glb'
         : './assets/models/black t shirt 3d model.glb';
         
       const gltfLoader = new GLTFLoader();
@@ -710,8 +710,8 @@ export default function StudioVisualizer({
                 originalMaterial.bumpScale = 0.035;
                 originalMaterial.side = THREE.DoubleSide;
                 
-                // If it is the T-shirt GLB, convert its black baseColorTexture to a colorable gray/white texture
-                if (glbPath.includes('t shirt') && originalMaterial.map) {
+                // If it is a black model GLB, convert its black baseColorTexture to a colorable gray/white texture
+                if ((glbPath.includes('t shirt') || glbPath.includes('hoodie')) && originalMaterial.map) {
                   originalMaterial.map = processTshirtTexture(originalMaterial.map);
                 }
                 
