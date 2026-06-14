@@ -169,6 +169,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update canvas garment display name
         canvasGarmentTitle.textContent = model.name;
 
+        // Update sidebar thumbnail SVG
+        const sidebarProductThumbnail = document.getElementById('sidebarProductThumbnail');
+        if (sidebarProductThumbnail) {
+            if (model.garmentType === 'hoodie') {
+                sidebarProductThumbnail.innerHTML = `
+                    <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                        <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill="var(--primary)"/>
+                        <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill="var(--primary)"/>
+                    </svg>`;
+            } else if (model.garmentType === 'tshirt') {
+                sidebarProductThumbnail.innerHTML = `
+                    <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                        <path d="M45 75 L40 210 L160 210 L155 75 L130 70 C125 85 115 90 100 90 C85 90 75 85 70 70 Z" fill="var(--primary)"/>
+                        <path d="M45 75 L70 70 L65 100 L30 118 L22 98 Z" fill="var(--primary)"/>
+                        <path d="M155 75 L130 70 L135 100 L170 118 L178 98 Z" fill="var(--primary)"/>
+                    </svg>`;
+            } else if (model.garmentType === 'sweater') {
+                sidebarProductThumbnail.innerHTML = `
+                    <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                        <path d="M45 75 L32 205 L168 205 L155 75 L130 70 C125 88 115 95 100 95 C85 95 75 88 70 70 Z" fill="var(--primary)"/>
+                        <path d="M45 75 L70 70 L65 100 L24 135 L18 160 L34 165 Z" fill="var(--primary)"/>
+                        <path d="M155 75 L130 70 L135 100 L176 135 L182 160 L166 165 Z" fill="var(--primary)"/>
+                    </svg>`;
+            }
+        }
+
         // Update 3D visualizer garment model
         if (typeof updateGarmentSilhouette === 'function') {
             updateGarmentSilhouette(model.garmentType);
@@ -247,7 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Bind events for each color row
     colorRows.forEach(row => {
         const zone = row.dataset.zone;
-        const dots = row.querySelectorAll('.color-row-dots .color-dot-wrapper:not(.custom-color-picker)');
+        // Support both old (.color-row-dots .color-dot-wrapper) and new (.color-dots-inline .cdot) selectors
+        const dots = row.querySelectorAll('.color-dots-inline .cdot:not(.custom-color-picker), .color-row-dots .color-dot-wrapper:not(.custom-color-picker)');
         const customPickerWrapper = row.querySelector('.custom-color-picker');
         const customPickerInput = row.querySelector('.custom-color-input-field');
 
@@ -318,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const label = document.getElementById(state.nameId);
             if (label) label.textContent = state.name;
 
-            const dots = row.querySelectorAll('.color-row-dots .color-dot-wrapper:not(.custom-color-picker)');
+            const dots = row.querySelectorAll('.color-dots-inline .cdot:not(.custom-color-picker), .color-row-dots .color-dot-wrapper:not(.custom-color-picker)');
             const customPickerWrapper = row.querySelector('.custom-color-picker');
             const customPickerInput = row.querySelector('.custom-color-input-field');
 
@@ -1081,6 +1108,45 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initialize pricing on startup
-    updatePrice();
+    // Parse URL parameter on load to set initial model
+    const urlParams = new URLSearchParams(window.location.search);
+    const modelParam = urlParams.get('model');
+    if (modelParam) {
+        const foundIndex = modelOptions.findIndex(m => m.garmentType === modelParam.toLowerCase() || m.id === modelParam.toLowerCase());
+        if (foundIndex !== -1) {
+            currentModelIndex = foundIndex;
+        }
+    }
+
+    // Initialize display on startup
+    updateCarouselDisplay();
+
+    // --- RIGHT SIDEBAR TABS ---
+    const rightTabBtns = document.querySelectorAll('.sidebar-tab-btn');
+    const rightTabPanes = document.querySelectorAll('.sidebar-tab-pane');
+    
+    rightTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            rightTabBtns.forEach(b => b.classList.remove('active'));
+            rightTabPanes.forEach(p => p.classList.remove('active'));
+            
+            btn.classList.add('active');
+            const targetPane = document.getElementById(btn.dataset.sidebarTab);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+        });
+    });
+
+    // --- LEFT SIDEBAR SHORTCUTS ---
+    const shortcutBtns = document.querySelectorAll('.btn-shortcut-action');
+    shortcutBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetTab = btn.dataset.shortcutTab;
+            const correspondingTabBtn = document.querySelector(`.sidebar-tab-btn[data-sidebar-tab="${targetTab}"]`);
+            if (correspondingTabBtn) {
+                correspondingTabBtn.click();
+            }
+        });
+    });
 });

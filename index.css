@@ -51,6 +51,13 @@ body.dark-theme {
                       radial-gradient(circle at 20% 80%, rgba(27, 46, 60, 0.35) 0%, transparent 60%);
 }
 
+/* Dark mode: header must be visually distinct from sidebars */
+body.dark-theme .app-header {
+    background-color: #060a0e;
+    border-bottom: 1px solid rgba(82, 140, 102, 0.18);
+    box-shadow: 0 1px 0 rgba(82, 140, 102, 0.1), 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -96,12 +103,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 28px;
-    background-color: var(--bg-card);
-    border-bottom: 1px solid var(--border-color);
-    z-index: 10;
-    height: 64px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    padding: 0 28px;
+    background-color: #fafbfc;
+    border-bottom: 2px solid #e8eceb;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    z-index: 20;
+    height: 60px;
+    flex-shrink: 0;
+    position: relative;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .header-left {
@@ -1646,8 +1656,31 @@ input:checked + .slider-toggle:before {
     transform: scale(1.05);
 }
 
-.btn-carousel-nav:active {
-    transform: scale(0.95);
+.btn-view-catalog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: transparent;
+    border: 1px dashed var(--border-color);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-view-catalog:hover {
+    background: var(--bg-panel);
+    border-style: solid;
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 /* ==========================================================================
@@ -2622,7 +2655,7 @@ body.dark-theme .btn-cam-preset:hover {
     flex-direction: column;
     gap: 18px;
     background-color: var(--bg-card);
-    padding: 16px;
+    padding: 14px 12px;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
     margin-top: 4px;
@@ -2658,19 +2691,21 @@ body.dark-theme .btn-cam-preset:hover {
 
 .color-row-dots {
     display: flex;
-    gap: 6px;
+    gap: 5px;
     flex-wrap: wrap;
     align-items: center;
+    padding-bottom: 3px; /* Prevent active outline clip */
 }
 
 .color-row-dots .color-dot-wrapper {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 .color-row-dots .color-dot-wrapper::after {
-    width: 15px;
-    height: 15px;
+    width: 12px;
+    height: 12px;
 }
 
 .color-row-dots .color-dot-wrapper .color-tooltip {
@@ -2689,14 +2724,296 @@ body.dark-theme .btn-cam-preset:hover {
     background: var(--dot-color, linear-gradient(135deg, #ef4444, #f59e0b, #10b981, #3b82f6, #8b5cf6, #ec4899));
     content: '';
     display: block;
-    width: 15px;
-    height: 15px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
 }
 
 .color-row-dots .custom-color-picker.active {
     border-color: var(--primary);
     box-shadow: 0 0 0 1px var(--primary);
+}
+
+/* ==========================================================================
+   REDESIGN MODERN EDITOR UI LAYOUTS
+   ========================================================================== */
+
+/* Left Sidebar: Active Product Card */
+.product-info-card {
+    display: flex;
+    align-items: center;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    gap: 12px;
+    transition: all 0.25s ease;
+    margin-top: 6px;
+}
+
+.product-info-card:hover {
+    border-color: rgba(82, 140, 102, 0.25);
+    background: var(--bg-card);
+}
+
+.product-info-card-left {
+    width: 48px;
+    height: 58px;
+    background: var(--bg-app);
+    border-radius: 8px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background-color 0.25s ease;
+}
+
+.product-info-card:hover .product-info-card-left {
+    background-color: var(--primary-light);
+}
+
+.product-info-thumbnail {
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.product-info-card-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.product-info-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.product-info-meta .model-category {
+    font-size: 8px;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--text-muted);
+}
+
+.product-info-meta .model-title {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 2px 0;
+}
+
+.product-info-meta .model-price {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.btn-change-garment {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--primary-light);
+    border: 1px solid rgba(82, 140, 102, 0.15);
+    border-radius: 6px;
+    color: var(--primary);
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+}
+
+.btn-change-garment:hover {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+/* Left Sidebar: Quick Shortcuts List */
+.quick-shortcuts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.btn-shortcut-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.btn-shortcut-action svg {
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+}
+
+.btn-shortcut-action:hover {
+    background: var(--primary-light);
+    border-color: rgba(82, 140, 102, 0.25);
+    color: var(--primary);
+}
+
+.btn-shortcut-action:hover svg {
+    color: var(--primary);
+}
+
+/* Right Sidebar: Tabs Navigation */
+.sidebar-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 16px;
+    background: rgba(0, 0, 0, 0.015);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    padding: 4px;
+    gap: 4px;
+}
+
+body.dark-theme .sidebar-tabs {
+    background: rgba(255, 255, 255, 0.015);
+}
+
+.sidebar-tab-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: none;
+}
+
+.sidebar-tab-btn:hover {
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+body.dark-theme .sidebar-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.sidebar-tab-btn.active {
+    color: var(--primary);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-sm);
+}
+
+body.dark-theme .sidebar-tab-btn.active {
+    background: var(--bg-app);
+}
+
+/* Tab Panes */
+.sidebar-tab-pane {
+    display: none;
+}
+
+.sidebar-tab-pane.active {
+    display: block;
+}
+
+/* Redefine Camera Presets Panel (Vertical List of outline cards) */
+.camera-presets-panel {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+}
+
+.btn-cam-preset {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    width: 54px;
+    height: 64px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-sm);
+    padding: 6px;
+    text-transform: uppercase;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    min-width: unset;
+    text-align: center;
+}
+
+.btn-cam-preset svg {
+    opacity: 0.6;
+    transition: all 0.25s ease;
+    color: var(--text-secondary);
+}
+
+.btn-cam-preset:hover {
+    border-color: rgba(82, 140, 102, 0.4);
+    color: var(--primary);
+    transform: translateX(4px);
+    background: var(--bg-panel);
+}
+
+.btn-cam-preset:hover svg {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.btn-cam-preset.active {
+    background: var(--bg-card);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(82, 140, 102, 0.12);
+}
+
+.btn-cam-preset.active svg {
+    opacity: 1;
+    color: var(--primary);
+}
+
+/* Green background color override for primary button customizer elements */
+.btn-checkout, .btn-checkout-primary {
+    background-color: var(--primary) !important;
+}
+
+.btn-checkout:hover, .btn-checkout-primary:hover {
+    background-color: var(--primary-hover) !important;
 }
 
 
