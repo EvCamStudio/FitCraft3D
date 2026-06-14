@@ -1221,5 +1221,54 @@ function updateGarmentSize(size) {
 }
 window.updateGarmentSize = updateGarmentSize;
 
+// Expose camera transition helper globally
+function transitionCameraTo(targetX, targetY, targetZ, targetLookAtY = 0, duration = 800) {
+    if (!camera || !controls) return;
+    
+    // Disable controls during camera auto-movement to prevent fighting
+    controls.enabled = false;
+    
+    // Disable auto-rotate
+    autoRotate = false;
+    const rotateToggle = document.getElementById('rotateToggle');
+    const rotateStatusText = document.getElementById('rotateStatus');
+    if (rotateToggle && rotateStatusText) {
+        rotateToggle.checked = false;
+        rotateStatusText.textContent = 'OFF';
+    }
+    
+    const startTime = performance.now();
+    const startX = camera.position.x;
+    const startY = camera.position.y;
+    const startZ = camera.position.z;
+    const startLookAtY = controls.target.y;
+    
+    function updateCam() {
+        const elapsed = performance.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        
+        camera.position.x = startX + (targetX - startX) * ease;
+        camera.position.y = startY + (targetY - startY) * ease;
+        camera.position.z = startZ + (targetZ - startZ) * ease;
+        
+        controls.target.y = startLookAtY + (targetLookAtY - startLookAtY) * ease;
+        controls.target.x = 0;
+        controls.target.z = 0;
+        
+        controls.update();
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateCam);
+        } else {
+            controls.enabled = true;
+        }
+    }
+    
+    updateCam();
+}
+window.transitionCameraTo = transitionCameraTo;
+
+
 
 

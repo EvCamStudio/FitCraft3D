@@ -506,16 +506,41 @@ input:checked + .slider-toggle:before {
     text-align: center;
 }
 
-/* SIDEBAR REGION (RIGHT) */
+/* SIDEBAR REGION (LEFT & RIGHT) */
 .sidebar-section {
-    width: 380px;
+    width: 330px;
     background-color: var(--bg-panel);
     backdrop-filter: blur(16px);
-    border-left: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     z-index: 5;
+    height: 100%;
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.sidebar-section.sidebar-left {
+    border-right: 1px solid var(--border-color);
+    animation: fadeInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sidebar-section.sidebar-right {
+    border-left: 1px solid var(--border-color);
     animation: fadeInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
 .sidebar-tabs {
@@ -2528,5 +2553,151 @@ body.dark-theme .logo-badge {
 .size-chart-table tr:hover td {
     background-color: var(--bg-app);
 }
+
+/* --- 3-COLUMN LAYOUT AND CAMERA PRESETS --- */
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* CAMERA PRESETS (GLASSMORPHIC VIEWPORT CONTROL) */
+.camera-presets-panel {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+    background: var(--bg-panel);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-cam-preset {
+    background: none;
+    border: none;
+    padding: 8px 14px;
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    text-align: left;
+    transition: all 0.2s ease;
+    min-width: 80px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-cam-preset:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.btn-cam-preset.active {
+    background-color: var(--primary);
+    color: #ffffff;
+}
+
+body.dark-theme .btn-cam-preset:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* SIMULTANEOUS COLOR ROWS */
+.zone-color-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background-color: var(--bg-card);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    margin-top: 4px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.color-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.color-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.color-row-label {
+    font-family: var(--font-heading);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.color-row-value {
+    font-size: 9px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.color-row-dots {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.color-row-dots .color-dot-wrapper {
+    width: 24px;
+    height: 24px;
+}
+
+.color-row-dots .color-dot-wrapper::after {
+    width: 15px;
+    height: 15px;
+}
+
+.color-row-dots .color-dot-wrapper .color-tooltip {
+    bottom: 30px;
+    font-size: 8px;
+}
+
+/* Custom color picker wrapper */
+.color-row-dots .custom-color-picker {
+    position: relative;
+    overflow: hidden;
+    border: 1.5px solid var(--border-color);
+}
+
+.color-row-dots .custom-color-picker::after {
+    background: var(--dot-color, linear-gradient(135deg, #ef4444, #f59e0b, #10b981, #3b82f6, #8b5cf6, #ec4899));
+    content: '';
+    display: block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.color-row-dots .custom-color-picker.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 1px var(--primary);
+}
+
 
 

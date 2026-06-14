@@ -214,14 +214,82 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- COLOR PALETTE SELECTOR ---
-    const customColorDot = document.getElementById('customColorDot');
-    const customColorInput = document.getElementById('customColorInput');
-    const hexColorInput = document.getElementById('hexColorInput');
-    const recentColorsContainer = document.getElementById('recentColorsContainer');
-    const recentColorsGrid = document.getElementById('recentColorsGrid');
+    // --- SIMULTANEOUS COLOR SELECTION LOGIC ---
+    const colorRows = document.querySelectorAll('.color-row');
 
-    let recentColors = []; // Stores up to 4 custom colors
+    function updateZoneColor(zone, hex, name) {
+        if (zone === 'body') {
+            colorBodyHex = hex;
+            colorBodyName = name;
+            const label = document.getElementById('bodyColorName');
+            if (label) label.textContent = name;
+        } else if (zone === 'sleeves') {
+            colorSleevesHex = hex;
+            colorSleevesName = name;
+            const label = document.getElementById('sleevesColorName');
+            if (label) label.textContent = name;
+        } else if (zone === 'collar') {
+            colorCollarHex = hex;
+            colorCollarName = name;
+            const label = document.getElementById('collarColorName');
+            if (label) label.textContent = name;
+        }
+
+        // Update Three.js visualizer color
+        if (typeof updateGarmentColor === 'function') {
+            updateGarmentColor(hex, zone);
+        }
+
+        // Re-calculate pricing/summary
+        updatePrice();
+    }
+
+    // Bind events for each color row
+    colorRows.forEach(row => {
+        const zone = row.dataset.zone;
+        const dots = row.querySelectorAll('.color-row-dots .color-dot-wrapper:not(.custom-color-picker)');
+        const customPickerWrapper = row.querySelector('.custom-color-picker');
+        const customPickerInput = row.querySelector('.custom-color-input-field');
+
+        // Preset color dots
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                // Clear active states
+                dots.forEach(d => d.classList.remove('active'));
+                if (customPickerWrapper) customPickerWrapper.classList.remove('active');
+
+                // Active this dot
+                dot.classList.add('active');
+
+                const hex = dot.dataset.color;
+                const name = dot.dataset.colorName;
+                updateZoneColor(zone, hex, name);
+            });
+        });
+
+        // Custom color input picker
+        if (customPickerInput) {
+            customPickerInput.addEventListener('input', function() {
+                const hex = this.value;
+                
+                // Clear active states
+                dots.forEach(d => d.classList.remove('active'));
+                if (customPickerWrapper) {
+                    customPickerWrapper.classList.add('active');
+                    customPickerWrapper.style.setProperty('--dot-color', hex);
+                }
+
+                const name = 'Kustom (' + hex.toUpperCase() + ')';
+                updateZoneColor(zone, hex, name);
+            });
+
+            customPickerInput.addEventListener('change', function() {
+                const hex = this.value;
+                const name = 'Kustom (' + hex.toUpperCase() + ')';
+                updateZoneColor(zone, hex, name);
+            });
+        }
+    });
 
     const colorTreeMap = {
         '#1b2e3c': 'Tech Navy (Tren SaaS)',
@@ -234,250 +302,50 @@ document.addEventListener('DOMContentLoaded', () => {
         '#121212': 'Obsidian Black (Tren Cyberpunk)'
     };
 
-    // Helper to update color for the active zone
-    function updateActiveZoneColor(hex, name) {
-        if (activeColorZone === 'body') {
-            colorBodyHex = hex;
-            colorBodyName = name;
-        } else if (activeColorZone === 'sleeves') {
-            colorSleevesHex = hex;
-            colorSleevesName = name;
-        } else if (activeColorZone === 'collar') {
-            colorCollarHex = hex;
-            colorCollarName = name;
-        }
+    // Helper to synchronize dot active classes with state hex values
+    function syncColorDotsWithState() {
+        const zones = {
+            body: { hex: colorBodyHex, name: colorBodyName, nameId: 'bodyColorName' },
+            sleeves: { hex: colorSleevesHex, name: colorSleevesName, nameId: 'sleevesColorName' },
+            collar: { hex: colorCollarHex, name: colorCollarName, nameId: 'collarColorName' }
+        };
 
-        // Update color name text display
-        selectedColorDisplay.textContent = name;
+        Object.keys(zones).forEach(zone => {
+            const row = document.querySelector(`.color-row[data-zone="${zone}"]`);
+            if (!row) return;
 
-        // Sync with hex text input
-        hexColorInput.value = hex.substring(1).toUpperCase();
+            const state = zones[zone];
+            const label = document.getElementById(state.nameId);
+            if (label) label.textContent = state.name;
 
-        // Update 3D visualizer garment color for this specific zone
-        if (typeof updateGarmentColor === 'function') {
-            updateGarmentColor(hex, activeColorZone);
-        }
-    }
+            const dots = row.querySelectorAll('.color-row-dots .color-dot-wrapper:not(.custom-color-picker)');
+            const customPickerWrapper = row.querySelector('.custom-color-picker');
+            const customPickerInput = row.querySelector('.custom-color-input-field');
 
-    // Switch between color zones
-    zonePills.forEach(pill => {
-        pill.addEventListener('click', () => {
-            zonePills.forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-            activeColorZone = pill.dataset.zone;
-            
-            // Sync UI controls with the colors of the newly active zone
-            let hex, name;
-            if (activeColorZone === 'body') {
-                hex = colorBodyHex;
-                name = colorBodyName;
-            } else if (activeColorZone === 'sleeves') {
-                hex = colorSleevesHex;
-                name = colorSleevesName;
-            } else if (activeColorZone === 'collar') {
-                hex = colorCollarHex;
-                name = colorCollarName;
-            }
-            
-            selectedColorDisplay.textContent = name;
-            hexColorInput.value = hex.substring(1).toUpperCase();
-            
-            // Highlight matching color dot on grid
-            colorDots.forEach(d => {
-                if (d.id === 'customColorDot') return;
-                if (d.dataset.color.toLowerCase() === hex.toLowerCase()) {
+            let matchedPreset = false;
+            dots.forEach(d => {
+                if (d.dataset.color.toLowerCase() === state.hex.toLowerCase()) {
                     d.classList.add('active');
+                    matchedPreset = true;
                 } else {
                     d.classList.remove('active');
                 }
             });
-            
-            // Sync custom color picker dot background color
-            if (colorTreeMap.hasOwnProperty(hex.toLowerCase())) {
-                customColorDot.classList.remove('active');
-            } else {
-                customColorDot.classList.add('active');
-                customColorDot.style.setProperty('--dot-color', hex);
-                customColorInput.value = hex;
-            }
-            
-            // Re-highlight matching recent color dot
-            const recentDots = recentColorsGrid.querySelectorAll('.recent-color-dot');
-            recentDots.forEach(rd => {
-                if (rd.dataset.color.toLowerCase() === hex.toLowerCase()) {
-                    rd.classList.add('active');
+
+            if (customPickerWrapper) {
+                if (!matchedPreset) {
+                    customPickerWrapper.classList.add('active');
+                    customPickerWrapper.style.setProperty('--dot-color', state.hex);
+                    if (customPickerInput) customPickerInput.value = state.hex;
                 } else {
-                    rd.classList.remove('active');
+                    customPickerWrapper.classList.remove('active');
                 }
-            });
-        });
-    });
-
-    function addRecentColor(hex) {
-        const lowerHex = hex.toLowerCase();
-        
-        // Skip if this color is one of the default preset colors
-        if (colorTreeMap.hasOwnProperty(lowerHex)) {
-            // Deactivate active indicators on recent colors
-            const dots = recentColorsGrid.querySelectorAll('.recent-color-dot');
-            dots.forEach(d => d.classList.remove('active'));
-            return;
-        }
-
-        // Remove from current index if it already exists (to push to front)
-        const index = recentColors.indexOf(lowerHex);
-        if (index > -1) {
-            recentColors.splice(index, 1);
-        }
-
-        // Prepend to list
-        recentColors.unshift(lowerHex);
-
-        // Keep maximum of 4 custom colors in history
-        if (recentColors.length > 4) {
-            recentColors.pop();
-        }
-
-        // Re-render recent colors
-        renderRecentColors();
-    }
-
-    function renderRecentColors() {
-        recentColorsGrid.innerHTML = '';
-        
-        if (recentColors.length === 0) {
-            recentColorsContainer.classList.add('hidden');
-            return;
-        }
-
-        recentColorsContainer.classList.remove('hidden');
-
-        recentColors.forEach(color => {
-            const dot = document.createElement('button');
-            dot.className = 'recent-color-dot';
-            dot.style.setProperty('--recent-color', color);
-            dot.dataset.color = color;
-            
-            // Highlight active if current hex matches
-            const currentHex = '#' + hexColorInput.value.toLowerCase();
-            if (currentHex === color) {
-                dot.classList.add('active');
             }
-
-            dot.addEventListener('click', () => {
-                // Clear active states from presets and custom picker
-                colorDots.forEach(d => d.classList.remove('active'));
-                customColorDot.classList.remove('active');
-                
-                // Set this dot as active
-                const dots = recentColorsGrid.querySelectorAll('.recent-color-dot');
-                dots.forEach(d => d.classList.remove('active'));
-                dot.classList.add('active');
-
-                // Update active zone color
-                const name = 'Kustom (' + color.toUpperCase() + ')';
-                updateActiveZoneColor(color, name);
-            });
-
-            recentColorsGrid.appendChild(dot);
         });
     }
 
-    colorDots.forEach(dot => {
-        if (dot.id === 'customColorDot') return;
-        
-        dot.addEventListener('click', () => {
-            colorDots.forEach(d => d.classList.remove('active'));
-            customColorDot.classList.remove('active');
-            dot.classList.add('active');
-            
-            // Deactivate any active recent color dot
-            const recentDots = recentColorsGrid.querySelectorAll('.recent-color-dot');
-            recentDots.forEach(rd => rd.classList.remove('active'));
-            
-            const hex = dot.dataset.color;
-            const name = dot.dataset.colorName;
-            updateActiveZoneColor(hex, name);
-        });
-    });
-
-    // Custom Color Picker Click Trigger
-    customColorDot.addEventListener('click', () => {
-        customColorInput.click();
-    });
-
-    // Custom Color Picker Input Event (Real-time update)
-    customColorInput.addEventListener('input', function() {
-        const hex = this.value;
-        
-        // Remove active class from presets and add to custom dot
-        colorDots.forEach(d => d.classList.remove('active'));
-        customColorDot.classList.add('active');
-        
-        // Deactivate active indicators on recent colors
-        const recentDots = recentColorsGrid.querySelectorAll('.recent-color-dot');
-        recentDots.forEach(rd => rd.classList.remove('active'));
-        
-        // Set CSS variable to update the dot background color
-        customColorDot.style.setProperty('--dot-color', hex);
-        
-        const name = 'Kustom (' + hex.toUpperCase() + ')';
-        updateActiveZoneColor(hex, name);
-    });
-
-    // Custom Color Picker Change Event (Dialog closed/color selected)
-    customColorInput.addEventListener('change', function() {
-        const hex = this.value;
-        const name = 'Kustom (' + hex.toUpperCase() + ')';
-        updateActiveZoneColor(hex, name);
-        // Add to recent color history
-        addRecentColor(hex);
-    });
-
-    // Hex Code Manual Text Entry
-    hexColorInput.addEventListener('input', function() {
-        // Remove non-hex characters and convert to uppercase in text box
-        let cleanHex = this.value.replace(/[^0-9A-Fa-f]/g, '');
-        this.value = cleanHex.toUpperCase();
-
-        if (cleanHex.length === 6) {
-            const hex = '#' + cleanHex.toLowerCase();
-            
-            // Detect if hex matches one of the preset trends
-            const trendName = colorTreeMap[hex];
-            
-            if (trendName) {
-                // Select preset color dot
-                customColorDot.classList.remove('active');
-                colorDots.forEach(d => {
-                    if (d.dataset.color === hex) {
-                        d.classList.add('active');
-                    } else {
-                        d.classList.remove('active');
-                    }
-                });
-                
-                // Deactivate active indicators on recent colors
-                const recentDots = recentColorsGrid.querySelectorAll('.recent-color-dot');
-                recentDots.forEach(rd => rd.classList.remove('active'));
-
-                updateActiveZoneColor(hex, trendName);
-            } else {
-                // Select custom color dot
-                colorDots.forEach(d => d.classList.remove('active'));
-                customColorDot.classList.add('active');
-                
-                customColorDot.style.setProperty('--dot-color', hex);
-                customColorInput.value = hex;
-                
-                const name = 'Kustom (' + hex.toUpperCase() + ')';
-                updateActiveZoneColor(hex, name);
-
-                // Add to recent color history
-                addRecentColor(hex);
-            }
-        }
-    });
+    // Run initial sync on load
+    syncColorDotsWithState();
 
     // --- LIGHTING PRESETS ---
     lightingButtons.forEach(btn => {
@@ -779,24 +647,8 @@ document.addEventListener('DOMContentLoaded', () => {
             colorCollarHex = collar;
             colorCollarName = `Preset: ${name} (Detail)`;
 
-            // Sync the hex input and tooltip if active zone matches
-            let activeHex = body;
-            let activeName = colorBodyName;
-            if (activeColorZone === 'sleeves') {
-                activeHex = sleeves;
-                activeName = colorSleevesName;
-            } else if (activeColorZone === 'collar') {
-                activeHex = collar;
-                activeName = colorCollarName;
-            }
-            selectedColorDisplay.textContent = activeName;
-            hexColorInput.value = activeHex.substring(1).toUpperCase();
-
-            // Remove active style from normal color dots
-            colorDots.forEach(d => d.classList.remove('active'));
-            customColorDot.classList.remove('active');
-            const recentDots = recentColorsGrid.querySelectorAll('.recent-color-dot');
-            recentDots.forEach(rd => rd.classList.remove('active'));
+            // Sync all color dots in the 3 rows with the new state colors
+            syncColorDotsWithState();
         });
     });
 
@@ -1014,17 +866,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateGarmentColor(colorCollarHex, 'collar');
         }
 
-        let activeHex = colorBodyHex;
-        let activeName = colorBodyName;
-        if (activeColorZone === 'sleeves') {
-            activeHex = colorSleevesHex;
-            activeName = colorSleevesName;
-        } else if (activeColorZone === 'collar') {
-            activeHex = colorCollarHex;
-            activeName = colorCollarName;
-        }
-        selectedColorDisplay.textContent = activeName;
-        hexColorInput.value = activeHex.substring(1).toUpperCase();
+        // Sync all color dots in the 3 rows with loaded state colors
+        syncColorDotsWithState();
 
         // Load decal config
         activeDecalName = design.decal.name;
@@ -1176,6 +1019,65 @@ document.addEventListener('DOMContentLoaded', () => {
         themeToggleBtn.addEventListener('click', () => {
             const isDark = document.body.classList.toggle('dark-theme');
             localStorage.setItem('fitcraft_theme', isDark ? 'dark' : 'light');
+        });
+    }
+
+    // --- CAMERA PRESET CONTROLS ---
+    const camDepan = document.getElementById('camDepan');
+    const camBelakang = document.getElementById('camBelakang');
+    const camSamping = document.getElementById('camSamping');
+    const camDetail = document.getElementById('camDetail');
+    const camPresetBtns = document.querySelectorAll('.btn-cam-preset');
+
+    function setActiveCamPreset(activeBtn) {
+        if (camPresetBtns) {
+            camPresetBtns.forEach(btn => btn.classList.remove('active'));
+        }
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    if (camDepan) {
+        camDepan.addEventListener('click', () => {
+            setActiveCamPreset(camDepan);
+            if (typeof window.transitionCameraTo === 'function') {
+                window.transitionCameraTo(0, 0, 8.2, 0, 800);
+            }
+        });
+    }
+
+    if (camBelakang) {
+        camBelakang.addEventListener('click', () => {
+            setActiveCamPreset(camBelakang);
+            if (typeof window.transitionCameraTo === 'function') {
+                window.transitionCameraTo(0, 0, -8.2, 0, 800);
+            }
+        });
+    }
+
+    if (camSamping) {
+        camSamping.addEventListener('click', () => {
+            setActiveCamPreset(camSamping);
+            if (typeof window.transitionCameraTo === 'function') {
+                window.transitionCameraTo(-8.2, 0, 0, 0, 800);
+            }
+        });
+    }
+
+    if (camDetail) {
+        camDetail.addEventListener('click', () => {
+            setActiveCamPreset(camDetail);
+            if (typeof window.transitionCameraTo === 'function') {
+                window.transitionCameraTo(0, 0.4, 3.6, 0.4, 800);
+            }
+        });
+    }
+
+    const canvasContainer = document.getElementById('canvas-container');
+    if (canvasContainer) {
+        ['mousedown', 'touchstart', 'wheel'].forEach(evtType => {
+            canvasContainer.addEventListener(evtType, () => {
+                setActiveCamPreset(null);
+            });
         });
     }
 
