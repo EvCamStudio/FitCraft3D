@@ -64,7 +64,7 @@ body.dark-theme .app-header {
     padding: 0;
 }
 
-body {
+body.studio-page {
     font-family: var(--font-sans);
     background-color: var(--bg-app);
     color: var(--text-primary);

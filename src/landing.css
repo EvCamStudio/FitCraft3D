@@ -38,7 +38,7 @@
 
 html { scroll-behavior: smooth; }
 
-body {
+body.landing-page {
     font-family: var(--font-sans);
     background-color: var(--obsidian);
     color: var(--text-primary);
