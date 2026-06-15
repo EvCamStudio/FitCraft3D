@@ -1,12 +1,12 @@
 # Product Requirement Document (PRD)
-## FitCraft 3D - Minimalist Customization Studio (Edisi Premium Dual-Page)
+## FitCraft 3D - Real-Time 3D Customization Studio (Vite + React Edition)
 
 ---
 
 ## 1. PENDAHULUAN & LATAR BELAKANG
 **FitCraft 3D** adalah platform visualisasi kustomisasi pakaian 3D berbasis web yang dirancang khusus untuk startup inovatif. Aplikasi ini menghadirkan antarmuka minimalis modern, interaktivitas tinggi, dan performa rendering visual 3D yang lancar langsung di browser tanpa perlu menginstal aplikasi pihak ketiga. 
 
-Edisi Premium ini mengadopsi **Arsitektur Dual-Page** yang memisahkan halaman perkenalan produk (*Landing Page*) dengan ruang kerja desain (*3D Customizer Studio*) untuk performa optimal dan estetika premium sekelas kompetisi desain web modern (Awwwards-quality).
+Edisi Premium ini mengadopsi arsitektur **Vite + React (JavaScript)** yang modular, memisahkan halaman perkenalan produk (*Landing Page*) dengan ruang kerja desain (*3D Customizer Studio*) menggunakan router berbasis state untuk performa optimal dan estetika premium sekelas kompetisi desain web modern (Awwwards-quality).
 
 ---
 
@@ -17,16 +17,19 @@ Edisi Premium ini mengadopsi **Arsitektur Dual-Page** yang memisahkan halaman pe
 
 ---
 
-## 3. ARSITEKTUR HALAMAN (DUAL-PAGE ARCHITECTURE)
-Aplikasi terbagi menjadi dua halaman fisik terpisah untuk optimalisasi beban resource:
-1. **Landing Page (`index.html` + `landing.css` + `landing.js`)**:
+## 3. ARSITEKTUR HALAMAN (REACT SPA ARCHITECTURE)
+Aplikasi ini dikembangkan sebagai React Single-Page Application (SPA) berbasis Vite dengan komponen utama berikut:
+1. **Landing Page Component (`LandingPage.jsx`)**:
    * Desain gelap obsidian bertema premium/luxurious.
-   * Animasi latar belakang gradasi mesh berdenyut.
-   * Efek interaksi premium: tombol magnetik (*magnetic CTA*), efek scroll reveal, dan navigasi smooth scroll anchor.
+   * Efek interaksi premium: scroll reveal (Intersection Observer) dan navigasi landing page yang mulus.
    * Pratinjau hoodie interaktif berbasis SVG swatches (mengubah warna mockup SVG secara real-time).
    * Form login mockup terintegrasi dengan penyimpanan sesi lokal.
-2. **3D Customizer Studio (`studio.html` + `index.css` + `app.js` + `ui.js`)**:
+2. **Products Catalog Component (`ProductsPage.jsx`)**:
+   * Katalog 3 model pakaian dasar (Hoodie, Kaos, Sweater) dengan spesifikasi lengkap.
+   * Efek interaksi kartu glassmorphism dengan spotlight glow yang mengikuti pergerakan kursor mouse.
+3. **3D Customizer Studio Component (`StudioPage.jsx` + `StudioVisualizer.jsx`)**:
    * Workspace Three.js full-screen berdampingan dengan sidebar konfigurasi bertema glassmorphism transparan.
+   * Visualisasi interaktif terfokus penuh pada kanvas 3D tanpa pratinjau 2D flat untuk menjamin pengalaman editor 3D yang modern dan imersif.
    * Tempat utama untuk merancang, mengunggah logo, mengatur ukuran, menyimpan galeri lokal, dan melakukan checkout simulasi.
 
 ---
@@ -34,7 +37,11 @@ Aplikasi terbagi menjadi dua halaman fisik terpisah untuk optimalisasi beban res
 ## 4. KEBUTUHAN FUNGSIONAL (FUNCTIONAL REQUIREMENTS)
 
 ### A. Fitur Visualisasi 3D Real-Time (Core 3D Viewport)
-* **Rendering PBR (Physics-Based Rendering)**: Visualizer mereproduksi efek pencahayaan realistis pada serat kain baju.
+* **Rendering PBR (Physics-Based Rendering)**: Visualizer mereproduksi efek pencahayaan realistis pada serat kain baju menggunakan model GLB berkualitas tinggi.
+* **Pemuatan Model GLB Asinkron**: 
+  * Memuat file model 3D kaos (`black t shirt 3d model.glb`), hoodie (`black hoodie 3d model.glb`), dan sweater (`knitted crewneck sweater 3d model.glb`) secara dinamis.
+  * Menggunakan rotasi Y otomatis sebesar `-Math.PI / 2` agar semua model menghadap tegak lurus ke kamera.
+  * Memiliki toleransi kegagalan (*fallback*) berupa model geometris prosedural apabila aset 3D gagal dimuat.
 * **Navigasi Orbit Kamera**: Pengguna dapat memutar pakaian 360 derajat secara horizontal/vertikal (klik-kiri + geser mouse) dan memperbesar/memperkecil detail (scroll mouse).
 * **Reset & Zoom Cepat**: Tombol kontrol untuk mengatur ulang kamera ke posisi depan default (`Reset View`) atau melakukan zoom dekat ke permukaan kain (`Scale View` / Perbesar).
 * **Jitter-Free Zoom**: Transisi perbesaran kamera yang mulus tanpa getaran kaku dengan mematikan kontrol input sementara dan melakukan *interpolasi lerp* pada titik fokus kamera (`controls.target`) sepanjang animasi.
@@ -45,9 +52,9 @@ Aplikasi terbagi menjadi dua halaman fisik terpisah untuk optimalisasi beban res
 
 ### B. Pemilihan Model Pakaian & Ukuran (Silhouette & Sizing)
 * **Carousel Model Selector**: Menampilkan tombol panah Kiri (`<`) dan Kanan (`>`) untuk memilih:
-  1. *Hoodie Kustom Cozy* (Kategori: Outerwear, Harga Dasar: Rp 349.000).
-  2. *Kaos Kinerja Pas Badan* (Kategori: Atasan, Harga Dasar: Rp 199.000).
-  3. *Sweater Crewneck Klasik* (Kategori: Outerwear, Harga Dasar: Rp 299.000).
+  1. *Hoodie Kustom Cozy* (Outerwear, Rp 349.000) - Memuat model GLB hoodie.
+  2. *Kaos Kinerja Pas Badan* (Atasan, Rp 199.000) - Memuat model GLB kaos.
+  3. *Sweater Crewneck Klasik* (Outerwear, Rp 299.000) - Memuat model GLB sweater.
 * **Size Selector Pills (S, M, L, XL, XXL)**: Tombol pill interaktif di sidebar untuk mengubah ukuran baju.
 * **3D Scale Animation**: Mengubah ukuran model 3D pakaian secara halus menggunakan animasi transisi skala (S = 0.92x, M = 1.0x, L = 1.08x, XL = 1.15x, XXL = 1.22x) demi umpan balik visual yang memuaskan.
 * **Tabel Panduan Ukuran (Size Chart)**: Modal pop-up tabel dimensi pakaian (Lebar Dada x Panjang Badan x Panjang Lengan) dalam centimeter (cm) sebagai referensi fitting lokal.
@@ -56,12 +63,11 @@ Aplikasi terbagi menjadi dua halaman fisik terpisah untuk optimalisasi beban res
 * **Jenis Bahan**:
   * *Katun Premium* (Default, Tekstur matte rajutan katun organik 100%, +Rp 0).
   * *Fleece Tebal* (Tekstur fleece tebal, halus, dan hangat, +Rp 75.000).
-* **Pewarnaan Multi-Bagian (Multi-Zone Coloring)**:
-  * Membagi pewarnaan pakaian menjadi 3 zona terpisah: **Badan** (tubuh utama, kupluk, saku), **Lengan** (kedua sleeves dan manset), dan **Detail** (kerah rib dan tali hoodie).
-* **Pemilih Warna**:
-  * 8 Preset Warna Tren (Tech Navy, Eco Sage, Khaki Zaitun, Creative Coral, Premium Burgundy, Aesthetic Cream, Heather Grey, Obsidian Black).
-  * Input HEX manual dan Color Picker kustom untuk fleksibilitas warna kustom.
-  * *Recent Custom Colors*: Menampilkan maksimal 4 warna kustom yang baru saja diracik oleh pengguna.
+  * Tekstur ini digambar secara prosedural di `<canvas>` saat aplikasi dimuat untuk menjaga performa loading yang sangat ringan tanpa memerlukan aset eksternal.
+* **Pewarnaan Seragam Pakaian (Uniform Clothing Coloring)**:
+  * Menggunakan pemilih warna tunggal terpusat untuk mewarnai seluruh bagian pakaian (badan, lengan, dan detail) secara seragam dan konsisten.
+  * *8 Preset Warna Tren*: Tech Navy, Eco Sage, Khaki Zaitun, Creative Coral, Premium Burgundy, Aesthetic Cream, Heather Grey, Obsidian Black.
+  * Mendukung input HEX manual dan Color Picker kustom untuk fleksibilitas warna kustom.
 
 ### D. Kustomisasi Logo & Branding (Decals & Printing)
 * **Preset Logo**: Menyediakan 4 template logo startup (FitCraft, Nexus AI, Quantum, Apex Tech) yang warnanya otomatis beradaptasi dengan warna dasar baju.
@@ -71,12 +77,13 @@ Aplikasi terbagi menjadi dua halaman fisik terpisah untuk optimalisasi beban res
   * Mengatur ukuran logo (Scale).
   * Mengatur posisi Vertikal (Y) & Horizontal (X).
   * Mengatur kepekatan/transparansi logo (Opacity).
-  * **Interactive Dragging**: Pengguna dapat mengeklik dan menggeser langsung posisi logo pada permukaan baju 3D menggunakan kursor mouse.
+  * **Interactive Dragging (Normal-Conformal Snapping)**: Pengguna dapat mengeklik dan menggeser langsung posisi logo pada permukaan baju 3D. Logo akan secara otomatis menempel pas mengikuti kelengkungan permukaan kain dan menghadap lurus sesuai arah normal permukaan mesh 3D.
+  * **State Preservation**: Posisi stiker 3D tidak akan melompat kembali ke dada depan saat pengguna mengubah ukuran, warna, teks, atau transparansi logo.
 * **Decal Selection Outline**: Garis bantu hijau sage (`decalOutline`) di sekeliling logo saat kursor di-hover atau di-drag untuk memberikan umpan balik desain yang presisi.
 * **Camera Autofocus**: Sudut kamera secara otomatis bergeser dan melakukan zoom-in ke area dada saat pengguna membuka tab Branding & Logo untuk mempermudah penempatan logo, serta kembali ke posisi default saat berpindah tab.
 
 ### E. Galeri Desain & Checkout (Order Management)
-* **Galeri Desain Lokal**: Pengguna dapat menyimpan varian desain mereka ke memori browser lokal (`localStorage`). Desain yang disimpan mencakup jenis baju, bahan, warna tiap zona, ukuran baju, jenis decal, teks kustom, koordinat modifikasi, dan gambar thumbnail.
+* **Galeri Desain Lokal**: Pengguna dapat menyimpan varian desain mereka ke memori browser lokal (`localStorage`). Desain yang disimpan mencakup jenis baju, bahan, warna, ukuran baju, jenis decal, teks kustom, koordinat 3D stiker, dan gambar thumbnail.
 * **Restorasi Desain**: Mengklik kartu desain di galeri akan memulihkan seluruh konfigurasi visual 3D, menyinkronkan tombol slider, dan mengaktifkan pill ukuran yang tepat.
 * **Kalkulasi Dinamis**: Total Harga = Harga Model Terpilih + Tambahan Harga Bahan Premium (Fleece).
 * **Checkout Modal & Success Overlay**: Pop-up konfirmasi ringkasan detail pesanan lengkap dengan input nama, email, instansi, dan penyerahan invoice kode pesanan setelah submit formulir.
@@ -95,13 +102,13 @@ Aplikasi terbagi menjadi dua halaman fisik terpisah untuk optimalisasi beban res
 ## 6. ALUR PENGGUNA (USER FLOW)
 ```mermaid
 graph TD
-    A[Pengguna Membuka Landing Page] --> B[Melihat Produk & Preview Hoodie SVG]
+    A[Pengguna Membuka Landing Page] --> B[Melihat Produk & Desain Mockup]
     B --> C[Klik CTA / Masuk Studio]
     C --> D[Pilih Model Kaos/Sweater/Hoodie di Carousel]
     D --> E[Pilih Ukuran S/M/L/XL/XXL & Bahan Kain]
     E --> F[Buka Tab Branding - Kamera Autofocus Zoom]
     F --> G[Unggah Logo Brand Kustom / Gunakan Preset & Teks]
-    G --> H[Atur Posisi Logo dengan Drag 3D Langsung - Tampil Outline Hijau]
+    G --> H[Atur Posisi Logo dengan Drag 3D Langsung - Menempel Mengikuti Lekukan Mesh]
     H --> I[Simpan ke Galeri Lokal untuk Bandingkan Desain]
     I --> J[Klik Pesan Desain Ini - Tampil Ringkasan & Form]
     J --> K[Isi Formulir Nama, Instansi, & Email]
@@ -111,7 +118,8 @@ graph TD
 ---
 
 ## 7. TEKNOLOGI PENGEMBANGAN (TECH STACK)
-* **Struktur Halaman**: HTML5 dengan tag semantik.
+* **Runtime & Framework**: React 19 (React-DOM) + JavaScript.
+* **Build Tool & Server**: Vite 8.
 * **Desain UI/UX**: CSS3 Modern (Vanilla CSS) dengan Variabel HSL untuk kemudahan tema warna gelap/terang.
-* **Engine Grafis 3D**: Three.js & OrbitControls (WebGL API) via CDN.
-* **Logika Halaman**: Vanilla Javascript ES6 modular tanpa framework eksternal.
+* **Engine Grafis 3D**: Three.js (`three` npm package) & OrbitControls.
+* **Kualitas & Linter**: ESLint (Flat Config).

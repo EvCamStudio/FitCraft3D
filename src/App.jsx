@@ -10,6 +10,10 @@ function App() {
     if (modelParam && ['hoodie', 'tshirt', 'sweater'].includes(modelParam.toLowerCase())) {
       return modelParam.toLowerCase();
     }
+    const savedModel = localStorage.getItem('fitcraft_active_model');
+    if (savedModel && ['hoodie', 'tshirt', 'sweater'].includes(savedModel)) {
+      return savedModel;
+    }
     return 'hoodie';
   });
 
@@ -19,19 +23,27 @@ function App() {
     if (modelParam && ['hoodie', 'tshirt', 'sweater'].includes(modelParam.toLowerCase())) {
       return 'studio';
     }
+    const savedView = localStorage.getItem('fitcraft_active_view');
+    if (savedView) {
+      return savedView;
+    }
     return 'landing';
   });
 
   const navigate = (targetView, model = null) => {
     if (model) {
       setInitialModel(model);
+      localStorage.setItem('fitcraft_active_model', model);
     }
     setView(targetView);
+    localStorage.setItem('fitcraft_active_view', targetView);
+    
     // Update URL history state for visual consistency
     if (targetView !== 'studio') {
       window.history.pushState({}, '', window.location.pathname);
-    } else if (model) {
-      window.history.pushState({}, '', `?model=${model}`);
+    } else {
+      const activeModel = model || initialModel || localStorage.getItem('fitcraft_active_model') || 'hoodie';
+      window.history.pushState({}, '', `?model=${activeModel}`);
     }
   };
 

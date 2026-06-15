@@ -55,7 +55,6 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
   const [garmentType, setGarmentType] = useState(initialModel);
   const [fabric, setFabric] = useState('cotton'); // 'cotton' | 'fleece'
   const [size, setSize] = useState('M'); // 'S' | 'M' | 'L' | 'XL' | 'XXL'
-  const [viewMode, setViewMode] = useState('3d'); // '3d' | '2d'
 
   // Colors state
   const [colors, setColors] = useState({
@@ -89,7 +88,6 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
   const [autoRotate, setAutoRotate] = useState(true);
   const [isScaleView, setIsScaleView] = useState(false);
   const [isLightIntensityExtra, setIsLightIntensityExtra] = useState(false);
-  const [fps, setFps] = useState(60);
   const [cameraAngle, setCameraAngle] = useState('depan');
   const [activeTab, setActiveTab] = useState('tab-right-design');
 
@@ -135,44 +133,33 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
     };
   }, []);
 
+  // Sync garmentType with localStorage and URL query params
+  useEffect(() => {
+    localStorage.setItem('fitcraft_active_model', garmentType);
+    localStorage.setItem('fitcraft_active_view', 'studio');
+    window.history.replaceState({}, '', `?model=${garmentType}`);
+  }, [garmentType]);
+
   // Pricing formula
   const activeModel = modelOptions.find((m) => m.id === garmentType) || modelOptions[0];
   const fabricPriceAdd = fabric === 'fleece' ? 75000 : 0;
   const totalPrice = activeModel.price + fabricPriceAdd;
 
-  // Carousel controls
-  const handlePrevModel = () => {
-    const currentIdx = modelOptions.findIndex((m) => m.id === garmentType);
-    const prevIdx = (currentIdx - 1 + modelOptions.length) % modelOptions.length;
-    setGarmentType(modelOptions[prevIdx].id);
-  };
 
-  const handleNextModel = () => {
-    const currentIdx = modelOptions.findIndex((m) => m.id === garmentType);
-    const nextIdx = (currentIdx + 1) % modelOptions.length;
-    setGarmentType(modelOptions[nextIdx].id);
-  };
 
   // Color change handlers
   const handleColorSelect = (zone, hex, name) => {
-    setColors((prev) => ({ ...prev, [zone]: hex }));
-    setColorsName((prev) => ({ ...prev, [zone]: name }));
+    setColors({ body: hex, sleeves: hex, collar: hex });
+    setColorsName({ body: name, sleeves: name, collar: name });
   };
 
   // Custom color picker handlers
   const handleCustomColor = (zone, hex) => {
     const name = `Kustom (${hex.toUpperCase()})`;
-    setColors((prev) => ({ ...prev, [zone]: hex }));
-    setColorsName((prev) => ({ ...prev, [zone]: name }));
+    setColors({ body: hex, sleeves: hex, collar: hex });
+    setColorsName({ body: name, sleeves: name, collar: name });
   };
 
-  // Quick Action Tabs navigation shortcuts
-  const handleShortcutClick = (tabId, triggerUpload = false) => {
-    setActiveTab(tabId);
-    if (triggerUpload && fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
 
   // Camera angles triggers
   const handleCameraAngle = (angle) => {
@@ -232,19 +219,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
     setDecal((prev) => ({ ...prev, ...coords }));
   };
 
-  // Instant theme presets
-  const applyThemePreset = (preset) => {
-    setColors({
-      body: preset.body,
-      sleeves: preset.sleeves,
-      collar: preset.collar
-    });
-    setColorsName({
-      body: `Preset: ${preset.name} (Badan)`,
-      sleeves: `Preset: ${preset.name} (Lengan)`,
-      collar: `Preset: ${preset.name} (Detail)`
-    });
-  };
+
 
   // Saved designs system
   const triggerSaveDesign = () => {
@@ -344,21 +319,10 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
           </div>
         </div>
 
-        {/* Zone Center: Viewport Toggle */}
+        {/* Zone Center: Studio Title */}
         <div className="header-zone-center">
-          <div className="view-toggle-group" id="viewToggleGroup">
-            <button
-              className={`btn-view-toggle ${viewMode === '3d' ? 'active' : ''}`}
-              onClick={() => setViewMode('3d')}
-            >
-              3D View
-            </button>
-            <button
-              className={`btn-view-toggle ${viewMode === '2d' ? 'active' : ''}`}
-              onClick={() => setViewMode('2d')}
-            >
-              2D Flat View
-            </button>
+          <div style={{ fontSize: '11px', fontWeight: 'bold', fontFamily: 'Space Grotesk', letterSpacing: '1.5px', color: '#8c9692' }}>
+            3D REAL-TIME STUDIO
           </div>
         </div>
 
@@ -390,213 +354,90 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
         {/* ── LEFT SIDEBAR ── */}
         <aside className="sidebar-left">
           
-          {/* Active Model Picker */}
-          <div className="sidebar-block" style={{ borderBottom: '1px solid #e8eceb' }}>
-            <div className="sidebar-block-label">Model Aktif</div>
-            <div className="sidebar-product-picker-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-              <div className="header-product-info">
-                <div className="header-product-thumb" id="sidebarProductThumbnail">
-                  {garmentType === 'hoodie' && (
-                    <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-                      <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill="var(--primary, #528c66)" opacity="0.7"/>
-                      <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill="var(--primary, #528c66)" opacity="0.5"/>
-                    </svg>
-                  )}
-                  {garmentType === 'tshirt' && (
-                    <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-                      <path d="M45 75 L40 210 L160 210 L155 75 L130 70 C125 85 115 90 100 90 C85 90 75 85 70 70 Z" fill="var(--primary, #528c66)" opacity="0.7"/>
-                      <path d="M45 75 L70 70 L65 100 L30 118 L22 98 Z" fill="var(--primary, #528c66)" opacity="0.5"/>
-                      <path d="M155 75 L130 70 L135 100 L170 118 L178 98 Z" fill="var(--primary, #528c66)" opacity="0.5"/>
-                    </svg>
-                  )}
-                  {garmentType === 'sweater' && (
-                    <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-                      <path d="M45 75 L32 205 L168 205 L155 75 L130 70 C125 88 115 95 100 95 C85 95 75 88 70 70 Z" fill="var(--primary, #528c66)" opacity="0.7"/>
-                      <path d="M45 75 L70 70 L65 100 L24 135 L18 160 L34 165 Z" fill="var(--primary, #528c66)" opacity="0.5"/>
-                      <path d="M155 75 L130 70 L135 100 L176 135 L182 160 L166 165 Z" fill="var(--primary, #528c66)" opacity="0.5"/>
-                    </svg>
-                  )}
+          <div className="sidebar-scroll-container">
+            {/* Active Model Picker */}
+            <div className="sidebar-block" style={{ borderBottom: '1px solid #e8eceb' }}>
+              <div className="sidebar-block-label">Model Aktif</div>
+              <div className="sidebar-product-picker-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                <div className="header-product-info">
+                  <div className="header-product-thumb" id="sidebarProductThumbnail">
+                    {garmentType === 'hoodie' && (
+                      <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+                        <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill="var(--primary, #528c66)" opacity="0.7"/>
+                        <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill="var(--primary, #528c66)" opacity="0.5"/>
+                      </svg>
+                    )}
+                    {garmentType === 'tshirt' && (
+                      <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+                        <path d="M45 75 L40 210 L160 210 L155 75 L130 70 C125 85 115 90 100 90 C85 90 75 85 70 70 Z" fill="var(--primary, #528c66)" opacity="0.7"/>
+                        <path d="M45 75 L70 70 L65 100 L30 118 L22 98 Z" fill="var(--primary, #528c66)" opacity="0.5"/>
+                        <path d="M155 75 L130 70 L135 100 L170 118 L178 98 Z" fill="var(--primary, #528c66)" opacity="0.5"/>
+                      </svg>
+                    )}
+                    {garmentType === 'sweater' && (
+                      <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+                        <path d="M45 75 L32 205 L168 205 L155 75 L130 70 C125 88 115 95 100 95 C85 95 75 88 70 70 Z" fill="var(--primary, #528c66)" opacity="0.7"/>
+                        <path d="M45 75 L70 70 L65 100 L24 135 L18 160 L34 165 Z" fill="var(--primary, #528c66)" opacity="0.5"/>
+                        <path d="M155 75 L130 70 L135 100 L176 135 L182 160 L166 165 Z" fill="var(--primary, #528c66)" opacity="0.5"/>
+                      </svg>
+                    )}
+                  </div>
+                  <div className="header-product-meta">
+                    <span className="header-product-name" id="carouselModelTitle">{activeModel.name}</span>
+                    <span className="header-product-sub">PBR v4 · <span id="activeGarmentName">{activeModel.category}</span></span>
+                  </div>
                 </div>
-                <div className="header-product-meta">
-                  <span className="header-product-name" id="carouselModelTitle">{activeModel.name}</span>
-                  <span className="header-product-sub">PBR v4 · <span id="activeGarmentName">{activeModel.category}</span></span>
+                <button onClick={() => onNavigate('products')} className="btn-ubah-produk" title="Ubah Produk">
+                  <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/>
+                  </svg>
+                  Ubah
+                </button>
+              </div>
+            </div>
+
+
+
+            {/* Material selection block */}
+            <div className="sidebar-block">
+              <div className="sidebar-block-label">Pilih Bahan Kain</div>
+              <div className="fabric-cards-group" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                <div
+                  className={`fabric-card ${fabric === 'cotton' ? 'active' : ''}`}
+                  onClick={() => setFabric('cotton')}
+                >
+                  <div className="fabric-card-title">Cotton Premium</div>
+                  <div className="fabric-card-price">Termasuk</div>
+                </div>
+                <div
+                  className={`fabric-card ${fabric === 'fleece' ? 'active' : ''}`}
+                  onClick={() => setFabric('fleece')}
+                >
+                  <div className="fabric-card-title">Heavy Fleece</div>
+                  <div className="fabric-card-price">+Rp 75.000</div>
                 </div>
               </div>
-              <button onClick={() => onNavigate('products')} className="btn-ubah-produk" title="Ubah Produk">
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/>
-                </svg>
-                Ubah
+            </div>
+
+            {/* Size Select pills & Size Guide */}
+            <div className="sidebar-block" style={{ borderBottom: 'none' }}>
+              <div className="sidebar-block-label">Pilih Ukuran</div>
+              <div style={{ display: 'flex', gap: '6px', width: '100%', marginBottom: '10px' }}>
+                {['S', 'M', 'L', 'XL', 'XXL'].map((sz) => (
+                  <button
+                    key={sz}
+                    className={`btn-size-pill ${size === sz ? 'active' : ''}`}
+                    onClick={() => setSize(sz)}
+                    style={{ flex: 1 }}
+                  >
+                    {sz}
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => setShowSizeModal(true)} className="btn-save-design" style={{ borderStyle: 'solid', marginTop: 0 }}>
+                📏 Lihat Panduan Ukuran (Size Guide)
               </button>
             </div>
-          </div>
-
-          {/* Model Carousel Switcher */}
-          <div className="sidebar-block" style={{ padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', borderBottom: '1px solid #f0f4f2' }}>
-            <button onClick={handlePrevModel} className="header-back-btn" style={{ width: '30px', height: '30px' }}>&lt;</button>
-            <span style={{ fontSize: '11px', fontWeight: 'bold', fontFamily: 'Space Grotesk' }}>PILIH MODEL</span>
-            <button onClick={handleNextModel} className="header-back-btn" style={{ width: '30px', height: '30px' }}>&gt;</button>
-          </div>
-
-          {/* Material selection block */}
-          <div className="sidebar-block">
-            <div className="sidebar-block-label">Pilih Bahan Kain</div>
-            <div className="fabric-cards-group" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              <div
-                className={`fabric-card ${fabric === 'cotton' ? 'active' : ''}`}
-                onClick={() => setFabric('cotton')}
-              >
-                <div className="fabric-card-title">Cotton Premium</div>
-                <div className="fabric-card-price">Termasuk</div>
-              </div>
-              <div
-                className={`fabric-card ${fabric === 'fleece' ? 'active' : ''}`}
-                onClick={() => setFabric('fleece')}
-              >
-                <div className="fabric-card-title">Heavy Fleece</div>
-                <div className="fabric-card-price">+Rp 75.000</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Color Section */}
-          <div className="sidebar-block">
-            <div className="sidebar-block-label">Pewarnaan Multi-Bagian</div>
-
-            {/* Body color row */}
-            <div className="color-zone-row">
-              <span className="color-zone-name">Badan</span>
-              <div className="color-dots-inline">
-                {presetColorOptions.map((opt, idx) => (
-                  <button
-                    key={idx}
-                    className={`cdot ${colors.body === opt.hex ? 'active' : ''}`}
-                    style={{ '--dot-color': opt.hex }}
-                    onClick={() => handleColorSelect('body', opt.hex, opt.name)}
-                    title={opt.name}
-                  />
-                ))}
-                <div className={`cdot-plus custom-color-picker ${!presetColorOptions.some(o => o.hex === colors.body) ? 'active' : ''}`} style={{ '--dot-color': colors.body }} title="Warna Kustom">
-                  <input
-                    type="color"
-                    className="custom-color-input-field"
-                    value={colors.body}
-                    onChange={(e) => handleCustomColor('body', e.target.value)}
-                  />
-                  <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </div>
-              </div>
-            </div>
-            <div style={{ fontSize: '9px', color: '#8c9692', marginBottom: '10px', marginTop: '-4px', paddingLeft: '38px' }}>
-              {colorsName.body}
-            </div>
-
-            {/* Sleeves color row */}
-            <div className="color-zone-row">
-              <span className="color-zone-name">Lengan</span>
-              <div className="color-dots-inline">
-                {presetColorOptions.map((opt, idx) => (
-                  <button
-                    key={idx}
-                    className={`cdot ${colors.sleeves === opt.hex ? 'active' : ''}`}
-                    style={{ '--dot-color': opt.hex }}
-                    onClick={() => handleColorSelect('sleeves', opt.hex, opt.name)}
-                    title={opt.name}
-                  />
-                ))}
-                <div className={`cdot-plus custom-color-picker ${!presetColorOptions.some(o => o.hex === colors.sleeves) ? 'active' : ''}`} style={{ '--dot-color': colors.sleeves }} title="Warna Kustom">
-                  <input
-                    type="color"
-                    className="custom-color-input-field"
-                    value={colors.sleeves}
-                    onChange={(e) => handleCustomColor('sleeves', e.target.value)}
-                  />
-                  <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </div>
-              </div>
-            </div>
-            <div style={{ fontSize: '9px', color: '#8c9692', marginBottom: '10px', marginTop: '-4px', paddingLeft: '38px' }}>
-              {colorsName.sleeves}
-            </div>
-
-            {/* Collar/Rib color row */}
-            <div className="color-zone-row">
-              <span className="color-zone-name">Detail</span>
-              <div className="color-dots-inline">
-                {presetColorOptions.map((opt, idx) => (
-                  <button
-                    key={idx}
-                    className={`cdot ${colors.collar === opt.hex ? 'active' : ''}`}
-                    style={{ '--dot-color': opt.hex }}
-                    onClick={() => handleColorSelect('collar', opt.hex, opt.name)}
-                    title={opt.name}
-                  />
-                ))}
-                <div className={`cdot-plus custom-color-picker ${!presetColorOptions.some(o => o.hex === colors.collar) ? 'active' : ''}`} style={{ '--dot-color': colors.collar }} title="Warna Kustom">
-                  <input
-                    type="color"
-                    className="custom-color-input-field"
-                    value={colors.collar}
-                    onChange={(e) => handleCustomColor('collar', e.target.value)}
-                  />
-                  <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </div>
-              </div>
-            </div>
-            <div style={{ fontSize: '9px', color: '#8c9692', marginBottom: '4px', marginTop: '-4px', paddingLeft: '38px' }}>
-              {colorsName.collar}
-            </div>
-          </div>
-
-          {/* Quick Actions / Tab Navigation Short-cuts */}
-          <div className="sidebar-block" style={{ flex: 1, borderBottom: 'none', overflowY: 'auto' }}>
-            <button className="quick-action-item" onClick={() => handleShortcutClick('tab-right-design', true)}>
-              <div className="qa-icon-box">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-              </div>
-              <div className="qa-text">
-                <div className="qa-title">Tambahkan Desain</div>
-                <div className="qa-desc">Upload gambar atau pilih dari gallery</div>
-              </div>
-            </button>
-            <button className="quick-action-item" onClick={() => handleShortcutClick('tab-right-text')}>
-              <div className="qa-icon-box">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-              </div>
-              <div className="qa-text">
-                <div className="qa-title">Tambah Teks</div>
-                <div className="qa-desc">Ketik teks dengan font pilihanmu</div>
-              </div>
-            </button>
-            <button className="quick-action-item" onClick={() => handleShortcutClick('tab-right-design')}>
-              <div className="qa-icon-box">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              </div>
-              <div className="qa-text">
-                <div className="qa-title">Elemen Grafis</div>
-                <div className="qa-desc">Preset logo kustom adaptif</div>
-              </div>
-            </button>
-          </div>
-
-          {/* Size Select pills & Size Guide */}
-          <div className="sidebar-block" style={{ borderBottom: 'none' }}>
-            <div className="sidebar-block-label">Pilih Ukuran</div>
-            <div style={{ display: 'flex', gap: '6px', width: '100%', marginBottom: '10px' }}>
-              {['S', 'M', 'L', 'XL', 'XXL'].map((sz) => (
-                <button
-                  key={sz}
-                  className={`btn-size-pill ${size === sz ? 'active' : ''}`}
-                  onClick={() => setSize(sz)}
-                  style={{ flex: 1 }}
-                >
-                  {sz}
-                </button>
-              ))}
-            </div>
-            <button onClick={() => setShowSizeModal(true)} className="btn-save-design" style={{ borderStyle: 'solid', marginTop: 0 }}>
-              📏 Lihat Panduan Ukuran (Size Guide)
-            </button>
           </div>
 
           {/* Footer Assistance */}
@@ -605,7 +446,6 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
               Bantuan
             </button>
-            <span style={{ fontSize: '10px', color: '#8c9692' }}>v2.0 (React)</span>
           </div>
         </aside>
 
@@ -674,86 +514,24 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
 
             {/* Visualizer Canvas View */}
             <div id="canvas-container" className="canvas-container">
-              {viewMode === '3d' ? (
-                <StudioVisualizer
-                  garmentType={garmentType}
-                  colors={colors}
-                  fabric={fabric}
-                  size={size}
-                  lightingPreset={lightingPreset}
-                  decal={decal}
-                  autoRotate={autoRotate}
-                  isScaleView={isScaleView}
-                  onDecalDrag={handleDecalDrag}
-                  onFpsUpdate={setFps}
-                  exportTrigger={exportTrigger}
-                  onExportComplete={handleExportComplete}
-                />
-              ) : (
-                /* Flat 2D SVG Render View */
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-viewport)', position: 'relative' }}>
-                  <svg style={{ width: '280px', height: '320px', filter: 'drop-shadow(0 12px 30px rgba(0,0,0,0.15))' }} viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx="100" cy="230" rx="55" ry="8" fill="rgba(0,0,0,0.1)"/>
-                    {/* SVG Renderings shaped dynamically */}
-                    {garmentType === 'hoodie' && (
-                      <>
-                        <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill={colors.body}/>
-                        <path d="M45 85 L70 75 L65 100 L20 130 L15 160 L35 165 L50 135 L55 110 Z" fill={colors.sleeves}/>
-                        <path d="M155 85 L130 75 L135 100 L180 130 L185 160 L165 165 L150 135 L145 110 Z" fill={colors.sleeves}/>
-                        <path d="M70 75 C75 55 90 45 100 45 C110 45 125 55 130 75 C125 95 115 105 100 105 C85 105 75 95 70 75Z" fill={colors.collar}/>
-                        <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill={colors.collar}/>
-                        <rect x="70" y="155" width="60" height="30" rx="6" fill="rgba(0,0,0,0.08)"/>
-                      </>
-                    )}
-                    {garmentType === 'tshirt' && (
-                      <>
-                        <path d="M45 75 L40 210 L160 210 L155 75 L130 70 C125 85 115 90 100 90 C85 90 75 85 70 70 Z" fill={colors.body}/>
-                        <path d="M45 75 L70 70 L65 100 L30 118 L22 98 L38 90 Z" fill={colors.sleeves}/>
-                        <path d="M155 75 L130 70 L135 100 L170 118 L178 98 L162 90 Z" fill={colors.sleeves}/>
-                        <path d="M70 70 C75 85 125 85 130 70 C125 80 115 80 100 80 C85 80 75 80 70 70 Z" fill={colors.collar}/>
-                      </>
-                    )}
-                    {garmentType === 'sweater' && (
-                      <>
-                        <path d="M45 75 L32 205 L168 205 L155 75 L130 70 C125 88 115 95 100 95 C85 95 75 88 70 70 Z" fill={colors.body}/>
-                        <path d="M32 205 H168 V213 H32 Z" fill={colors.collar}/>
-                        <path d="M45 75 L70 70 L65 100 L24 135 L18 160 L34 165 L48 140 Z" fill={colors.sleeves}/>
-                        <path d="M18 160 L34 165 L32 171 L16 166 Z" fill={colors.collar}/>
-                        <path d="M155 75 L130 70 L135 100 L176 135 L182 160 L166 165 L152 140 Z" fill={colors.sleeves}/>
-                        <path d="M182 160 L166 165 L168 171 L184 166 Z" fill={colors.collar}/>
-                        <path d="M70 70 C75 82 85 88 100 88 C115 88 125 82 130 70 C125 78 115 78 100 78 C85 78 75 78 70 70 Z" fill={colors.collar}/>
-                      </>
-                    )}
-                    
-                    {/* SVG Flat Decal representation */}
-                    {decal.type !== 'none' && (
-                      <g transform={`translate(${100 + decal.horizontal * 80}, ${120 + decal.vertical * 80}) scale(${decal.scale * 0.75})`}>
-                        <rect x="-20" y="-12" width="40" height="24" rx="4" fill="rgba(255,255,255,0.2)" stroke="rgba(0,0,0,0.15)"/>
-                        {decal.type === 'preset' && (
-                          <text x="0" y="4" textAnchor="middle" fill="#121212" fontSize="7" fontWeight="bold" fontFamily="Space Grotesk">{decal.presetName.toUpperCase()}</text>
-                        )}
-                        {decal.type === 'custom' && (
-                          <text x="0" y="4" textAnchor="middle" fill="#121212" fontSize="7" fontWeight="bold" fontFamily="Space Grotesk">LOGO</text>
-                        )}
-                      </g>
-                    )}
-                  </svg>
-                  <div style={{ position: 'absolute', top: '14px', left: '14px', fontSize: '10px', color: '#8c9692' }}>Flat 2D Vector Preview</div>
-                </div>
-              )}
-
-              {/* Floating garment name tag */}
-              <div className="floating-info-badge">
-                <h2 id="activeGarmentBadge">{activeModel.name}</h2>
-                <div className="badge-stats">
-                  <span>Bahan: <strong>PBR v4</strong></span>
-                  <span>FPS: <strong id="fpsCounter">{fps}</strong></span>
-                </div>
-              </div>
+              <StudioVisualizer
+                garmentType={garmentType}
+                colors={colors}
+                fabric={fabric}
+                size={size}
+                lightingPreset={lightingPreset}
+                decal={decal}
+                autoRotate={autoRotate}
+                isScaleView={isScaleView}
+                onDecalDrag={handleDecalDrag}
+                exportTrigger={exportTrigger}
+                onExportComplete={handleExportComplete}
+              />
             </div>
+          </div>
 
-            {/* Customization Toolbar Wrapper (Floating Bottom Bar) */}
-            <div className="toolbar-container">
+          {/* Customization Toolbar Wrapper (Floating Bottom Bar) */}
+          <div className="toolbar-container">
               <div className="customization-toolbar">
                 {/* Lighting Presets */}
                 <button
@@ -879,9 +657,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
                 Tarik langsung logomu pada visualisator 3D untuk menyesuaikan posisi.
               </div>
             </div>
-
-          </div>
-        </section>
+          </section>
 
         {/* ── RIGHT SIDEBAR ── */}
         <aside className="sidebar-right">
@@ -907,8 +683,9 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
             </button>
           </div>
 
-          {/* Tab Panes */}
-          <div className="right-panel-content">
+          <div className="sidebar-scroll-container">
+            {/* Tab Panes */}
+            <div className="right-panel-content">
             
             {/* DESIGN PANE */}
             {activeTab === 'tab-right-design' && (
@@ -966,28 +743,33 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
 
                 <div className="rpane-divider"></div>
 
-                {/* Instant Theme Colors */}
-                <div className="desain-section-title" style={{ marginBottom: '8px' }}>Tema Warna Instan</div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
-                  {[
-                    { name: 'Earth Sage', body: '#3b6352', sleeves: '#3b6352', collar: '#4a7a65' },
-                    { name: 'Cyber Crimson', body: '#7f1d1d', sleeves: '#121212', collar: '#991b1b' },
-                    { name: 'Minimal Cream', body: '#f7f4eb', sleeves: '#e8e5d8', collar: '#d8d4c3' },
-                    { name: 'SaaS Coral', body: '#1b2e3c', sleeves: '#e27c70', collar: '#e27c70' }
-                  ].map((theme, idx) => (
-                    <button
-                      key={idx}
-                      className="btn-decal-preset"
-                      onClick={() => applyThemePreset(theme)}
-                      style={{ padding: '8px', gap: '4px' }}
-                    >
-                      <div style={{ display: 'flex', gap: '3px' }}>
-                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: theme.body }} />
-                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: theme.sleeves }} />
-                      </div>
-                      <span style={{ fontSize: '8px' }}>{theme.name}</span>
-                    </button>
-                  ))}
+                {/* Pilih Warna Section */}
+                <div className="desain-section-title" style={{ marginBottom: '8px' }}>Pilih Warna Pakaian</div>
+                <div className="color-zone-row" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <span className="color-zone-name" style={{ minWidth: '45px', fontSize: '11px', fontWeight: 'bold', color: '#8c9692' }}>Warna</span>
+                  <div className="color-dots-inline" style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {presetColorOptions.map((opt, idx) => (
+                      <button
+                        key={idx}
+                        className={`cdot ${colors.body === opt.hex ? 'active' : ''}`}
+                        style={{ '--dot-color': opt.hex }}
+                        onClick={() => handleColorSelect('body', opt.hex, opt.name)}
+                        title={opt.name}
+                      />
+                    ))}
+                    <div className={`cdot-plus custom-color-picker ${!presetColorOptions.some(o => o.hex === colors.body) ? 'active' : ''}`} style={{ '--dot-color': colors.body }} title="Warna Kustom">
+                      <input
+                        type="color"
+                        className="custom-color-input-field"
+                        value={colors.body}
+                        onChange={(e) => handleCustomColor('body', e.target.value)}
+                      />
+                      <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ fontSize: '9px', color: '#8c9692', marginBottom: '14px', paddingLeft: '53px' }}>
+                  {colorsName.body}
                 </div>
 
                 <div className="rpane-divider"></div>
@@ -1230,6 +1012,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
                 />
               </div>
             </div>
+          </div>
           </div>
 
           {/* Pricing + Checkout primary button */}

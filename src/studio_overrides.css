@@ -498,6 +498,8 @@
             overflow: hidden;
             position: relative;
             background: #f5f6f8;
+            transition: background-color 0.8s ease; /* override width transitions to fix shifting */
+            min-width: 0; /* prevents flex child expansion */
         }
         body.dark-theme .viewport-section { background: #080b0f; }
 
@@ -559,7 +561,18 @@
         }
         body.dark-theme .cam-thumb-box { background: #080b0f; border-color: rgba(255,255,255,0.07); }
         .cam-angle-btn.active .cam-thumb-box { border-color: #528c66; }
-        .cam-thumb-box svg { opacity: 0.6; }
+        .cam-thumb-box svg {
+            opacity: 0.6;
+            flex-shrink: 0;
+        }
+        .cam-thumb-box svg[viewBox="0 0 200 240"] {
+            width: 36px;
+            height: 44px;
+        }
+        .cam-thumb-box svg[viewBox="0 0 24 24"] {
+            width: 20px;
+            height: 20px;
+        }
         .cam-angle-btn.active .cam-thumb-box svg { opacity: 1; color: #528c66; }
 
         .cam-label {
@@ -635,16 +648,17 @@
         .toolbar-container {
             position: absolute;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: max-content;
+            max-width: 90vw;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
             z-index: 45;
             pointer-events: none;
-            width: auto;
-            max-width: 90vw;
         }
 
         .customization-toolbar {
@@ -659,7 +673,7 @@
             align-items: center;
             gap: 4px;
             pointer-events: auto;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             width: max-content;
         }
         body.dark-theme .customization-toolbar {
@@ -780,11 +794,32 @@
         }
         body.dark-theme .right-tab-btn.active { color: #cdd4d0; }
 
-        /* Right panel scrollable content */
+        /* Right panel scrollable content - scroll handled by parent container */
         .right-panel-content {
+            flex: none;
+            overflow: visible;
+        }
+
+        /* Unified scroll container for both left and right sidebars */
+        .sidebar-scroll-container {
             flex: 1;
             overflow-y: auto;
             scrollbar-width: thin;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-scroll-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-scroll-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+        body.dark-theme .sidebar-scroll-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .right-tab-pane { display: none; padding: 16px; }
@@ -1304,4 +1339,3 @@
         .size-chart-table td { padding: 6px 10px; border-bottom: 1px solid #f0f4f2; }
         body.dark-theme .size-chart-table th { background: rgba(255,255,255,0.05); color: #cdd4d0; }
         body.dark-theme .size-chart-table td { border-bottom-color: rgba(255,255,255,0.04); color: #8a9892; }
-    

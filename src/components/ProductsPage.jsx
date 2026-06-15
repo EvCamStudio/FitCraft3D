@@ -1,24 +1,311 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import '../landing.css';
 import '../products.css';
 
-export default function ProductsPage({ onNavigate }) {
+const products = [
+  {
+    id: 'hoodie',
+    name: 'Hoodie Kustom Cozy',
+    category: 'Outerwear',
+    price: 'Rp 349.000',
+    colors: { body: '#1b2e3c', sleeves: '#1b2e3c', collar: '#2a4050' },
+    desc: 'Hoodie potongan santai dengan kupluk ganda dan saku depan kanguru. Memberikan kenyamanan maksimal dan area cetak logo dada yang luas.',
+    features: [
+      'Fleece Katun Tebal 330 gsm',
+      'Kupluk Ganda (Double Hood)',
+      'Rib Karet di Hem & Lengan'
+    ]
+  },
+  {
+    id: 'tshirt',
+    name: 'Kaos Kinerja Pas Badan',
+    category: 'Atasan',
+    price: 'Rp 199.000',
+    colors: { body: '#3b6352', sleeves: '#3b6352', collar: '#4a7a65' },
+    desc: 'Kaos potongan modern dengan material combed premium yang lembut, sejuk, dan awet. Sangat pas untuk merchandise startup dan seragam kerja harian.',
+    features: [
+      '100% Katun Combed Premium 24s',
+      'Jahitan Rantai Pundak Standar Ekspor',
+      'Kerah Rib Elastis & Anti Melar'
+    ]
+  },
+  {
+    id: 'sweater',
+    name: 'Sweater Crewneck Klasik',
+    category: 'Outerwear',
+    price: 'Rp 299.000',
+    colors: { body: '#7f1d1d', sleeves: '#7f1d1d', collar: '#991b1b' },
+    desc: 'Crewneck klasik dengan detail rib tebal pada kerah, ujung lengan, dan pinggang. Desain minimalis serbaguna, cocok untuk gaya kasual semi-formal.',
+    features: [
+      'Fleece Katun Lembut 280 gsm',
+      'Kerutan Rib Elastis di Leher & Lengan',
+      'Bahan Breathable Hangat & Menyerap Keringat'
+    ]
+  }
+];
+
+function processTshirtTexture(texture) {
+  if (!texture || !texture.image) return texture;
+  const img = texture.image;
+
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width || 1024;
+    canvas.height = img.height || 1024;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imgData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+      const newLuma = Math.min(255, 175 + luma * 1.6);
+
+      data[i] = newLuma;
+      data[i + 1] = newLuma;
+      data[i + 2] = newLuma;
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+
+    const newTexture = new THREE.CanvasTexture(canvas);
+    newTexture.wrapS = texture.wrapS;
+    newTexture.wrapT = texture.wrapT;
+    newTexture.needsUpdate = true;
+    return newTexture;
+  } catch (err) {
+    console.error('Failed to process t-shirt texture:', err);
+    return texture;
+  }
+}
+
+function ProductVisualizer({ garmentType, colors }) {
   const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const stateRef = useRef({ colors, garmentType });
 
   useEffect(() => {
-    document.body.classList.add('landing-page');
+    stateRef.current = { colors, garmentType };
+  }, [colors, garmentType]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // A. Scene & Camera
+    const scene = new THREE.Scene();
+    scene.background = null;
+
+    const camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(0, 0.2, 7.5);
+
+    // B. Renderer
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
+      antialias: true,
+      alpha: true
+    });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+
+    // C. Controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.minDistance = 5;
+    controls.maxDistance = 10;
+    controls.enableZoom = false; // Disable zoom on product showcase card to avoid interfering with body scroll
+    controls.maxPolarAngle = Math.PI / 2 + 0.1;
+    controls.target.set(0, 0.2, 0);
+
+    // D. Garment group
+    const garmentGroup = new THREE.Group();
+    scene.add(garmentGroup);
+
+    // F. Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+    scene.add(ambientLight);
+
+    const mainLight = new THREE.DirectionalLight(0xffffff, 0.85);
+    mainLight.position.set(3, 4, 5);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.set(1024, 1024);
+    mainLight.shadow.bias = -0.001;
+    scene.add(mainLight);
+
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+    fillLight.position.set(-4, 2, 2);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    rimLight.position.set(0, 5, -5);
+    scene.add(rimLight);
+
+    // G. Load GLB
+    let glbPath = '';
+    if (garmentType === 'hoodie') {
+      glbPath = './assets/models/black hoodie 3d model.glb';
+    } else if (garmentType === 'tshirt') {
+      glbPath = './assets/models/black t shirt 3d model.glb';
+    } else if (garmentType === 'sweater') {
+      glbPath = './assets/models/knitted crewneck sweater 3d model.glb';
+    }
+
+    setLoading(true);
+
+    const gltfLoader = new GLTFLoader();
+    let loadedModel;
+
+    gltfLoader.load(
+      glbPath,
+      (gltf) => {
+        loadedModel = gltf.scene;
+
+        const box = new THREE.Box3().setFromObject(loadedModel);
+        const sizeVec = box.getSize(new THREE.Vector3());
+        const centerVec = box.getCenter(new THREE.Vector3());
+
+        loadedModel.position.x += (loadedModel.position.x - centerVec.x);
+        loadedModel.position.y += (loadedModel.position.y - centerVec.y);
+        loadedModel.position.z += (loadedModel.position.z - centerVec.z);
+
+        const targetHeight = 2.1;
+        const scaleFactor = targetHeight / sizeVec.y;
+        loadedModel.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+        loadedModel.rotation.y = -Math.PI / 2;
+        loadedModel.updateMatrixWorld(true);
+
+        loadedModel.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+
+            if (child.material) {
+              const originalMaterial = child.material.clone();
+              const name = (child.name || child.material.name || '').toLowerCase();
+              let targetColor = stateRef.current.colors.body;
+              
+              if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
+                targetColor = stateRef.current.colors.sleeves;
+              } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
+                targetColor = stateRef.current.colors.collar;
+              }
+
+              originalMaterial.color.set(new THREE.Color(targetColor));
+              originalMaterial.roughness = 0.85;
+              originalMaterial.metalness = 0.05;
+              originalMaterial.side = THREE.DoubleSide;
+
+              if (originalMaterial.map) {
+                originalMaterial.map = processTshirtTexture(originalMaterial.map);
+              }
+
+              child.material = originalMaterial;
+            }
+          }
+        });
+
+        garmentGroup.add(loadedModel);
+        garmentGroup.position.y = 0.2;
+        setLoading(false);
+      },
+      undefined,
+      (error) => {
+        console.error('Failed to load GLB on products page:', error);
+        setLoading(false);
+      }
+    );
+
+    // H. Render Loop
+    let animationFrameId;
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+
+      if (garmentGroup && controls.state === -1) { 
+        garmentGroup.rotation.y += 0.005;
+      }
+      
+      controls.update();
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // I. Resize observer
+    const resizeObserver = new ResizeObserver(() => {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+    resizeObserver.observe(container);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      resizeObserver.disconnect();
+      scene.clear();
+      renderer.dispose();
+    };
+  }, [garmentType]);
+
+  return (
+    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {loading && (
+        <div className="visualizer-loader">
+          <div className="spinner"></div>
+        </div>
+      )}
+      <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
+    </div>
+  );
+}
+
+export default function ProductsPage({ onNavigate }) {
+  const containerRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [darkTheme] = useState(() => {
+    return localStorage.getItem('fitcraft_theme') === 'dark';
+  });
+
+  // Sync dark theme state to body class and localStorage
+  useEffect(() => {
+    if (darkTheme) {
+      document.body.classList.add('dark-theme');
+      localStorage.setItem('fitcraft_theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-theme');
+      localStorage.setItem('fitcraft_theme', 'light');
+    }
+  }, [darkTheme]);
+
+  useEffect(() => {
+    document.body.classList.add('products-page-scoped');
 
     // Reveal animations on load
-    const cards = containerRef.current.querySelectorAll('.products-header, .product-card');
-    cards.forEach((card) => {
-      card.classList.add('reveal');
+    const reveals = containerRef.current.querySelectorAll('.products-header, .showcase-container');
+    reveals.forEach((el) => {
+      el.classList.add('reveal');
       setTimeout(() => {
-        card.classList.add('in-view');
+        el.classList.add('in-view');
       }, 50);
     });
 
     return () => {
-      document.body.classList.remove('landing-page');
+      document.body.classList.remove('products-page-scoped');
     };
   }, []);
 
@@ -30,6 +317,8 @@ export default function ProductsPage({ onNavigate }) {
     card.style.setProperty('--mouse-x', `${x}px`);
     card.style.setProperty('--mouse-y', `${y}px`);
   };
+
+  const activeProduct = products[activeIndex];
 
   return (
     <div ref={containerRef} className="products-page-wrapper">
@@ -67,7 +356,7 @@ export default function ProductsPage({ onNavigate }) {
         </div>
       </nav>
 
-      {/* PRODUCTS GRID SECTION */}
+      {/* PRODUCTS SECTION */}
       <main className="products-section">
         <div className="products-header">
           <div className="products-eyebrow">
@@ -79,143 +368,63 @@ export default function ProductsPage({ onNavigate }) {
           </p>
         </div>
 
-        <div className="products-grid">
-          {/* HOODIE CARD */}
-          <div className="product-card" onMouseMove={handleMouseMove}>
-            <div className="product-tag">Outerwear</div>
-            <div className="product-card-visual">
-              <div className="product-svg-wrapper">
-                <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-                  <ellipse cx="100" cy="225" rx="55" ry="8" fill="rgba(0,0,0,0.2)"/>
-                  <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill="#1b2e3c"/>
-                  <path d="M45 85 L70 75 L65 100 L20 130 L15 160 L35 165 L50 135 L55 110 Z" fill="#1b2e3c"/>
-                  <path d="M155 85 L130 75 L135 100 L180 130 L185 160 L165 165 L150 135 L145 110 Z" fill="#1b2e3c"/>
-                  <path d="M70 75 C75 55 90 45 100 45 C110 45 125 55 130 75 C125 95 115 105 100 105 C85 105 75 95 70 75Z" fill="#2a4050"/>
-                  <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill="#2a4050"/>
-                  <rect x="70" y="155" width="60" height="30" rx="6" fill="rgba(0,0,0,0.15)"/>
-                  <rect x="85" y="112" width="30" height="18" rx="3" stroke="rgba(82, 140, 102, 0.4)" strokeDasharray="3 3" strokeWidth="1.5" fill="none"/>
-                  <path d="M80 90 C90 88 110 88 120 92" stroke="rgba(255,255,255,0.08)" strokeWidth="6" strokeLinecap="round"/>
-                </svg>
-              </div>
-            </div>
-            <div className="product-info">
-              <h2 className="product-name">Hoodie Kustom Cozy</h2>
-              <div className="product-price">Rp 349.000</div>
-              <p className="product-desc">Hoodie potongan santai dengan kupluk ganda dan saku depan kanguru. Memberikan kenyamanan maksimal dan area cetak logo dada yang luas.</p>
-              <ul className="product-features-list">
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Fleece Katun Tebal 330 gsm</span>
-                </li>
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Kupluk Ganda (Double Hood)</span>
-                </li>
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Rib Karet di Hem & Lengan</span>
-                </li>
-              </ul>
-              <button onClick={() => onNavigate('studio', 'hoodie')} className="btn-design-now">
-                <span>Desain Sekarang</span>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </button>
+        {/* Unified Premium Showcase Card */}
+        <div className="showcase-container" onMouseMove={handleMouseMove}>
+          
+          {/* Active visual container */}
+          <div className="showcase-visual">
+            <ProductVisualizer garmentType={activeProduct.id} colors={activeProduct.colors} />
+          </div>
+
+          {/* Top-Right category tag inside showcase */}
+          <div className="showcase-top-tag">
+            {activeProduct.category}
+          </div>
+
+          {/* Bottom-Left Information Overlay */}
+          <div className="showcase-info">
+            <span className="showcase-category-eyebrow">MODEL PRODUK AKTIF</span>
+            <h2 className="showcase-title">{activeProduct.name.toUpperCase()}</h2>
+            <div className="showcase-meta-row">
+              <span className="showcase-desc-snippet">{activeProduct.desc}</span>
             </div>
           </div>
 
-          {/* TSHIRT CARD */}
-          <div className="product-card" onMouseMove={handleMouseMove}>
-            <div className="product-tag">Atasan</div>
-            <div className="product-card-visual">
-              <div className="product-svg-wrapper">
-                <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-                  <ellipse cx="100" cy="225" rx="55" ry="8" fill="rgba(0,0,0,0.2)"/>
-                  <path d="M45 75 L40 210 L160 210 L155 75 L130 70 C125 85 115 90 100 90 C85 90 75 85 70 70 Z" fill="#3b6352"/>
-                  <path d="M45 75 L70 70 L65 100 L30 118 L22 98 L38 90 Z" fill="#3b6352"/>
-                  <path d="M155 75 L130 70 L135 100 L170 118 L178 98 L162 90 Z" fill="#3b6352"/>
-                  <path d="M70 70 C75 85 125 85 130 70 C125 80 115 80 100 80 C85 80 75 80 70 70 Z" fill="#4a7a65" stroke="#4a7a65" strokeWidth="2"/>
-                  <rect x="85" y="102" width="30" height="18" rx="3" stroke="rgba(82, 140, 102, 0.4)" strokeDasharray="3 3" strokeWidth="1.5" fill="none"/>
-                  <path d="M80 82 C90 80 110 80 120 84" stroke="rgba(255,255,255,0.08)" strokeWidth="4" strokeLinecap="round"/>
-                </svg>
-              </div>
-            </div>
-            <div className="product-info">
-              <h2 className="product-name">Kaos Kinerja Pas Badan</h2>
-              <div className="product-price">Rp 199.000</div>
-              <p className="product-desc">Kaos potongan modern dengan material combed premium yang lembut, sejuk, dan awet. Sangat pas untuk merchandise startup dan seragam kerja harian.</p>
-              <ul className="product-features-list">
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>100% Katun Combed Premium 24s</span>
-                </li>
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Jahitan Rantai Pundak Standar Ekspor</span>
-                </li>
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Kerah Rib Elastis & Anti Melar</span>
-                </li>
-              </ul>
-              <button onClick={() => onNavigate('studio', 'tshirt')} className="btn-design-now">
-                <span>Desain Sekarang</span>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </button>
-            </div>
+          {/* Bottom-Right Arrow Switcher Controls */}
+          <div className="showcase-nav">
+            <button 
+              onClick={() => setActiveIndex((prev) => (prev - 1 + products.length) % products.length)} 
+              className="showcase-nav-btn" 
+              title="Model Sebelumnya"
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <button 
+              onClick={() => setActiveIndex((prev) => (prev + 1) % products.length)} 
+              className="showcase-nav-btn" 
+              title="Model Berikutnya"
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
           </div>
 
-          {/* SWEATER CARD */}
-          <div className="product-card" onMouseMove={handleMouseMove}>
-            <div className="product-tag">Outerwear</div>
-            <div className="product-card-visual">
-              <div className="product-svg-wrapper">
-                <svg viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-                  <ellipse cx="100" cy="225" rx="55" ry="8" fill="rgba(0,0,0,0.2)"/>
-                  <path d="M45 75 L32 205 L168 205 L155 75 L130 70 C125 88 115 95 100 95 C85 95 75 88 70 70 Z" fill="#7f1d1d"/>
-                  <path d="M32 205 H168 V213 H32 Z" fill="#991b1b"/>
-                  <path d="M45 75 L70 70 L65 100 L24 135 L18 160 L34 165 L48 140 Z" fill="#7f1d1d"/>
-                  <path d="M18 160 L34 165 L32 171 L16 166 Z" fill="#991b1b"/>
-                  <path d="M155 75 L130 70 L135 100 L176 135 L182 160 L166 165 L152 140 Z" fill="#7f1d1d"/>
-                  <path d="M182 160 L166 165 L168 171 L184 166 Z" fill="#991b1b"/>
-                  <path d="M70 70 C75 82 85 88 100 88 C115 88 125 82 130 70 C125 78 115 78 100 78 C85 78 75 78 70 70 Z" fill="#991b1b"/>
-                  <rect x="85" y="105" width="30" height="18" rx="3" stroke="rgba(82, 140, 102, 0.4)" strokeDasharray="3 3" strokeWidth="1.5" fill="none"/>
-                  <path d="M80 82 C90 80 110 80 120 84" stroke="rgba(255,255,255,0.08)" strokeWidth="4" strokeLinecap="round"/>
-                </svg>
-              </div>
-            </div>
-            <div className="product-info">
-              <h2 className="product-name">Sweater Crewneck Klasik</h2>
-              <div className="product-price">Rp 299.000</div>
-              <p className="product-desc">Crewneck klasik dengan detail rib tebal pada kerah, ujung lengan, dan pinggang. Desain minimalis serbaguna, cocok untuk gaya kasual semi-formal.</p>
-              <ul className="product-features-list">
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Fleece Katun Lembut 280 gsm</span>
-                </li>
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Kerutan Rib Elastis di Leher & Lengan</span>
-                </li>
-                <li className="product-feature-item">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                  <span>Bahan Breathable Hangat & Menyerap Keringat</span>
-                </li>
-              </ul>
-              <button onClick={() => onNavigate('studio', 'sweater')} className="btn-design-now">
-                <span>Desain Sekarang</span>
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </button>
-            </div>
+          {/* Bottom-Center Showcase CTA */}
+          <div className="showcase-cta">
+            <button onClick={() => onNavigate('studio', activeProduct.id)} className="btn-design-now">
+              <span>Desain Sekarang</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
           </div>
+
         </div>
       </main>
 
