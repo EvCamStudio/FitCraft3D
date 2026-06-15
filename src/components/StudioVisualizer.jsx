@@ -648,10 +648,15 @@ export default function StudioVisualizer({
     }
     eng.bodyMesh = null;
 
-    if (garmentType === 'hoodie' || garmentType === 'tshirt') {
-      const glbPath = garmentType === 'hoodie'
-        ? './assets/models/black hoodie 3d model.glb'
-        : './assets/models/black t shirt 3d model.glb';
+    if (garmentType === 'hoodie' || garmentType === 'tshirt' || garmentType === 'sweater') {
+      let glbPath = '';
+      if (garmentType === 'hoodie') {
+        glbPath = './assets/models/black hoodie 3d model.glb';
+      } else if (garmentType === 'tshirt') {
+        glbPath = './assets/models/black t shirt 3d model.glb';
+      } else if (garmentType === 'sweater') {
+        glbPath = './assets/models/knitted crewneck sweater 3d model.glb';
+      }
         
       const gltfLoader = new GLTFLoader();
       gltfLoader.load(
@@ -674,8 +679,8 @@ export default function StudioVisualizer({
           const scaleFactor = targetHeight / sizeVec.y;
           model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-          // Rotate tshirt GLB model to face the camera (Tripo AI model faces sideways by default)
-          if (glbPath.includes('t shirt')) {
+          // Rotate GLB models to face the camera (Tripo AI models face sideways by default)
+          if (glbPath.includes('t shirt') || glbPath.includes('hoodie') || glbPath.includes('sweater')) {
             model.rotation.y = -Math.PI / 2;
             model.updateMatrixWorld(true);
           }
@@ -711,7 +716,7 @@ export default function StudioVisualizer({
                 originalMaterial.side = THREE.DoubleSide;
                 
                 // If it is a black model GLB, convert its black baseColorTexture to a colorable gray/white texture
-                if ((glbPath.includes('t shirt') || glbPath.includes('hoodie')) && originalMaterial.map) {
+                if ((glbPath.includes('t shirt') || glbPath.includes('hoodie') || glbPath.includes('sweater')) && originalMaterial.map) {
                   originalMaterial.map = processTshirtTexture(originalMaterial.map);
                 }
                 
@@ -820,14 +825,18 @@ export default function StudioVisualizer({
 
     // Initial chest coordinates conform to garment
     let baseY = 0.45;
-    let baseZ = actualFrontZ;
+    let baseZ = (actualFrontZ !== null && actualFrontZ !== undefined) ? actualFrontZ : 1.29;
 
     if (garmentType === 'sweater') {
       baseY = 0.45;
-      baseZ = 1.28;
+      if (actualFrontZ === null && !eng.modelFrontZ) {
+        baseZ = 1.28;
+      }
     } else if (garmentType === 'tshirt') {
       baseY = 0.40;
-      baseZ = (actualFrontZ !== null && actualFrontZ !== undefined) ? actualFrontZ : 1.18;
+      if (actualFrontZ === null && !eng.modelFrontZ) {
+        baseZ = 1.18;
+      }
     }
 
     badgeMesh.position.set(0, baseY, baseZ);
@@ -885,10 +894,14 @@ export default function StudioVisualizer({
 
     if (garmentType === 'sweater') {
       baseY = 0.45;
-      baseZ = 1.28;
+      if (modelFrontZ === null && !eng.modelFrontZ) {
+        baseZ = 1.28;
+      }
     } else if (garmentType === 'tshirt') {
       baseY = 0.40;
-      baseZ = (actualFrontZ !== null && actualFrontZ !== undefined) ? actualFrontZ : 1.18;
+      if (modelFrontZ === null && !eng.modelFrontZ) {
+        baseZ = 1.18;
+      }
     }
 
     const posX = d.horizontal;
