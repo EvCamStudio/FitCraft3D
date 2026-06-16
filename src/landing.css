@@ -513,7 +513,7 @@ img, svg { display: block; }
 .float-value { font-size: 12px; font-weight: 600; color: var(--text-hero); }
 
 .float-card-1 {
-    top: 20px; right: -60px;
+    top: 50px; right: -20px;
     animation: floatCard1 6s ease-in-out infinite;
 }
 .float-card-2 {
