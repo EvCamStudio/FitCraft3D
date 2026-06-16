@@ -389,11 +389,31 @@ export default function LandingPage({ onNavigate }) {
 
     sections.forEach((sec) => sectionObs.observe(sec));
 
+    // 5. PPT-style slide-in trigger for each full-screen snap section
+    const snapSections = containerRef.current.querySelectorAll('.snap-section');
+    const slideObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('slide-in');
+          } else {
+            entry.target.classList.remove('slide-in');
+          }
+        });
+      },
+      { threshold: 0.35 }
+    );
+
+    snapSections.forEach((sec) => slideObs.observe(sec));
+    // Hero should be visible immediately on load
+    if (heroRef.current) heroRef.current.classList.add('slide-in');
+
     return () => {
       document.body.classList.remove('landing-page');
       navObs.disconnect();
       revealObs.disconnect();
       sectionObs.disconnect();
+      slideObs.disconnect();
     };
   }, []);
 
@@ -498,7 +518,7 @@ export default function LandingPage({ onNavigate }) {
       </nav>
 
       {/* HERO SECTION */}
-      <section ref={heroRef} className="hero-section" id="hero">
+      <section ref={heroRef} className="hero-section snap-section" id="hero">
         <div className="hero-content">
           <div className="hero-badge">
             <span className="badge-dot"></span>
@@ -636,7 +656,7 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* FEATURES SECTION */}
-      <section className="features-section" id="features">
+      <section className="features-section snap-section" id="features">
         <div className="section-container">
           <div className="section-header">
             <span className="section-eyebrow">KENAPA FITCRAFT 3D</span>
@@ -716,7 +736,7 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* HOW IT WORKS SECTION */}
-      <section className="how-section" id="how-it-works">
+      <section className="how-section snap-section" id="how-it-works">
         <div className="section-container">
           <div className="section-header">
             <span className="section-eyebrow">ALUR KERJA</span>
@@ -752,7 +772,7 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* SHOWCASE SECTION */}
-      <section className="showcase-section" id="showcase">
+      <section className="showcase-section snap-section" id="showcase">
         <div className="section-container">
           <div className="section-header">
             <span className="section-eyebrow">SHOWCASE</span>
@@ -805,7 +825,7 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* CTA SECTION */}
-      <section className="cta-section">
+      <section className="cta-section snap-section">
         <div className="cta-inner">
             <span className="cta-eyebrow">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ verticalAlign: '-1px', marginRight: '6px' }}>

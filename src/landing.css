@@ -38,6 +38,12 @@
 
 html { scroll-behavior: smooth; }
 
+/* ---------- PPT-STYLE SCROLL SNAP ---------- */
+html:has(body.landing-page) {
+    scroll-snap-type: y proximity;
+    scroll-padding-top: 0;
+}
+
 body.landing-page {
     font-family: var(--font-sans);
     background-color: var(--obsidian);
@@ -45,6 +51,16 @@ body.landing-page {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Each full-screen "slide" snaps into view */
+body.landing-page .snap-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html:has(body.landing-page) { scroll-snap-type: none; }
 }
 
 a { text-decoration: none; color: inherit; }
@@ -542,6 +558,18 @@ img, svg { display: block; }
     padding: 100px clamp(20px, 5vw, 80px);
 }
 
+/* Full-screen slide behaviour for PPT-style scrolling */
+.snap-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.snap-section > .section-container {
+    width: 100%;
+}
+
 .section-container {
     max-width: 1280px; margin: 0 auto;
 }
@@ -994,6 +1022,32 @@ img, svg { display: block; }
 .reveal.in-view {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* ---------- PPT SLIDE ENTER ---------- */
+.snap-section .section-header,
+.snap-section .hero-content,
+.snap-section .cta-inner {
+    opacity: 0;
+    transform: translateY(48px) scale(0.985);
+    transition: opacity 0.8s var(--ease-expo), transform 0.8s var(--ease-expo);
+}
+
+.snap-section.slide-in .section-header,
+.snap-section.slide-in .hero-content,
+.snap-section.slide-in .cta-inner {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .snap-section .section-header,
+    .snap-section .hero-content,
+    .snap-section .cta-inner {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
 }
 
 /* ---------- RESPONSIVE ---------- */
