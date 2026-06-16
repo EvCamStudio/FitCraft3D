@@ -502,7 +502,10 @@ export default function LandingPage({ onNavigate }) {
         <div className="hero-content">
           <div className="hero-badge">
             <span className="badge-dot"></span>
-            ✦ STUDIO KUSTOMISASI 3D PREMIUM
+            <svg className="badge-spark" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2l2.2 6.4L20.6 11l-6.4 2.2L12 19.6 9.8 13.2 3.4 11l6.4-2.6L12 2z" />
+            </svg>
+            STUDIO KUSTOMISASI 3D PREMIUM
           </div>
 
           <h1 className="hero-title">
@@ -606,7 +609,7 @@ export default function LandingPage({ onNavigate }) {
 
             {/* Floating Info Cards */}
             <div className="float-card float-card-1">
-              <div className="float-icon">✦</div>
+              <div className="float-icon">🧵</div>
               <div className="float-info">
                 <span className="float-label">Bahan</span>
                 <span className="float-value">PBR Cotton Premium</span>
@@ -804,7 +807,12 @@ export default function LandingPage({ onNavigate }) {
       {/* CTA SECTION */}
       <section className="cta-section">
         <div className="cta-inner">
-          <span className="cta-eyebrow">✦ MULAI SEKARANG — GRATIS</span>
+            <span className="cta-eyebrow">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ verticalAlign: '-1px', marginRight: '6px' }}>
+                <path d="M12 2l2.2 6.4L20.6 11l-6.4 2.2L12 19.6 9.8 13.2 3.4 11l6.4-2.6L12 2z" />
+              </svg>
+              MULAI SEKARANG — GRATIS
+            </span>
           <h2 className="cta-title">Wujudkan Identitas<br/>Brand Anda Hari Ini</h2>
           <p className="cta-desc">Tidak perlu akun, tidak perlu install. Langsung buka studio 3D dan mulai desain pakaian impian startup Anda.</p>
           <button
