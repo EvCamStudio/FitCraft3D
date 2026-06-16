@@ -65,31 +65,49 @@ img, svg { display: block; }
 }
 
 .mesh-orb {
-    position: absolute;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.45;
     animation: orbFloat 12s ease-in-out infinite alternate;
 }
 
-.orb-1 {
+.orb-parallax-wrapper {
+    position: absolute;
+    will-change: transform;
+}
+
+.orb-1-wrapper {
     width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(82,140,102,0.3) 0%, transparent 70%);
     top: -150px; left: -100px;
+    transform: translateY(calc(var(--scroll-y, 0) * 0.15px));
+}
+
+.orb-2-wrapper {
+    width: 400px; height: 400px;
+    bottom: -100px; right: -80px;
+    transform: translateY(calc(var(--scroll-y, 0) * -0.2px));
+}
+
+.orb-3-wrapper {
+    width: 300px; height: 300px;
+    top: 40%; left: 55%;
+    transform: translateY(calc(var(--scroll-y, 0) * 0.1px));
+}
+
+.orb-1 {
+    background: radial-gradient(circle, rgba(82,140,102,0.3) 0%, transparent 70%);
     animation-delay: 0s;
 }
 
 .orb-2 {
-    width: 400px; height: 400px;
     background: radial-gradient(circle, rgba(27,46,60,0.8) 0%, transparent 70%);
-    bottom: -100px; right: -80px;
     animation-delay: -4s;
 }
 
 .orb-3 {
-    width: 300px; height: 300px;
     background: radial-gradient(circle, rgba(82,140,102,0.15) 0%, transparent 70%);
-    top: 40%; left: 55%;
     animation-delay: -8s;
 }
 
@@ -208,6 +226,8 @@ img, svg { display: block; }
 .hero-content {
     display: flex; flex-direction: column;
     gap: 28px;
+    will-change: transform;
+    transform: translateY(calc(var(--scroll-y, 0) * 0.12px));
 }
 
 .hero-badge {
@@ -364,6 +384,8 @@ img, svg { display: block; }
     position: relative;
     opacity: 0;
     animation: fadeIn 1.2s var(--ease-expo) 0.4s forwards;
+    will-change: transform;
+    transform: translateY(calc(var(--scroll-y, 0) * -0.08px));
 }
 
 @keyframes fadeIn {
@@ -994,3 +1016,22 @@ img, svg { display: block; }
     .footer-inner { flex-direction: column; text-align: center; }
     .footer-copy { text-align: center; }
 }
+
+/* ---------- 3D VISUALIZER OVERLAY & LOADER ---------- */
+.visualizer-loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13, 20, 25, 0.85);
+    z-index: 5;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text-secondary, #a0aec0);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    gap: 12px;
+}
+

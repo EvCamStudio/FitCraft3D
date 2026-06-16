@@ -1,5 +1,298 @@
 import { useState, useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import '../landing.css';
+
+// Helper to convert a dark/black baseColorTexture to a light-gray colorable texture
+function processTshirtTexture(texture) {
+  if (!texture || !texture.image) return texture;
+  const img = texture.image;
+
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width || 1024;
+    canvas.height = img.height || 1024;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imgData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+      
+      // Remap the dark range [0, 50] to light-gray [180, 255] to allow standard multiply coloring
+      const newLuma = Math.min(255, 175 + luma * 1.6);
+
+      data[i] = newLuma;
+      data[i + 1] = newLuma;
+      data[i + 2] = newLuma;
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+
+    const newTexture = new THREE.CanvasTexture(canvas);
+    newTexture.wrapS = texture.wrapS;
+    newTexture.wrapT = texture.wrapT;
+    newTexture.needsUpdate = true;
+    return newTexture;
+  } catch (err) {
+    console.error('Failed to process t-shirt texture:', err);
+    return texture;
+  }
+}
+
+function LandingVisualizer({ colors }) {
+  const containerRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const modelRef = useRef(null);
+
+  // Keep colors ref to avoid closures outdating in the animate loop
+  const colorsRef = useRef(colors);
+  useEffect(() => {
+    colorsRef.current = colors;
+  }, [colors]);
+
+  // Handle color updates dynamically
+  useEffect(() => {
+    if (!modelRef.current) return;
+    modelRef.current.traverse((child) => {
+      if (child.isMesh && child.material) {
+        const name = (child.name || child.material.name || '').toLowerCase();
+        let targetColor = colors.body;
+        if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
+          targetColor = colors.sleeve;
+        } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
+          targetColor = colors.collar;
+        }
+        child.material.color.set(new THREE.Color(targetColor));
+      }
+    });
+  }, [colors]);
+
+  // Keep loading state inside a ref for the animate loop to avoid closure capture
+  const loadingRef = useRef(true);
+  useEffect(() => {
+    loadingRef.current = loading;
+  }, [loading]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // 1. Scene & Camera
+    const scene = new THREE.Scene();
+    scene.background = null;
+
+    const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(0, 0.2, 5.5);
+
+    // 2. WebGLRenderer
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
+      antialias: true,
+      alpha: true
+    });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+
+    // 3. OrbitControls (damping enabled, zoom disabled)
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.enableZoom = false; // Prevent scroll interference
+    controls.minDistance = 3.5;
+    controls.maxDistance = 8;
+    controls.maxPolarAngle = Math.PI / 2 + 0.1;
+    controls.target.set(0, 0.2, 0);
+
+    // 4. Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+
+    const mainLight = new THREE.DirectionalLight(0xffffff, 0.95);
+    mainLight.position.set(3, 4, 5);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.set(1024, 1024);
+    mainLight.shadow.bias = -0.001;
+    scene.add(mainLight);
+
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+    fillLight.position.set(-4, 2, 2);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.7);
+    rimLight.position.set(0, 5, -5);
+    scene.add(rimLight);
+
+    // 5. Garment Group
+    const garmentGroup = new THREE.Group();
+    // Start garment group slightly lower and pushed back for the fly-in transition
+    garmentGroup.position.set(0, -0.8, -1.5);
+    scene.add(garmentGroup);
+
+    // Variables to track smooth fly-in animation
+    let currentY = -0.8;
+    let currentZ = -1.5;
+    const targetY = -0.2;
+    const targetZ = 0.0;
+    const interpolationFactor = 0.06; // Easing speed
+
+    // 6. Load GLB
+    setLoading(true);
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load(
+      './assets/models/black t shirt 3d model.glb',
+      (gltf) => {
+        const model = gltf.scene;
+
+        // Center model
+        const box = new THREE.Box3().setFromObject(model);
+        const sizeVec = box.getSize(new THREE.Vector3());
+        const centerVec = box.getCenter(new THREE.Vector3());
+
+        model.position.x += (model.position.x - centerVec.x);
+        model.position.y += (model.position.y - centerVec.y);
+        model.position.z += (model.position.z - centerVec.z);
+
+        // Normalize size to fit nicely in 320px viewport
+        const targetHeight = 2.1;
+        const scaleFactor = targetHeight / sizeVec.y;
+        model.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+        // Face front
+        model.rotation.y = -Math.PI / 2;
+        model.updateMatrixWorld(true);
+
+        // Traverse to apply cloned material and initial colors
+        model.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+
+            if (child.material) {
+              const originalMaterial = child.material.clone();
+              const name = (child.name || child.material.name || '').toLowerCase();
+              
+              let targetColor = colorsRef.current.body;
+              if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
+                targetColor = colorsRef.current.sleeve;
+              } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
+                targetColor = colorsRef.current.collar;
+              }
+
+              originalMaterial.color.set(new THREE.Color(targetColor));
+              originalMaterial.roughness = 0.85;
+              originalMaterial.metalness = 0.05;
+              originalMaterial.side = THREE.DoubleSide;
+
+              if (originalMaterial.map) {
+                originalMaterial.map = processTshirtTexture(originalMaterial.map);
+              }
+
+              child.material = originalMaterial;
+            }
+          }
+        });
+
+        modelRef.current = model;
+        garmentGroup.add(model);
+        
+        // Add a micro-delay to let textures upload to GPU before removing the spinner
+        setTimeout(() => {
+          setLoading(false);
+        }, 100);
+      },
+      undefined,
+      (error) => {
+        console.error('Failed to load t-shirt GLB model on landing page:', error);
+        setLoading(false);
+      }
+    );
+
+    // 7. Animation loop (includes slow auto-rotation and smooth slide/fly-in transition)
+    let animationFrameId;
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+
+      // Perform smooth entry zoom/fly-in after loading is complete
+      if (!loadingRef.current) {
+        if (Math.abs(garmentGroup.position.y - targetY) > 0.001) {
+          currentY += (targetY - currentY) * interpolationFactor;
+          garmentGroup.position.y = currentY;
+        }
+        if (Math.abs(garmentGroup.position.z - targetZ) > 0.001) {
+          currentZ += (targetZ - currentZ) * interpolationFactor;
+          garmentGroup.position.z = currentZ;
+        }
+      }
+
+      // Auto-rotate when user is not actively interacting/dragging
+      if (modelRef.current && controls.state === -1) {
+        modelRef.current.rotation.y += 0.005;
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // 8. Resize handling
+    const resizeObserver = new ResizeObserver(() => {
+      if (container.clientWidth === 0 || container.clientHeight === 0) return;
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+    resizeObserver.observe(container);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      resizeObserver.disconnect();
+      scene.clear();
+      renderer.dispose();
+    };
+  }, []);
+
+  return (
+    <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {/* Smoothly fade-out loader */}
+      <div 
+        className="visualizer-loader"
+        style={{
+          opacity: loading ? 1 : 0,
+          pointerEvents: loading ? 'all' : 'none',
+          transition: 'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1)'
+        }}
+      >
+        <div className="spinner"></div>
+        <p>Memuat Visualizer 3D...</p>
+      </div>
+      {/* Smoothly fade-in canvas */}
+      <canvas 
+        ref={canvasRef} 
+        style={{ 
+          display: 'block', 
+          width: '100%', 
+          height: '100%',
+          opacity: loading ? 0 : 1,
+          transition: 'opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1)'
+        }} 
+      />
+    </div>
+  );
+}
+
 
 export default function LandingPage({ onNavigate }) {
   // Hoodie color swatch state
@@ -104,6 +397,30 @@ export default function LandingPage({ onNavigate }) {
     };
   }, []);
 
+  // 8. Scroll Parallax Tracking
+  useEffect(() => {
+    const wrapper = containerRef.current;
+    if (!wrapper) return;
+
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          wrapper.style.setProperty('--scroll-y', window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   // 5. Magnetic button hover effects
   const handleMouseMove = (e) => {
     const btn = e.currentTarget;
@@ -142,9 +459,15 @@ export default function LandingPage({ onNavigate }) {
     <div ref={containerRef} className="landing-page-wrapper">
       {/* Animated Background */}
       <div className="bg-gradient-mesh" aria-hidden="true">
-        <div className="mesh-orb orb-1"></div>
-        <div className="mesh-orb orb-2"></div>
-        <div className="mesh-orb orb-3"></div>
+        <div className="orb-parallax-wrapper orb-1-wrapper">
+          <div className="mesh-orb orb-1"></div>
+        </div>
+        <div className="orb-parallax-wrapper orb-2-wrapper">
+          <div className="mesh-orb orb-2"></div>
+        </div>
+        <div className="orb-parallax-wrapper orb-3-wrapper">
+          <div className="mesh-orb orb-3"></div>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -250,40 +573,9 @@ export default function LandingPage({ onNavigate }) {
                 </div>
                 <span className="card-title-badge">FitCraft 3D Studio</span>
               </div>
-              <div
-                className="card-viewport"
-                style={{
-                  '--hoodie-body': hoodieColors.body,
-                  '--hoodie-sleeve': hoodieColors.sleeve,
-                  '--hoodie-collar': hoodieColors.collar
-                }}
-              >
-                {/* Animated Hoodie SVG Illustration */}
-                <div className="hoodie-showcase" id="hoodieShowcase">
-                  <svg className="hoodie-svg" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    {/* Shadow */}
-                    <ellipse cx="100" cy="230" rx="55" ry="8" fill="rgba(0,0,0,0.15)"/>
-                    {/* Body */}
-                    <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill="var(--hoodie-body, #1b2e3c)"/>
-                    {/* Left Sleeve */}
-                    <path d="M45 85 L70 75 L65 100 L20 130 L15 160 L35 165 L50 135 L55 110 Z" fill="var(--hoodie-sleeve, #1b2e3c)"/>
-                    {/* Right Sleeve */}
-                    <path d="M155 85 L130 75 L135 100 L180 130 L185 160 L165 165 L150 135 L145 110 Z" fill="var(--hoodie-sleeve, #1b2e3c)"/>
-                    {/* Collar/Hood Base */}
-                    <path d="M70 75 C75 55 90 45 100 45 C110 45 125 55 130 75 C125 95 115 105 100 105 C85 105 75 95 70 75Z" fill="var(--hoodie-collar, #2a4050)"/>
-                    {/* Hood */}
-                    <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill="var(--hoodie-collar, #2a4050)"/>
-                    {/* Pocket */}
-                    <rect x="70" y="155" width="60" height="30" rx="6" fill="rgba(0,0,0,0.15)"/>
-                    {/* Logo/Decal Area */}
-                    <g className="hoodie-decal" transform="translate(82, 115)">
-                      <rect x="0" y="0" width="36" height="22" rx="4" fill="rgba(255,255,255,0.12)"/>
-                      <text x="18" y="15" textAnchor="middle" fill="rgba(255,255,255,0.9)" fontSize="8" fontFamily="Space Grotesk, sans-serif" fontWeight="700">FITCRAFT</text>
-                    </g>
-                    {/* Highlight/Sheen */}
-                    <path d="M80 90 C90 88 110 88 120 92" stroke="rgba(255,255,255,0.12)" strokeWidth="8" strokeLinecap="round"/>
-                  </svg>
-                </div>
+              <div className="card-viewport">
+                {/* Interactive 3D T-Shirt GLB Canvas */}
+                <LandingVisualizer colors={hoodieColors} />
 
                 {/* Color orbit rings (animated) */}
                 <div className="orbit-rings" aria-hidden="true">

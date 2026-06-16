@@ -14,7 +14,8 @@ body.products-page-scoped .bg-gradient-mesh {
 }
 
 body.products-page-scoped .mesh-orb {
-    position: absolute;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.15;
@@ -25,24 +26,41 @@ body.dark-theme.products-page-scoped .mesh-orb {
     opacity: 0.45;
 }
 
-body.products-page-scoped .orb-1 {
+body.products-page-scoped .orb-parallax-wrapper {
+    position: absolute;
+    will-change: transform;
+}
+
+body.products-page-scoped .orb-1-wrapper {
     width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(82, 140, 102, 0.25) 0%, transparent 70%);
     top: -150px; left: -100px;
+    transform: translateY(calc(var(--scroll-y, 0) * 0.15px));
+}
+
+body.products-page-scoped .orb-2-wrapper {
+    width: 400px; height: 400px;
+    bottom: -100px; right: -80px;
+    transform: translateY(calc(var(--scroll-y, 0) * -0.2px));
+}
+
+body.products-page-scoped .orb-3-wrapper {
+    width: 300px; height: 300px;
+    top: 40%; left: 60%;
+    transform: translateY(calc(var(--scroll-y, 0) * 0.1px));
+}
+
+body.products-page-scoped .orb-1 {
+    background: radial-gradient(circle, rgba(82, 140, 102, 0.25) 0%, transparent 70%);
     animation-delay: 0s;
 }
 
 body.products-page-scoped .orb-2 {
-    width: 400px; height: 400px;
     background: radial-gradient(circle, rgba(27, 46, 60, 0.6) 0%, transparent 70%);
-    bottom: -100px; right: -80px;
     animation-delay: -4s;
 }
 
 body.products-page-scoped .orb-3 {
-    width: 300px; height: 300px;
     background: radial-gradient(circle, rgba(82, 140, 102, 0.18) 0%, transparent 70%);
-    top: 40%; left: 60%;
     animation-delay: -8s;
 }
 

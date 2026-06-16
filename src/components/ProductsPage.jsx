@@ -87,15 +87,26 @@ function processTshirtTexture(texture) {
   }
 }
 
-function ProductVisualizer({ garmentType, colors }) {
+function ProductVisualizer({ activeIndex }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
-  const stateRef = useRef({ colors, garmentType });
 
-  useEffect(() => {
-    stateRef.current = { colors, garmentType };
-  }, [colors, garmentType]);
+  // Store model groups for each garment type
+  const modelsRef = useRef({ hoodie: null, tshirt: null, sweater: null });
+  // Store Three.js instances to share them across effects
+  const threeRef = useRef({
+    scene: null,
+    camera: null,
+    renderer: null,
+    controls: null,
+    garmentGroup: null,
+    activeModel: null,
+    isTransitioning: false
+  });
+
+  const prevIndexRef = useRef(activeIndex);
+  const initialIndexRef = useRef(activeIndex);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -154,89 +165,128 @@ function ProductVisualizer({ garmentType, colors }) {
     rimLight.position.set(0, 5, -5);
     scene.add(rimLight);
 
-    // G. Load GLB
-    let glbPath = '';
-    if (garmentType === 'hoodie') {
-      glbPath = './assets/models/black hoodie 3d model.glb';
-    } else if (garmentType === 'tshirt') {
-      glbPath = './assets/models/black t shirt 3d model.glb';
-    } else if (garmentType === 'sweater') {
-      glbPath = './assets/models/knitted crewneck sweater 3d model.glb';
-    }
+    threeRef.current = {
+      scene,
+      camera,
+      renderer,
+      controls,
+      garmentGroup,
+      activeModel: null,
+      isTransitioning: false
+    };
 
+    // G. Load GLB (Preload all three models)
     setLoading(true);
-
     const gltfLoader = new GLTFLoader();
-    let loadedModel;
+    const types = ['hoodie', 'tshirt', 'sweater'];
+    let loadedCount = 0;
 
-    gltfLoader.load(
-      glbPath,
-      (gltf) => {
-        loadedModel = gltf.scene;
+    // Signature color configurations for preloaded meshes
+    const colorConfigs = {
+      hoodie: { body: '#1b2e3c', sleeves: '#1b2e3c', collar: '#2a4050' },
+      tshirt: { body: '#3b6352', sleeves: '#3b6352', collar: '#4a7a65' },
+      sweater: { body: '#7f1d1d', sleeves: '#7f1d1d', collar: '#991b1b' }
+    };
 
-        const box = new THREE.Box3().setFromObject(loadedModel);
-        const sizeVec = box.getSize(new THREE.Vector3());
-        const centerVec = box.getCenter(new THREE.Vector3());
+    types.forEach((type) => {
+      let glbPath = '';
+      if (type === 'hoodie') glbPath = './assets/models/black hoodie 3d model.glb';
+      else if (type === 'tshirt') glbPath = './assets/models/black t shirt 3d model.glb';
+      else if (type === 'sweater') glbPath = './assets/models/knitted crewneck sweater 3d model.glb';
 
-        loadedModel.position.x += (loadedModel.position.x - centerVec.x);
-        loadedModel.position.y += (loadedModel.position.y - centerVec.y);
-        loadedModel.position.z += (loadedModel.position.z - centerVec.z);
+      gltfLoader.load(
+        glbPath,
+        (gltf) => {
+          const model = gltf.scene;
 
-        const targetHeight = 2.1;
-        const scaleFactor = targetHeight / sizeVec.y;
-        loadedModel.scale.set(scaleFactor, scaleFactor, scaleFactor);
+          const box = new THREE.Box3().setFromObject(model);
+          const sizeVec = box.getSize(new THREE.Vector3());
+          const centerVec = box.getCenter(new THREE.Vector3());
 
-        loadedModel.rotation.y = -Math.PI / 2;
-        loadedModel.updateMatrixWorld(true);
+          model.position.x += (model.position.x - centerVec.x);
+          model.position.y += (model.position.y - centerVec.y);
+          model.position.z += (model.position.z - centerVec.z);
 
-        loadedModel.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
+          const targetHeight = 2.1;
+          const scaleFactor = targetHeight / sizeVec.y;
+          model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-            if (child.material) {
-              const originalMaterial = child.material.clone();
-              const name = (child.name || child.material.name || '').toLowerCase();
-              let targetColor = stateRef.current.colors.body;
-              
-              if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
-                targetColor = stateRef.current.colors.sleeves;
-              } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
-                targetColor = stateRef.current.colors.collar;
+          model.rotation.y = -Math.PI / 2;
+          model.updateMatrixWorld(true);
+
+          model.traverse((child) => {
+            if (child.isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+
+              if (child.material) {
+                const originalMaterial = child.material.clone();
+                const name = (child.name || child.material.name || '').toLowerCase();
+                
+                // Color based on pre-set brand colors
+                const cfg = colorConfigs[type];
+                let targetColor = cfg.body;
+                
+                if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
+                  targetColor = cfg.sleeves;
+                } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
+                  targetColor = cfg.collar;
+                }
+
+                originalMaterial.color.set(new THREE.Color(targetColor));
+                originalMaterial.roughness = 0.85;
+                originalMaterial.metalness = 0.05;
+                originalMaterial.side = THREE.DoubleSide;
+
+                if (originalMaterial.map) {
+                  originalMaterial.map = processTshirtTexture(originalMaterial.map);
+                }
+
+                child.material = originalMaterial;
               }
-
-              originalMaterial.color.set(new THREE.Color(targetColor));
-              originalMaterial.roughness = 0.85;
-              originalMaterial.metalness = 0.05;
-              originalMaterial.side = THREE.DoubleSide;
-
-              if (originalMaterial.map) {
-                originalMaterial.map = processTshirtTexture(originalMaterial.map);
-              }
-
-              child.material = originalMaterial;
             }
-          }
-        });
+          });
 
-        garmentGroup.add(loadedModel);
-        garmentGroup.position.y = 0.2;
-        setLoading(false);
-      },
-      undefined,
-      (error) => {
-        console.error('Failed to load GLB on products page:', error);
-        setLoading(false);
-      }
-    );
+          // Set visibility to false initially unless it matches initial index
+          const initialType = types[initialIndexRef.current];
+          model.visible = (type === initialType);
+          model.position.set(0, 0, 0);
+
+          modelsRef.current[type] = model;
+          garmentGroup.add(model);
+
+          if (type === initialType) {
+            threeRef.current.activeModel = model;
+          }
+
+          loadedCount++;
+          if (loadedCount === 3) {
+            setLoading(false);
+          }
+        },
+        undefined,
+        (error) => {
+          console.error(`Failed to load ${type} GLB:`, error);
+          loadedCount++;
+          if (loadedCount === 3) {
+            setLoading(false);
+          }
+        }
+      );
+    });
 
     // H. Render Loop
     let animationFrameId;
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      if (garmentGroup && controls.state === -1) { 
-        garmentGroup.rotation.y += 0.005;
+      // Only auto rotate when user is not dragging AND we are not transitioning
+      if (garmentGroup && controls.state === -1 && !threeRef.current.isTransitioning) {
+        Object.values(modelsRef.current).forEach((m) => {
+          if (m && m.visible) {
+            m.rotation.y += 0.005;
+          }
+        });
       }
       
       controls.update();
@@ -260,7 +310,111 @@ function ProductVisualizer({ garmentType, colors }) {
       scene.clear();
       renderer.dispose();
     };
-  }, [garmentType]);
+  }, []);
+
+  // Handle active index changes with smooth slide & cross-fade transition animations
+  useEffect(() => {
+    if (prevIndexRef.current === activeIndex) return;
+
+    const types = ['hoodie', 'tshirt', 'sweater'];
+    const prevType = types[prevIndexRef.current];
+    const nextType = types[activeIndex];
+
+    const oldModel = modelsRef.current[prevType];
+    const newModel = modelsRef.current[nextType];
+
+    if (!oldModel || !newModel) {
+      // Fallback: If not preloaded yet, switch immediately
+      prevIndexRef.current = activeIndex;
+      return;
+    }
+
+    const direction = (activeIndex - prevIndexRef.current + 3) % 3 === 1 ? 'next' : 'prev';
+
+    // Start transition
+    threeRef.current.isTransitioning = true;
+    newModel.visible = true;
+
+    // Match rotation of incoming model with outgoing model so transition looks seamless
+    newModel.rotation.y = oldModel.rotation.y;
+
+    // Helper functions for opacity cross-fade
+    const enableTransparency = (model, enable) => {
+      model.traverse((child) => {
+        if (child.isMesh && child.material) {
+          const mats = Array.isArray(child.material) ? child.material : [child.material];
+          mats.forEach((mat) => {
+            mat.transparent = enable;
+            if (enable) {
+              mat.depthWrite = false; // Prevent alpha-sorting artifacts
+            } else {
+              mat.depthWrite = true;
+              mat.opacity = 1;
+            }
+          });
+        }
+      });
+    };
+
+    const setOpacity = (model, opacityVal) => {
+      model.traverse((child) => {
+        if (child.isMesh && child.material) {
+          const mats = Array.isArray(child.material) ? child.material : [child.material];
+          mats.forEach((mat) => {
+            mat.opacity = opacityVal;
+          });
+        }
+      });
+    };
+
+    // Initialize cross-fade opacities
+    enableTransparency(oldModel, true);
+    enableTransparency(newModel, true);
+    setOpacity(oldModel, 1.0);
+    setOpacity(newModel, 0.0);
+
+    const startXOld = 0;
+    const endXOld = direction === 'next' ? 3.2 : -3.2;
+    const startXNew = direction === 'next' ? -3.2 : 3.2;
+    const endXNew = 0;
+
+    const startTime = performance.now();
+    const duration = 650; // 650ms for a buttery-smooth, cinematic drift
+
+    const slideAnimation = () => {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // ease-in-out cubic easing (gradual acceleration & deceleration)
+      const ease = progress < 0.5 
+        ? 4 * progress * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      oldModel.position.x = startXOld + (endXOld - startXOld) * ease;
+      newModel.position.x = startXNew + (endXNew - startXNew) * ease;
+
+      // Linearly cross-fade opacity
+      setOpacity(oldModel, 1.0 - progress);
+      setOpacity(newModel, progress);
+
+      if (progress < 1) {
+        requestAnimationFrame(slideAnimation);
+      } else {
+        oldModel.visible = false;
+        oldModel.position.x = 0; // reset old position
+        
+        // Restore standard solid rendering properties
+        enableTransparency(oldModel, false);
+        enableTransparency(newModel, false);
+
+        threeRef.current.activeModel = newModel;
+        threeRef.current.isTransitioning = false;
+        prevIndexRef.current = activeIndex;
+      }
+    };
+
+    slideAnimation();
+  }, [activeIndex]);
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -309,6 +463,30 @@ export default function ProductsPage({ onNavigate }) {
     };
   }, []);
 
+  // Scroll Parallax Tracking
+  useEffect(() => {
+    const wrapper = containerRef.current;
+    if (!wrapper) return;
+
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          wrapper.style.setProperty('--scroll-y', window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const handleMouseMove = (e) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
@@ -324,9 +502,15 @@ export default function ProductsPage({ onNavigate }) {
     <div ref={containerRef} className="products-page-wrapper">
       {/* Animated Background */}
       <div className="bg-gradient-mesh" aria-hidden="true">
-        <div className="mesh-orb orb-1"></div>
-        <div className="mesh-orb orb-2"></div>
-        <div className="mesh-orb orb-3"></div>
+        <div className="orb-parallax-wrapper orb-1-wrapper">
+          <div className="mesh-orb orb-1"></div>
+        </div>
+        <div className="orb-parallax-wrapper orb-2-wrapper">
+          <div className="mesh-orb orb-2"></div>
+        </div>
+        <div className="orb-parallax-wrapper orb-3-wrapper">
+          <div className="mesh-orb orb-3"></div>
+        </div>
       </div>
 
       {/* Navigation */}
@@ -373,7 +557,7 @@ export default function ProductsPage({ onNavigate }) {
           
           {/* Active visual container */}
           <div className="showcase-visual">
-            <ProductVisualizer garmentType={activeProduct.id} colors={activeProduct.colors} />
+            <ProductVisualizer activeIndex={activeIndex} />
           </div>
 
           {/* Top-Right category tag inside showcase */}
