@@ -1,0 +1,794 @@
+=== Browser Log Server Started ===
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to sweater
+[LOG] Transition animation from hoodie to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to tshirt
+[LOG] Transition animation from sweater to tshirt completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] [vite] server connection lost. Polling for restart...
+[LOG] [vite] server connection lost. Polling for restart...
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to hoodie
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 1
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to hoodie
+[LOG] Transition animation from tshirt to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] [vite] server connection lost. Polling for restart...
+[LOG] [vite] server connection lost. Polling for restart...
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to hoodie
+[LOG] Transition animation from tshirt to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to sweater
+[LOG] Transition animation from hoodie to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to tshirt
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to hoodie
+[LOG] Transition animation from tshirt to hoodie completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to hoodie
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to sweater
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to tshirt
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to hoodie
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to sweater
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to tshirt
+[LOG] Transition animation from sweater to tshirt completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to sweater
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to tshirt
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to hoodie
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to hoodie
+[LOG] Transition animation from tshirt to hoodie completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[ERROR] [vite] require is not defined
+ReferenceError: require is not defined
+    at http://localhost:5174/src/components/ProductsPage.jsx?t=1781709403867:1:183
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[ERROR] [vite] require is not defined
+ReferenceError: require is not defined
+    at http://localhost:5174/src/components/ProductsPage.jsx?t=1781709403867:1:183
+[ERROR] [vite] Failed to reload /src/components/ProductsPage.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above)
+[UNCAUGHT_ERROR] Uncaught SyntaxError: The requested module '/src/components/ProductsPage.jsx?t=1781709403867' does not provide an export named 'default' http://localhost:5174/src/App.jsx?t=1781709403867 3 8 The requested module '/src/components/ProductsPage.jsx?t=1781709403867' does not provide an export named 'default'
+SyntaxError: The requested module '/src/components/ProductsPage.jsx?t=1781709403867' does not provide an export named 'default'
+[UNCAUGHT_ERROR] Uncaught SyntaxError: The requested module '/src/components/ProductsPage.jsx?t=1781709403867' does not provide an export named 'default' http://localhost:5174/src/App.jsx?t=1781709403867 3 8 The requested module '/src/components/ProductsPage.jsx?t=1781709403867' does not provide an export named 'default'
+SyntaxError: The requested module '/src/components/ProductsPage.jsx?t=1781709403867' does not provide an export named 'default'
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] [vite] server connection lost. Polling for restart...
+[LOG] [vite] server connection lost. Polling for restart...
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] [vite] server connection lost. Polling for restart...
+[LOG] [vite] server connection lost. Polling for restart...
