@@ -58,7 +58,9 @@ export default function StudioVisualizer({
   onDecalDrag,     // Callback to update parent sliders when dragged: ({ horizontal, vertical })
   onFpsUpdate,     // Callback to update parent FPS text
   exportTrigger,   // Numeric counter to trigger PNG capture
-  onExportComplete // Callback after image capture
+  onExportComplete, // Callback when PNG export finishes
+  onReady,         // Callback when the 3D model is fully loaded and ready
+  onProgress       // Callback to report loading progress (0-100)
 }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
@@ -741,15 +743,24 @@ export default function StudioVisualizer({
           console.log("GLB Bounding Box:", sizeVec.x, sizeVec.y, sizeVec.z, "scaleFactor:", scaleFactor, "computedFrontZ:", modelFrontZ);
           
           rebuildBadgePlane(modelFrontZ);
-          setLoading(false);
-          animateCameraFocus();
+          setTimeout(() => {
+            setLoading(false);
+            animateCameraFocus();
+            if (onReady) onReady();
+          }, 100);
         },
-        undefined,
+        (xhr) => {
+          if (onProgress && xhr.total > 0) {
+            const progress = (xhr.loaded / xhr.total) * 100;
+            onProgress(Math.min(95, progress));
+          }
+        },
         (error) => {
           console.error(`Failed to load GLB for ${garmentType}, falling back to procedural construction`, error);
           eng.modelFrontZ = 1.34;
           buildProceduralGarment(garmentType);
           setLoading(false);
+          if (onReady) onReady();
         }
       );
     } else {

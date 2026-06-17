@@ -47,7 +47,7 @@ function processTshirtTexture(texture) {
   }
 }
 
-function LandingVisualizer({ colors }) {
+function LandingVisualizer({ colors, onReady, onProgress }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -91,7 +91,7 @@ function LandingVisualizer({ colors }) {
     scene.background = null;
 
     const camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.set(0, 0.2, 5.5);
+    camera.position.set(0, 0, 5.5);
 
     // 2. WebGLRenderer
     const renderer = new THREE.WebGLRenderer({
@@ -114,7 +114,7 @@ function LandingVisualizer({ colors }) {
     controls.minDistance = 3.5;
     controls.maxDistance = 8;
     controls.maxPolarAngle = Math.PI / 2 + 0.1;
-    controls.target.set(0, 0.2, 0);
+    controls.target.set(0, 0, 0);
 
     // 4. Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -144,7 +144,7 @@ function LandingVisualizer({ colors }) {
     // Variables to track smooth fly-in animation
     let currentY = -0.8;
     let currentZ = -1.5;
-    const targetY = -0.2;
+    const targetY = -0.25;
     const targetZ = 0.0;
     const interpolationFactor = 0.06; // Easing speed
 
@@ -165,8 +165,8 @@ function LandingVisualizer({ colors }) {
         model.position.y += (model.position.y - centerVec.y);
         model.position.z += (model.position.z - centerVec.z);
 
-        // Normalize size to fit nicely in 320px viewport
-        const targetHeight = 2.1;
+        // Normalize size to fit nicely in the viewport
+        const targetHeight = 2.15;
         const scaleFactor = targetHeight / sizeVec.y;
         model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
@@ -211,12 +211,21 @@ function LandingVisualizer({ colors }) {
         // Add a micro-delay to let textures upload to GPU before removing the spinner
         setTimeout(() => {
           setLoading(false);
+          if (onReady) onReady();
         }, 100);
       },
-      undefined,
+      (xhr) => {
+        if (onProgress && xhr.total > 0) {
+          const progress = (xhr.loaded / xhr.total) * 100;
+          // Scale it so it never fully reaches 100% until the very end 
+          // because parsing and texture uploading takes extra time
+          onProgress(Math.min(95, progress));
+        }
+      },
       (error) => {
         console.error('Failed to load t-shirt GLB model on landing page:', error);
         setLoading(false);
+        if (onReady) onReady();
       }
     );
 
@@ -266,18 +275,7 @@ function LandingVisualizer({ colors }) {
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
-      {/* Smoothly fade-out loader */}
-      <div 
-        className="visualizer-loader"
-        style={{
-          opacity: loading ? 1 : 0,
-          pointerEvents: loading ? 'all' : 'none',
-          transition: 'opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1)'
-        }}
-      >
-        <div className="spinner"></div>
-        <p>Memuat Visualizer 3D...</p>
-      </div>
+      {/* Global splash screen handles loading state, so we just use this space directly */}
       {/* Smoothly fade-in canvas */}
       <canvas 
         ref={canvasRef} 
@@ -294,7 +292,7 @@ function LandingVisualizer({ colors }) {
 }
 
 
-export default function LandingPage({ onNavigate }) {
+export default function LandingPage({ onNavigate, onReady, onProgress }) {
   // Hoodie color swatch state
   const [hoodieColors, setHoodieColors] = useState({
     body: '#1b2e3c',
@@ -598,12 +596,13 @@ export default function LandingPage({ onNavigate }) {
               </div>
               <div className="card-viewport">
                 {/* Interactive 3D T-Shirt GLB Canvas */}
-                <LandingVisualizer colors={hoodieColors} />
+                <LandingVisualizer colors={hoodieColors} onReady={onReady} onProgress={onProgress} />
 
                 {/* Color orbit rings (animated) */}
                 <div className="orbit-rings" aria-hidden="true">
                   <div className="orbit-ring ring-1"></div>
                   <div className="orbit-ring ring-2"></div>
+                  <div className="orbit-ring ring-3"></div>
                 </div>
               </div>
               {/* Color swatches below card */}
@@ -657,7 +656,11 @@ export default function LandingPage({ onNavigate }) {
 
       {/* FEATURES SECTION */}
       <section className="features-section snap-section" id="features">
-        <div className="section-container">
+        {/* Parallax Background Elements */}
+        <div className="bg-parallax-text" aria-hidden="true" style={{ '--parallax-speed': '-0.15', top: '10%', left: '-5%' }}>FITCRAFT</div>
+        <div className="bg-parallax-text outline" aria-hidden="true" style={{ '--parallax-speed': '0.1', top: '60%', left: '15%' }}>PREMIUM</div>
+
+        <div className="section-container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="section-header">
             <span className="section-eyebrow">KENAPA FITCRAFT 3D</span>
             <h2 className="section-title">Dirancang untuk <br/><span className="accent">Startup Modern</span></h2>
@@ -736,8 +739,11 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* HOW IT WORKS SECTION */}
-      <section className="how-section snap-section" id="how-it-works">
-        <div className="section-container">
+      <section className="how-section snap-section" id="how-it-works" style={{ position: 'relative', overflow: 'hidden' }}>
+        {/* Parallax Background Elements */}
+        <div className="bg-parallax-text outline" aria-hidden="true" style={{ '--parallax-speed': '-0.08', top: '20%', right: '-5%', left: 'auto' }}>3D STUDIO</div>
+
+        <div className="section-container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="section-header">
             <span className="section-eyebrow">ALUR KERJA</span>
             <h2 className="section-title">3 Langkah <br/><span className="accent">Desain Selesai</span></h2>

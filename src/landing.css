@@ -36,7 +36,10 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+}
 
 /* ---------- PPT-STYLE SCROLL SNAP ---------- */
 html:has(body.landing-page) {
@@ -410,7 +413,7 @@ img, svg { display: block; }
 
 .visual-card-stack {
     position: relative;
-    width: 380px; height: 480px;
+    width: 480px; height: 440px;
 }
 
 .preview-card {
@@ -419,6 +422,8 @@ img, svg { display: block; }
     border: 1px solid var(--surface-border);
     border-radius: 24px;
     overflow: hidden;
+    height: 100%;
+    display: flex; flex-direction: column;
     box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px var(--surface-border);
 }
 
@@ -426,6 +431,7 @@ img, svg { display: block; }
     display: flex; align-items: center;
     gap: 12px; padding: 14px 18px;
     border-bottom: 1px solid var(--surface-border);
+    position: relative;
 }
 
 .card-dots { display: flex; gap: 6px; }
@@ -438,15 +444,18 @@ img, svg { display: block; }
 .card-dots span:nth-child(3) { background: #28c840; }
 
 .card-title-badge {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 11px; font-weight: 600;
     color: var(--text-muted);
     letter-spacing: 0.3px;
-    margin-left: auto;
+    margin-left: 0;
 }
 
 .card-viewport {
     position: relative;
-    height: 320px;
+    flex: 1;
     display: flex; align-items: center; justify-content: center;
     background: radial-gradient(ellipse at center, #1c2d3a 0%, #0d1419 100%);
     overflow: hidden;
@@ -483,8 +492,9 @@ img, svg { display: block; }
     animation: orbitSpin 20s linear infinite;
 }
 
-.ring-1 { width: 300px; height: 300px; }
-.ring-2 { width: 220px; height: 220px; animation-direction: reverse; animation-duration: 14s; }
+.ring-1 { width: 340px; height: 340px; }
+.ring-2 { width: 240px; height: 240px; animation-direction: reverse; animation-duration: 14s; }
+.ring-3 { width: 140px; height: 140px; animation-duration: 10s; }
 
 @keyframes orbitSpin {
     from { transform: rotate(0deg); }
@@ -492,9 +502,17 @@ img, svg { display: block; }
 }
 
 .card-swatches {
-    display: flex; align-items: center;
-    gap: 8px; padding: 14px 18px;
-    border-top: 1px solid var(--surface-border);
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 12px 16px;
+    background: rgba(14, 19, 24, 0.95);
+    border: 1px solid var(--surface-border);
+    border-radius: 100px;
+    z-index: 10;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 
 .swatch {
@@ -529,15 +547,15 @@ img, svg { display: block; }
 .float-value { font-size: 12px; font-weight: 600; color: var(--text-hero); }
 
 .float-card-1 {
-    top: 50px; right: -20px;
+    top: 60px; right: 20px;
     animation: floatCard1 6s ease-in-out infinite;
 }
 .float-card-2 {
-    bottom: 140px; left: -55px;
+    bottom: 120px; left: -40px;
     animation: floatCard2 7s ease-in-out infinite;
 }
 .float-card-3 {
-    bottom: 55px; right: -40px;
+    bottom: 40px; right: -20px;
     animation: floatCard1 8s ease-in-out infinite reverse;
 }
 
@@ -556,14 +574,14 @@ img, svg { display: block; }
 .showcase-section {
     position: relative; z-index: 1;
     padding: 100px clamp(20px, 5vw, 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* Full-screen slide behaviour for PPT-style scrolling */
 .snap-section {
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 .snap-section > .section-container {
@@ -598,7 +616,35 @@ img, svg { display: block; }
 .section-title .accent { color: var(--sage); }
 
 /* ---------- FEATURES SECTION ---------- */
-.features-section { background: var(--obsidian-2); }
+.landing-page {
+    position: relative;
+    overflow-x: hidden;
+    background-color: var(--obsidian);
+}
+
+.features-section { 
+    background: var(--obsidian-2); 
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-parallax-text {
+    position: absolute;
+    font-size: 20vw;
+    font-family: var(--font-display);
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.015);
+    white-space: nowrap;
+    z-index: 0;
+    pointer-events: none;
+    will-change: transform;
+    transform: translateY(calc(var(--scroll-y, 0) * var(--parallax-speed, 0px)));
+}
+
+.bg-parallax-text.outline {
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.02);
+    color: transparent;
+}
 
 .features-grid {
     display: grid;
@@ -613,13 +659,22 @@ img, svg { display: block; }
     border-radius: 20px;
     padding: 32px 28px;
     transition: border-color 0.3s, background 0.3s, transform 0.3s;
+    will-change: transform;
+    transform: translateY(calc(var(--scroll-y, 0) * var(--parallax-speed, 0px)));
 }
 
 .feature-card:hover {
     border-color: var(--surface-border-hover);
     background: var(--surface-2);
-    transform: translateY(-4px);
+    transform: translateY(calc(var(--scroll-y, 0) * var(--parallax-speed, 0px) - 6px));
 }
+
+.feature-card:nth-child(1) { --parallax-speed: 0.02; }
+.feature-card:nth-child(2) { --parallax-speed: 0.06; }
+.feature-card:nth-child(3) { --parallax-speed: 0.03; }
+.feature-card:nth-child(4) { --parallax-speed: 0.08; }
+.feature-card:nth-child(5) { --parallax-speed: 0.04; }
+.feature-card:nth-child(6) { --parallax-speed: 0.07; }
 
 .feature-large {
     grid-column: span 2;
@@ -680,12 +735,19 @@ img, svg { display: block; }
     display: flex; flex-direction: column;
     gap: 16px;
     position: relative;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, transform 0.3s;
+    will-change: transform;
+    transform: translateY(calc(var(--scroll-y, 0) * var(--parallax-speed, 0px)));
 }
 
-.step-card:not(:last-child) { margin-right: 20px; }
+.step-card:hover {
+    border-color: rgba(82,140,102,0.3);
+    transform: translateY(calc(var(--scroll-y, 0) * var(--parallax-speed, 0px) - 6px));
+}
 
-.step-card:hover { border-color: rgba(82,140,102,0.3); }
+.step-card:nth-child(1) { --parallax-speed: 0.03; }
+.step-card:nth-child(2) { --parallax-speed: 0.07; }
+.step-card:nth-child(3) { --parallax-speed: 0.11; }
 
 .step-number {
     font-family: var(--font-display);

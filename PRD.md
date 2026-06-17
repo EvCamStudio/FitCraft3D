@@ -19,15 +19,18 @@ Edisi Premium ini mengadopsi arsitektur **Vite + React (JavaScript)** yang modul
 
 ## 3. ARSITEKTUR HALAMAN (REACT SPA ARCHITECTURE)
 Aplikasi ini dikembangkan sebagai React Single-Page Application (SPA) berbasis Vite dengan komponen utama berikut:
-1. **Landing Page Component (`LandingPage.jsx`)**:
+1. **Global Splash Screen / Preloader (`App.jsx`)**:
+   * Tirai pemuatan penuh (*fullscreen preloader curtain*) yang bertindak sebagai gerbang masuk teaterikal.
+   * Menampilkan logo & indikator progress berupa animasi *text-fill* bermerek "FITCRAFT 3D" yang diisi warna secara real-time.
+2. **Landing Page Component (`LandingPage.jsx`)**:
    * Desain gelap obsidian bertema premium/luxurious.
    * Efek interaksi premium: scroll reveal (Intersection Observer) dan navigasi landing page yang mulus.
    * Pratinjau hoodie interaktif berbasis SVG swatches (mengubah warna mockup SVG secara real-time).
    * Form login mockup terintegrasi dengan penyimpanan sesi lokal.
-2. **Products Catalog Component (`ProductsPage.jsx`)**:
+3. **Products Catalog Component (`ProductsPage.jsx`)**:
    * Katalog 3 model pakaian dasar (Hoodie, Kaos, Sweater) dengan spesifikasi lengkap.
    * Efek interaksi kartu glassmorphism dengan spotlight glow yang mengikuti pergerakan kursor mouse.
-3. **3D Customizer Studio Component (`StudioPage.jsx` + `StudioVisualizer.jsx`)**:
+4. **3D Customizer Studio Component (`StudioPage.jsx` + `StudioVisualizer.jsx`)**:
    * Workspace Three.js full-screen berdampingan dengan sidebar konfigurasi bertema glassmorphism transparan.
    * Visualisasi interaktif terfokus penuh pada kanvas 3D tanpa pratinjau 2D flat untuk menjamin pengalaman editor 3D yang modern dan imersif.
    * Tempat utama untuk merancang, mengunggah logo, mengatur ukuran, menyimpan galeri lokal, dan melakukan checkout simulasi.
@@ -87,6 +90,17 @@ Aplikasi ini dikembangkan sebagai React Single-Page Application (SPA) berbasis V
 * **Restorasi Desain**: Mengklik kartu desain di galeri akan memulihkan seluruh konfigurasi visual 3D, menyinkronkan tombol slider, dan mengaktifkan pill ukuran yang tepat.
 * **Kalkulasi Dinamis**: Total Harga = Harga Model Terpilih + Tambahan Harga Bahan Premium (Fleece).
 * **Checkout Modal & Success Overlay**: Pop-up konfirmasi ringkasan detail pesanan lengkap dengan input nama, email, instansi, dan penyerahan invoice kode pesanan setelah submit formulir.
+
+### F. Sistem Splash Screen / Preloader Global & Transisi Pintu (Global Preloader & Slide-Up Reveal)
+* **Durasi Minimum 4 Detik**: Preloader ditampilkan minimal selama 4 detik untuk memperkuat branding dan memastikan inisialisasi visual berjalan matang.
+* **Sinkronisasi Progress & Aset**: Pemuatan disinkronkan langsung dengan progress unduhan model 3D (`onProgress` / `onReady`). Jika pemuatan membutuhkan waktu lebih dari 4 detik, preloader akan terus ditampilkan dan hanya akan membuka halaman setelah pemuatan model selesai sepenuhnya.
+* **Animasi Text-Fill Logo & Evaporasi Teks**: Progress loader direpresentasikan oleh teks brand "FITCRAFT 3D" yang diisi warna secara bertahap dari 0% ke 95% menggunakan interpolasi `requestAnimationFrame`. Saat 100%, teks akan memudar keluar (`opacity: 0`) dan bergerak naik (`translateY(-40px)`) secara elegan.
+* **Kunci Scroll Total & Anti-Shift**:
+  * Mengunci scrollbar pada koordinat `y = 0` secara total selama pemuatan menggunakan kelas `loading-active` pada `html` dan `body` untuk mencegah "peeking" atau pemulihan posisi scroll browser yang tidak terduga.
+  * Mempertahankan bar scrollbar (`overflow-y: scroll`) pada level root sepanjang daur hidup situs, mencegah geseran tata letak horizontal (*layout shift* kaku ke kiri) sewaktu scroll lock dilepas pasca transisi selesai.
+  * Menonaktifkan semua interaksi kursor (`pointer-events: none`) di belakang layar selama proses pemuatan.
+* **Transisi Geser ke Atas (Slide-up Curtain)**: Halaman utama (`.app-content-wrapper`) meluncur masuk dari bawah ke atas (`translateY(100vh) -> translateY(0)`) dengan kurva bezier melambat (*ease-out*) selama 0.8 detik setelah pemuatan usai.
+* **Cross-fade Latar Belakang**: Latar belakang gradien radial gelap loader memudar secara gradual (`opacity: 1 -> 0`) selama 0.8 detik ketika status berganti ke `.loaded` untuk melebur dengan warna latar belakang obsidian asli milik landing page secara mulus tanpa kedipan warna yang kaku sewaktu loader di-unmount.
 
 ---
 

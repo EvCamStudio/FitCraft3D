@@ -35,7 +35,7 @@ const modelOptions = [
   }
 ];
 
-export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
+export default function StudioPage({ onNavigate, initialModel = 'hoodie', onReady, onProgress }) {
   // Theme state
   const [darkTheme, setDarkTheme] = useState(() => {
     return localStorage.getItem('fitcraft_theme') === 'dark';
@@ -526,6 +526,8 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie' }) {
                 onDecalDrag={handleDecalDrag}
                 exportTrigger={exportTrigger}
                 onExportComplete={handleExportComplete}
+                onReady={onReady}
+                onProgress={onProgress}
               />
             </div>
           </div>

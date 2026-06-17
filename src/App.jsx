@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import LandingPage from './components/LandingPage'
 import ProductsPage from './components/ProductsPage'
 import StudioPage from './components/StudioPage'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const [fadeOutSplash, setFadeOutSplash] = useState(false);
 
   const [initialModel, setInitialModel] = useState(() => {
     const params = new URLSearchParams(window.location.search);
@@ -33,21 +32,97 @@ function App() {
     return 'landing';
   });
 
+  const [appStyle, setAppStyle] = useState({ transform: 'translateY(100vh)', pointerEvents: 'none' });
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [actualProgress, setActualProgress] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+
+  const startTime = React.useRef(Date.now());
+  const isReadyRef = React.useRef(false);
+  const actualProgressRef = React.useRef(0);
+
+  // Sync state to refs for use in animation loop
   useEffect(() => {
-    // Show splash animation for 1.8 seconds, then fade it out, then remove it from DOM
-    const fadeTimer = setTimeout(() => {
-      setFadeOutSplash(true);
-    }, 1800);
+    isReadyRef.current = isReady;
+  }, [isReady]);
 
-    const removeTimer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2400);
+  useEffect(() => {
+    actualProgressRef.current = actualProgress;
+  }, [actualProgress]);
 
+  // Lock scrolling and disable scroll-snapping during splash screen to prevent visual jumps
+  useEffect(() => {
+    if (showSplash) {
+      document.documentElement.classList.add('loading-active');
+      window.scrollTo(0, 0);
+    } else {
+      document.documentElement.classList.remove('loading-active');
+    }
     return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(removeTimer);
+      document.documentElement.classList.remove('loading-active');
     };
-  }, []);
+  }, [showSplash]);
+
+  const handleAppReady = () => {
+    setIsReady(true);
+  };
+
+  useEffect(() => {
+    if (!showSplash) return;
+
+    let animFrame;
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime.current;
+      const duration = 4000; // 4 seconds minimum loading screen duration
+
+      // Time-based progress goes up to 95% at 4s
+      const timeProgress = Math.min(95, (elapsed / duration) * 95);
+
+      const currentActual = actualProgressRef.current;
+      const currentReady = isReadyRef.current;
+
+      // Cap at actual load progress if loading is slower than elapsed time
+      let targetProgress = Math.min(timeProgress, currentActual);
+
+      // If the page is ready, let progress follow timeProgress smoothly
+      if (currentReady || currentActual >= 95) {
+        targetProgress = timeProgress;
+      }
+
+      setLoadProgress((prev) => {
+        const next = Math.max(prev, targetProgress);
+        return parseFloat(next.toFixed(1));
+      });
+
+      if (!currentReady || elapsed < duration) {
+        animFrame = requestAnimationFrame(updateProgress);
+      } else {
+        // Both conditions met: 4s elapsed AND website is fully ready
+        setLoadProgress(100);
+        
+        // Wait a brief moment at 100% before sliding up for aesthetic impact
+        setTimeout(() => {
+          setAppStyle({
+            transform: 'translateY(0)',
+            transition: 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)'
+          });
+
+          // After slide-up finishes, remove transform and deactivate splash
+          setTimeout(() => {
+            setAppStyle({});
+            setShowSplash(false);
+          }, 800);
+        }, 400);
+      }
+    };
+
+    animFrame = requestAnimationFrame(updateProgress);
+    return () => {
+      if (animFrame) {
+        cancelAnimationFrame(animFrame);
+      }
+    };
+  }, [showSplash]);
 
   const navigate = (targetView, model = null) => {
     if (model) {
@@ -69,24 +144,17 @@ function App() {
   return (
     <div className="app-root">
       {showSplash && (
-        <div className={`global-splash-screen ${fadeOutSplash ? 'fade-out' : ''}`}>
+        <div className={`global-splash-screen ${loadProgress === 100 ? 'loaded' : ''}`}>
           <div className="splash-content">
-            <div className="splash-logo">
-              <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
-              </svg>
-            </div>
-            <h1 className="splash-title">FITCRAFT <em>3D</em></h1>
-            <p className="splash-subtitle">Studio Kustomisasi Pakaian Premium</p>
-            <div className="splash-loader-bar">
-              <div className="splash-progress"></div>
-            </div>
+            <h1 className="splash-text-loader" data-text="FITCRAFT 3D" style={{ '--progress': `${loadProgress}%` }}>FITCRAFT 3D</h1>
           </div>
         </div>
       )}
-      {view === 'landing' && <LandingPage onNavigate={navigate} />}
-      {view === 'products' && <ProductsPage onNavigate={navigate} />}
-      {view === 'studio' && <StudioPage onNavigate={navigate} initialModel={initialModel} />}
+      <div className="app-content-wrapper" style={appStyle}>
+        {view === 'landing' && <LandingPage onNavigate={navigate} onReady={handleAppReady} onProgress={setActualProgress} />}
+        {view === 'products' && <ProductsPage onNavigate={navigate} onReady={handleAppReady} onProgress={setActualProgress} />}
+        {view === 'studio' && <StudioPage onNavigate={navigate} initialModel={initialModel} onReady={handleAppReady} onProgress={setActualProgress} />}
+      </div>
     </div>
   )
 }

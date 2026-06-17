@@ -428,7 +428,7 @@ function ProductVisualizer({ activeIndex }) {
   );
 }
 
-export default function ProductsPage({ onNavigate }) {
+export default function ProductsPage({ onNavigate, onReady, onProgress }) {
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [darkTheme] = useState(() => {
@@ -448,6 +448,12 @@ export default function ProductsPage({ onNavigate }) {
 
   useEffect(() => {
     document.body.classList.add('products-page-scoped');
+
+    // For Products page, we can assume it's ready immediately
+    // or wait for the mini 3D models to load. For simplicity, ready instantly:
+    if (onReady) {
+      onReady();
+    }
 
     // Reveal animations on load
     const reveals = containerRef.current.querySelectorAll('.products-header, .showcase-container');
