@@ -1,7 +1,50 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="landing-page-html loading-active">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function() {
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function sendLog(type, args) {
+          const message = args.map(arg => {
+            if (arg instanceof Error) return arg.message + '\n' + arg.stack;
+            if (typeof arg === 'object') {
+              try { return JSON.stringify(arg); } catch(e) { return String(arg); }
+            }
+            return String(arg);
+          }).join(' ');
+          
+          fetch('http://localhost:5175/log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: `[${type}] ${message}\n`
+          }).catch(err => originalError('Failed to send log to server:', err));
+        }
+
+        console.log = function(...args) {
+          originalLog.apply(console, args);
+          sendLog('LOG', args);
+        };
+        console.error = function(...args) {
+          originalError.apply(console, args);
+          sendLog('ERROR', args);
+        };
+        console.warn = function(...args) {
+          originalWarn.apply(console, args);
+          sendLog('WARN', args);
+        };
+        window.onerror = function(message, source, lineno, colno, error) {
+          sendLog('UNCAUGHT_ERROR', [message, source, lineno, colno, error]);
+          return false;
+        };
+        window.onunhandledrejection = function(event) {
+          sendLog('UNHANDLED_REJECTION', [event.reason]);
+        };
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FitCraft 3D — Studio Kustomisasi Pakaian Premium</title>
@@ -10,8 +53,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
+    
+    <!-- Prevent white flash and scrollbar layout jumps on initial load -->
+    <style>
+      html.loading-active, body.landing-page {
+        background-color: #06080b;
+        overflow: hidden;
+        height: 100%;
+      }
+    </style>
   </head>
-  <body>
+  <body class="landing-page">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

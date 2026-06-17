@@ -67,10 +67,10 @@ body.products-page-scoped .orb-3 {
 /* Products Section Layout */
 .products-section {
     position: relative;
-    padding: 140px 24px 100px;
+    padding: 50px 24px 20px;
     max-width: 1200px;
     margin: 0 auto;
-    min-height: calc(100vh - 120px);
+    min-height: auto;
     z-index: 1;
     display: flex;
     flex-direction: column;
@@ -79,42 +79,42 @@ body.products-page-scoped .orb-3 {
 
 .products-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 16px;
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
     animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .products-eyebrow {
     font-family: var(--font-display);
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     color: var(--primary);
-    margin-bottom: 16px;
+    margin-bottom: 6px;
     text-transform: uppercase;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .products-title {
     font-family: var(--font-display);
-    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
     font-weight: 800;
-    line-height: 1.1;
+    line-height: 1.15;
     color: var(--text-primary);
     letter-spacing: -0.02em;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
     transition: color 0.4s ease;
 }
 
 .products-subtitle {
-    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    font-size: clamp(0.75rem, 0.9vw, 0.88rem);
     color: var(--text-secondary);
-    max-width: 600px;
+    max-width: 500px;
     margin: 0 auto;
-    line-height: 1.6;
+    line-height: 1.45;
     transition: color 0.4s ease;
 }
 
@@ -156,7 +156,7 @@ body.products-page-scoped .btn-nav-cta:hover {
 /* Showcase Container (Matching Studio sidebars/panels) */
 .showcase-container {
     width: 100%;
-    height: 580px;
+    height: clamp(340px, 48vh, 420px);
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     border-radius: 36px;
@@ -222,8 +222,8 @@ body.dark-theme .showcase-svg-wrapper {
 /* Category Badge top-right */
 .showcase-top-tag {
     position: absolute;
-    top: 32px;
-    right: 32px;
+    top: 20px;
+    right: 20px;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
@@ -241,8 +241,8 @@ body.dark-theme .showcase-svg-wrapper {
 /* Showcase Info - Bottom Left */
 .showcase-info {
     position: absolute;
-    bottom: 40px;
-    left: 40px;
+    bottom: 24px;
+    left: 24px;
     z-index: 10;
     pointer-events: none;
     max-width: 38%;
@@ -301,8 +301,8 @@ body.dark-theme .showcase-svg-wrapper {
 /* Arrow Navigation - Bottom Right */
 .showcase-nav {
     position: absolute;
-    bottom: 40px;
-    right: 40px;
+    bottom: 24px;
+    right: 24px;
     z-index: 10;
     display: flex;
     gap: 12px;
@@ -498,5 +498,39 @@ body.products-page-scoped .footer-copy {
     border-radius: 36px;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+}
+
+/* Floating Back Button styling */
+.btn-products-back-floating {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-panel);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    padding: 10px 20px;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.btn-products-back-floating:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    transform: translateX(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-products-back-floating svg {
+    transition: transform 0.3s ease;
 }
 

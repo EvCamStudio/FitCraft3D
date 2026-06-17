@@ -693,38 +693,51 @@ export default function StudioVisualizer({
               child.receiveShadow = true;
               
               if (child.material) {
-                // Clone the original material to keep its baked normal maps/wrinkles/AO maps,
-                // but customize its standard properties to allow interactive coloring
-                const originalMaterial = child.material.clone();
-                
-                // Determine target color based on mesh or material name
-                const name = (child.name || child.material.name || '').toLowerCase();
-                let targetColor = stateRef.current.colors.body;
-                if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
-                  targetColor = stateRef.current.colors.sleeves;
-                  eng.sleevesMaterial = originalMaterial;
-                } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
-                  targetColor = stateRef.current.colors.collar;
-                  eng.collarMaterial = originalMaterial;
+                const assignMaterial = (mat) => {
+                  if (!mat) return mat;
+                  const originalMaterial = mat.clone();
+                  
+                  // Determine target color based on mesh or material name
+                  const name = (child.name || mat.name || '').toLowerCase();
+                  let targetColor = stateRef.current.colors.body;
+                  if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
+                    targetColor = stateRef.current.colors.sleeves;
+                    eng.sleevesMaterial = originalMaterial;
+                  } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
+                    targetColor = stateRef.current.colors.collar;
+                    eng.collarMaterial = originalMaterial;
+                  } else {
+                    eng.garmentMaterial = originalMaterial;
+                  }
+
+                  originalMaterial.color.set(new THREE.Color(targetColor));
+                  originalMaterial.roughness = 0.85;
+                  originalMaterial.metalness = 0.05;
+                  originalMaterial.bumpMap = eng.fabricBumpTextures['cotton'];
+                  originalMaterial.bumpScale = 0.035;
+                  originalMaterial.side = THREE.DoubleSide;
+                  
+                  // If it is a black model GLB, convert its black baseColorTexture to a colorable gray/white texture
+                  if ((glbPath.includes('t shirt') || glbPath.includes('hoodie') || glbPath.includes('sweater')) && originalMaterial.map) {
+                    originalMaterial.map = processTshirtTexture(originalMaterial.map);
+                  }
+                  
+                  if (!eng.garmentMaterial && !name.includes('sleeve') && !name.includes('lengan') && !name.includes('arm') && !name.includes('hand') && !name.includes('cuff') && !name.includes('collar') && !name.includes('kerah') && !name.includes('rib') && !name.includes('neck')) {
+                    eng.garmentMaterial = originalMaterial;
+                  }
+                  return originalMaterial;
+                };
+
+                if (Array.isArray(child.material)) {
+                  child.material = child.material.map(assignMaterial);
                 } else {
-                  eng.garmentMaterial = originalMaterial;
+                  child.material = assignMaterial(child.material);
                 }
 
-                originalMaterial.color.set(new THREE.Color(targetColor));
-                originalMaterial.roughness = 0.85;
-                originalMaterial.metalness = 0.05;
-                originalMaterial.bumpMap = eng.fabricBumpTextures['cotton'];
-                originalMaterial.bumpScale = 0.035;
-                originalMaterial.side = THREE.DoubleSide;
-                
-                // If it is a black model GLB, convert its black baseColorTexture to a colorable gray/white texture
-                if ((glbPath.includes('t shirt') || glbPath.includes('hoodie') || glbPath.includes('sweater')) && originalMaterial.map) {
-                  originalMaterial.map = processTshirtTexture(originalMaterial.map);
-                }
-                
-                child.material = originalMaterial;
                 if (!eng.garmentMaterial) {
-                  eng.garmentMaterial = originalMaterial; // fallback
+                  // Fallback: assign first material as garmentMaterial if still null
+                  const firstMat = Array.isArray(child.material) ? child.material[0] : child.material;
+                  eng.garmentMaterial = firstMat;
                 }
               }
               

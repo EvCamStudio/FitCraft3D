@@ -83,11 +83,23 @@ body.studio-page {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(82, 140, 102, 0.3);
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(82, 140, 102, 0.55);
+}
+/* Dark theme */
+body.dark-theme ::-webkit-scrollbar-thumb {
+    background: rgba(82, 140, 102, 0.25);
+}
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: rgba(82, 140, 102, 0.45);
+}
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(82, 140, 102, 0.3) transparent;
 }
 
 /* App Container Layout */
@@ -3449,7 +3461,7 @@ body.dark-theme .sidebar-tab-btn.active {
 
 /* Disable scroll snap and smooth scroll behavior during loading to prevent visual jumps, locking body scroll */
 html.loading-active {
-    overflow-y: scroll !important;
+    overflow: hidden !important;
     scroll-snap-type: none !important;
     scroll-behavior: auto !important;
 }

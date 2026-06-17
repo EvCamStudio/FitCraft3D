@@ -1,0 +1,356 @@
+=== Browser Log Server Started ===
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] All 3 GLB models loaded successfully.
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] All 3 GLB models loaded successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] All 3 GLB models loaded successfully.
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] All 3 GLB models loaded successfully.
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210
+[LOG] All 3 GLB models loaded successfully.
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210
+[LOG] All 3 GLB models loaded successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210
+[LOG] All 3 GLB models loaded successfully.
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210
+[LOG] All 3 GLB models loaded successfully.
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210, centerVec = x:0.000 y:-0.037 z:0.036
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210, centerVec = x:0.000 y:-0.037 z:0.036
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210, centerVec = x:0.004 y:0.001 z:-0.006
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210, centerVec = x:0.004 y:0.001 z:-0.006
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210, centerVec = x:0.004 y:-0.005 z:0.001
+[LOG] All 3 GLB models loaded successfully.
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210, centerVec = x:0.004 y:-0.005 z:0.001
+[LOG] All 3 GLB models loaded successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210, centerVec = x:0.004 y:0.001 z:-0.006
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210, centerVec = x:0.000 y:-0.037 z:0.036
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210, centerVec = x:0.004 y:0.001 z:-0.006
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210, centerVec = x:0.000 y:-0.037 z:0.036
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210, centerVec = x:0.004 y:-0.005 z:0.001
+[LOG] All 3 GLB models loaded successfully.
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210, centerVec = x:0.004 y:-0.005 z:0.001
+[LOG] All 3 GLB models loaded successfully.
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Transition animation from sweater to hoodie completed successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[LOG] GLB Bounding Box: 41.62859274853625 99.87875299071518 85.54634953265375 scaleFactor: 0.027032776432951607 computedFrontZ: 1.1562776707856814
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210, centerVec = x:0.000 y:-0.037 z:0.036
+[LOG] [DIAGNOSTIC] tshirt Mesh: name = tripo_node_610092bb, visible = true, parent_visible = true, materials = [tripo_mat_610092bb(color:3b6352,opacity:1,trans:false)]
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210, centerVec = x:0.000 y:-0.037 z:0.036
+[LOG] [DIAGNOSTIC] tshirt Mesh: name = tripo_node_610092bb, visible = true, parent_visible = true, materials = [tripo_mat_610092bb(color:3b6352,opacity:1,trans:false)]
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210, centerVec = x:0.004 y:0.001 z:-0.006
+[LOG] [DIAGNOSTIC] hoodie Mesh: name = tripo_node_026f5fc5, visible = true, parent_visible = true, materials = [tripo_mat_026f5fc5(color:1b2e3c,opacity:1,trans:false)]
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210, centerVec = x:0.004 y:0.001 z:-0.006
+[LOG] [DIAGNOSTIC] hoodie Mesh: name = tripo_node_026f5fc5, visible = true, parent_visible = true, materials = [tripo_mat_026f5fc5(color:1b2e3c,opacity:1,trans:false)]
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210, centerVec = x:0.004 y:-0.005 z:0.001
+[LOG] [DIAGNOSTIC] sweater Mesh: name = tripo_node_e2cfdb9b, visible = true, parent_visible = true, materials = [tripo_mat_e2cfdb9b(color:7f1d1d,opacity:1,trans:false)]
+[LOG] All 3 GLB models loaded successfully.
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210, centerVec = x:0.004 y:-0.005 z:0.001
+[LOG] [DIAGNOSTIC] sweater Mesh: name = tripo_node_e2cfdb9b, visible = true, parent_visible = true, materials = [tripo_mat_e2cfdb9b(color:7f1d1d,opacity:1,trans:false)]
+[LOG] All 3 GLB models loaded successfully.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[WARN] THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 0
+[LOG] activeIndex equals prevIndexRef.current. Skipping transition.
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210, centerVec = x:0.000 y:-0.037 z:0.036
+[LOG] [DIAGNOSTIC] tshirt Mesh: name = tripo_node_610092bb, visible = true, parent_visible = true, materials = [tripo_mat_610092bb(color:3b6352,opacity:1,trans:false)]
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210, centerVec = x:0.004 y:0.001 z:-0.006
+[LOG] [DIAGNOSTIC] hoodie Mesh: name = tripo_node_026f5fc5, visible = true, parent_visible = true, materials = [tripo_mat_026f5fc5(color:1b2e3c,opacity:1,trans:false)]
+[LOG] GLB Loader: tshirt model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for tshirt: sizeVec = x:31.781 y:99.891 z:98.587, scaleFactor = 0.0210, centerVec = x:0.000 y:-0.037 z:0.036
+[LOG] [DIAGNOSTIC] tshirt Mesh: name = tripo_node_610092bb, visible = true, parent_visible = true, materials = [tripo_mat_610092bb(color:3b6352,opacity:1,trans:false)]
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210, centerVec = x:0.004 y:-0.005 z:0.001
+[LOG] [DIAGNOSTIC] sweater Mesh: name = tripo_node_e2cfdb9b, visible = true, parent_visible = true, materials = [tripo_mat_e2cfdb9b(color:7f1d1d,opacity:1,trans:false)]
+[LOG] GLB Loader: hoodie model loaded successfully. visible = true, currentActiveType = hoodie
+[LOG] Model details for hoodie: sizeVec = x:41.629 y:99.879 z:85.546, scaleFactor = 0.0210, centerVec = x:0.004 y:0.001 z:-0.006
+[LOG] [DIAGNOSTIC] hoodie Mesh: name = tripo_node_026f5fc5, visible = true, parent_visible = true, materials = [tripo_mat_026f5fc5(color:1b2e3c,opacity:1,trans:false)]
+[LOG] All 3 GLB models loaded successfully.
+[LOG] GLB Loader: sweater model loaded successfully. visible = false, currentActiveType = hoodie
+[LOG] Model details for sweater: sizeVec = x:38.055 y:99.973 z:74.934, scaleFactor = 0.0210, centerVec = x:0.004 y:-0.005 z:0.001
+[LOG] [DIAGNOSTIC] sweater Mesh: name = tripo_node_e2cfdb9b, visible = true, parent_visible = true, materials = [tripo_mat_e2cfdb9b(color:7f1d1d,opacity:1,trans:false)]
+[LOG] All 3 GLB models loaded successfully.
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] Clicked Next button. Changing index from 2 to 0
+[LOG] Transition Effect: activeIndex changed to 0. prevIndexRef.current = 2
+[LOG] Starting transition animation from sweater to hoodie
+[LOG] Clicked Next button. Changing index from 0 to 1
+[LOG] Transition Effect: activeIndex changed to 1. prevIndexRef.current = 0
+[LOG] Cancelling ongoing transition.
+[LOG] Starting transition animation from hoodie to tshirt
+[LOG] Transition animation from hoodie to tshirt completed successfully.
+[LOG] Clicked Next button. Changing index from 1 to 2
+[LOG] Transition Effect: activeIndex changed to 2. prevIndexRef.current = 1
+[LOG] Starting transition animation from tshirt to sweater
+[LOG] Transition animation from tshirt to sweater completed successfully.
+[LOG] [vite] server connection lost. Polling for restart...

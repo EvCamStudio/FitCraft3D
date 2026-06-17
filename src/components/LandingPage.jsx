@@ -25,7 +25,7 @@ function processTshirtTexture(texture) {
       const b = data[i + 2];
 
       const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-      
+
       // Remap the dark range [0, 50] to light-gray [180, 255] to allow standard multiply coloring
       const newLuma = Math.min(255, 175 + luma * 1.6);
 
@@ -47,7 +47,7 @@ function processTshirtTexture(texture) {
   }
 }
 
-function LandingVisualizer({ colors, onReady, onProgress }) {
+function LandingVisualizer({ colors, onReady, onProgress, introFinished }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -84,6 +84,11 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
   useEffect(() => {
     loadingRef.current = loading;
   }, [loading]);
+
+  const introFinishedRef = useRef(introFinished);
+  useEffect(() => {
+    introFinishedRef.current = introFinished;
+  }, [introFinished]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -187,7 +192,7 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
               const assignMaterial = (mat) => {
                 const originalMaterial = mat.clone();
                 const name = (child.name || mat.name || '').toLowerCase();
-                
+
                 let targetColor = colorsRef.current.body;
                 if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
                   targetColor = colorsRef.current.sleeve;
@@ -217,7 +222,7 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
 
         modelRef.current = model;
         garmentGroup.add(model);
-        
+
         // Add a micro-delay to let textures upload to GPU before removing the spinner
         setTimeout(() => {
           setLoading(false);
@@ -244,7 +249,7 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
     const canvasDom = renderer.domElement;
     const handlePointerDown = () => { isInteracting = true; };
     const handlePointerUp = () => { isInteracting = false; };
-    
+
     canvasDom.addEventListener('pointerdown', handlePointerDown);
     window.addEventListener('pointerup', handlePointerUp);
 
@@ -252,8 +257,8 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      // Perform smooth entry zoom/fly-in after loading is complete
-      if (!loadingRef.current) {
+      // Perform smooth entry zoom/fly-in after loading is complete and intro is finished
+      if (!loadingRef.current && introFinishedRef.current) {
         if (Math.abs(garmentGroup.position.y - targetY) > 0.001) {
           currentY += (targetY - currentY) * interpolationFactor;
           garmentGroup.position.y = currentY;
@@ -297,22 +302,22 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
     <div ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
       {/* Global splash screen handles loading state, so we just use this space directly */}
       {/* Smoothly fade-in canvas */}
-      <canvas 
-        ref={canvasRef} 
-        style={{ 
-          display: 'block', 
-          width: '100%', 
+      <canvas
+        ref={canvasRef}
+        style={{
+          display: 'block',
+          width: '100%',
           height: '100%',
           opacity: loading ? 0 : 1,
           transition: 'opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1)'
-        }} 
+        }}
       />
     </div>
   );
 }
 
 
-export default function LandingPage({ onNavigate, onReady, onProgress }) {
+export default function LandingPage({ onNavigate, onReady, onProgress, introFinished }) {
   // Hoodie color swatch state
   const [hoodieColors, setHoodieColors] = useState({
     body: '#1b2e3c',
@@ -345,6 +350,9 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
     document.documentElement.classList.add('landing-page-html');
 
     const wrapper = containerRef.current;
+    if (wrapper) {
+      wrapper.scrollTop = 0;
+    }
 
     // 2. Navbar scrolled background class
     const navObs = new IntersectionObserver(
@@ -426,8 +434,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
     );
 
     snapSections.forEach((sec) => slideObs.observe(sec));
-    // Hero should be visible immediately on load
-    if (heroRef.current) heroRef.current.classList.add('slide-in');
+    // Hero slide-in is handled by the introFinished effect below
 
     return () => {
       document.body.classList.remove('landing-page');
@@ -438,6 +445,19 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
       slideObs.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (introFinished) {
+      if (heroRef.current) {
+        heroRef.current.classList.add('slide-in');
+      }
+    } else {
+      const wrapper = containerRef.current;
+      if (wrapper) {
+        wrapper.scrollTop = 0;
+      }
+    }
+  }, [introFinished]);
 
   // 8. Scroll Parallax Tracking
   useEffect(() => {
@@ -479,9 +499,27 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
   // 6. Smooth scroll logic
   const handleScrollTo = (e, targetId) => {
     e.preventDefault();
+    const wrapper = containerRef.current;
     const target = document.getElementById(targetId);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (wrapper && target) {
+      // Temporarily disable scroll snapping to prevent snapping conflicts during animation
+      wrapper.style.scrollSnapType = 'none';
+
+      let targetScrollTop = target.offsetTop;
+      // Subtract header height (72px) for non-hero sections
+      if (targetId !== 'hero') {
+        targetScrollTop = Math.max(0, targetScrollTop - 72);
+      }
+
+      wrapper.scrollTo({
+        top: targetScrollTop,
+        behavior: 'smooth'
+      });
+
+      // Restore scroll snapping after smooth scroll completes
+      setTimeout(() => {
+        wrapper.style.scrollSnapType = 'y mandatory';
+      }, 800);
     }
   };
 
@@ -517,8 +555,14 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
         <div className="nav-inner">
           <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="nav-logo">
             <div className="nav-logo-icon">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="fitcraft-logo-gradient-nav" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#2de295" />
+                    <stop offset="100%" stopColor="#14b8a6" />
+                  </linearGradient>
+                </defs>
+                <path d="M6 4h12v6h-6v3h4v4h-4v3H6Z" fill="url(#fitcraft-logo-gradient-nav)" />
               </svg>
             </div>
             <span className="nav-logo-text">FITCRAFT <em>3D</em></span>
@@ -529,6 +573,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
             <a href="#features" onClick={(e) => handleScrollTo(e, 'features')} className="nav-link">Fitur</a>
             <a href="#how-it-works" onClick={(e) => handleScrollTo(e, 'how-it-works')} className="nav-link">Cara Kerja</a>
             <a href="#showcase" onClick={(e) => handleScrollTo(e, 'showcase')} className="nav-link">Showcase</a>
+            <a href="#contact" onClick={(e) => handleScrollTo(e, 'contact')} className="nav-link">Kontak</a>
           </div>
 
           <button onClick={() => onNavigate('studio')} className="btn-nav-cta" id="navCta">
@@ -554,7 +599,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
           <h1 className="hero-title">
             <span className="line-reveal" data-delay="0">CRAFT YOUR</span>
             <span className="line-reveal accent-word" data-delay="100">BRAND</span>
-            <span className="line-reveal" data-delay="200">IDENTITY IN<br/><span className="outline-text">3D</span></span>
+            <span className="line-reveal" data-delay="200">IDENTITY IN<br /><span className="outline-text">3D</span></span>
           </h1>
 
           <p className="hero-desc">
@@ -583,8 +628,8 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
               }}
             >
               <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2"/>
-                <polygon points="10 8 16 12 10 16 10 8"/>
+                <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+                <polygon points="10 8 16 12 10 16 10 8" />
               </svg>
               <span>Lihat Demo</span>
             </button>
@@ -621,7 +666,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
               </div>
               <div className="card-viewport">
                 {/* Interactive 3D T-Shirt GLB Canvas */}
-                <LandingVisualizer colors={hoodieColors} onReady={onReady} onProgress={onProgress} />
+                <LandingVisualizer colors={hoodieColors} onReady={onReady} onProgress={onProgress} introFinished={introFinished} />
               </div>
               {/* Color swatches below card */}
               <div className="card-swatches">
@@ -656,15 +701,15 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
         <div className="section-container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="section-header">
             <span className="section-eyebrow">KENAPA FITCRAFT 3D</span>
-            <h2 className="section-title">Dirancang untuk <br/><span className="accent">Startup Modern</span></h2>
+            <h2 className="section-title">Dirancang untuk <br /><span className="accent">Startup Modern</span></h2>
           </div>
 
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon-bg">
                 <svg viewBox="0 0 48 48" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M24 4 L8 12 V24 C8 33.5 14.5 42.3 24 46 C33.5 42.3 40 33.5 40 24 V12 Z"/>
-                  <path d="M16 24 L21 29 L32 18"/>
+                  <path d="M24 4 L8 12 V24 C8 33.5 14.5 42.3 24 46 C33.5 42.3 40 33.5 40 24 V12 Z" />
+                  <path d="M16 24 L21 29 L32 18" />
                 </svg>
               </div>
               <h3>Visualisasi 3D Real-Time</h3>
@@ -675,8 +720,8 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
             <div className="feature-card">
               <div className="feature-icon-bg">
                 <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="24" cy="24" r="10"/>
-                  <path d="M24 4 V8 M24 40 V44 M4 24 H8 M40 24 H44"/>
+                  <circle cx="24" cy="24" r="10" />
+                  <path d="M24 4 V8 M24 40 V44 M4 24 H8 M40 24 H44" />
                 </svg>
               </div>
               <h3>Kustomisasi Warna &amp; Tema</h3>
@@ -687,8 +732,8 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
             <div className="feature-card">
               <div className="feature-icon-bg">
                 <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="8" y="8" width="32" height="32" rx="4"/>
-                  <path d="M16 24 H32 M24 16 V32"/>
+                  <rect x="8" y="8" width="32" height="32" rx="4" />
+                  <path d="M16 24 H32 M24 16 V32" />
                 </svg>
               </div>
               <h3>Upload Logo &amp; Brand</h3>
@@ -699,10 +744,10 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
             <div className="feature-card">
               <div className="feature-icon-bg">
                 <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="8" y="8" width="14" height="14" rx="2"/>
-                  <rect x="26" y="8" width="14" height="14" rx="2"/>
-                  <rect x="8" y="26" width="14" height="14" rx="2"/>
-                  <rect x="26" y="26" width="14" height="14" rx="2"/>
+                  <rect x="8" y="8" width="14" height="14" rx="2" />
+                  <rect x="26" y="8" width="14" height="14" rx="2" />
+                  <rect x="8" y="26" width="14" height="14" rx="2" />
+                  <rect x="26" y="26" width="14" height="14" rx="2" />
                 </svg>
               </div>
               <h3>Galeri Desain Lokal</h3>
@@ -721,7 +766,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
         <div className="section-container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="section-header">
             <span className="section-eyebrow">ALUR KERJA</span>
-            <h2 className="section-title">3 Langkah <br/><span className="accent">Desain Selesai</span></h2>
+            <h2 className="section-title">3 Langkah <br /><span className="accent">Desain Selesai</span></h2>
           </div>
 
           <div className="steps-container">
@@ -757,15 +802,15 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
         <div className="section-container">
           <div className="section-header">
             <span className="section-eyebrow">SHOWCASE</span>
-            <h2 className="section-title">Inspirasi <br/><span className="accent">Desain Terbaik</span></h2>
+            <h2 className="section-title">Inspirasi <br /><span className="accent">Desain Terbaik</span></h2>
           </div>
 
           <div className="showcase-grid">
             {/* Card 1: Hoodie */}
-            <div className="showcase-card" style={{ 
-              '--card-color': '#1b2e3c', 
-              '--glow-color': 'rgba(27, 46, 60, 0.45)', 
-              '--glow-accent': 'rgba(99, 102, 241, 0.25)', 
+            <div className="showcase-card" style={{
+              '--card-color': '#1b2e3c',
+              '--glow-color': 'rgba(27, 46, 60, 0.45)',
+              '--glow-accent': 'rgba(99, 102, 241, 0.25)',
               '--glow-hover-color': 'rgba(27, 46, 60, 0.35)',
               '--border-glow': 'rgba(99, 102, 241, 0.08)',
               '--border-glow-hover': 'rgba(99, 102, 241, 0.45)'
@@ -780,7 +825,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
               <div className="showcase-garment-preview">
                 <div className="sc-image-container">
                   <div className="sc-glass-disc"></div>
-                  <img src="./assets/models/product-1.png" alt="Hoodie Startup" className="sc-image" />
+                  <img src="./assets/models/product-1.webp" alt="Hoodie Startup" className="sc-image" />
                 </div>
               </div>
               <div className="showcase-info">
@@ -789,10 +834,10 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
             </div>
 
             {/* Card 2: Kaos */}
-            <div className="showcase-card" style={{ 
-              '--card-color': '#3b6352', 
-              '--glow-color': 'rgba(59, 99, 82, 0.45)', 
-              '--glow-accent': 'rgba(234, 179, 8, 0.2)', 
+            <div className="showcase-card" style={{
+              '--card-color': '#3b6352',
+              '--glow-color': 'rgba(59, 99, 82, 0.45)',
+              '--glow-accent': 'rgba(234, 179, 8, 0.2)',
               '--glow-hover-color': 'rgba(59, 99, 82, 0.35)',
               '--border-glow': 'rgba(59, 120, 99, 0.08)',
               '--border-glow-hover': 'rgba(59, 120, 99, 0.45)'
@@ -807,7 +852,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
               <div className="showcase-garment-preview">
                 <div className="sc-image-container">
                   <div className="sc-glass-disc"></div>
-                  <img src="./assets/models/product-2.png" alt="Kaos Kinerja" className="sc-image" />
+                  <img src="./assets/models/product-2.webp" alt="Kaos Kinerja" className="sc-image" />
                 </div>
               </div>
               <div className="showcase-info">
@@ -816,10 +861,10 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
             </div>
 
             {/* Card 3: Sweater */}
-            <div className="showcase-card" style={{ 
-              '--card-color': '#7f1d1d', 
-              '--glow-color': 'rgba(127, 29, 29, 0.45)', 
-              '--glow-accent': 'rgba(217, 70, 239, 0.25)', 
+            <div className="showcase-card" style={{
+              '--card-color': '#7f1d1d',
+              '--glow-color': 'rgba(127, 29, 29, 0.45)',
+              '--glow-accent': 'rgba(217, 70, 239, 0.25)',
               '--glow-hover-color': 'rgba(127, 29, 29, 0.35)',
               '--border-glow': 'rgba(217, 70, 239, 0.08)',
               '--border-glow-hover': 'rgba(217, 70, 239, 0.45)'
@@ -834,7 +879,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
               <div className="showcase-garment-preview">
                 <div className="sc-image-container">
                   <div className="sc-glass-disc"></div>
-                  <img src="./assets/models/product-3.png" alt="Sweater Crewneck" className="sc-image" />
+                  <img src="./assets/models/product-3.webp" alt="Sweater Crewneck" className="sc-image" />
                 </div>
               </div>
               <div className="showcase-info">
@@ -848,13 +893,13 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
       {/* CTA SECTION */}
       <section className="cta-section snap-section">
         <div className="cta-inner">
-            <span className="cta-eyebrow">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ verticalAlign: '-1px', marginRight: '6px' }}>
-                <path d="M12 2l2.2 6.4L20.6 11l-6.4 2.2L12 19.6 9.8 13.2 3.4 11l6.4-2.6L12 2z" />
-              </svg>
-              MULAI SEKARANG — GRATIS
-            </span>
-          <h2 className="cta-title">Wujudkan Identitas<br/>Brand Anda Hari Ini</h2>
+          <span className="cta-eyebrow">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ verticalAlign: '-1px', marginRight: '6px' }}>
+              <path d="M12 2l2.2 6.4L20.6 11l-6.4 2.2L12 19.6 9.8 13.2 3.4 11l6.4-2.6L12 2z" />
+            </svg>
+            MULAI SEKARANG — GRATIS
+          </span>
+          <h2 className="cta-title">Wujudkan Identitas<br />Brand Anda Hari Ini</h2>
           <p className="cta-desc">Tidak perlu akun, tidak perlu install. Langsung buka studio 3D dan mulai desain pakaian impian startup Anda.</p>
           <button
             onClick={() => onNavigate('studio')}
@@ -876,18 +921,87 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="site-footer">
-        <div className="footer-inner">
-          <div className="footer-logo">
-            <div className="nav-logo-icon">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
-              </svg>
+      {/* FOOTER & CONTACT SECTION */}
+      <footer className="site-footer" id="contact">
+        <div className="footer-grid">
+          {/* Brand Info */}
+          <div className="footer-brand">
+            <div className="footer-logo">
+              <div className="nav-logo-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="fitcraft-logo-gradient-footer" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#2de295" />
+                      <stop offset="100%" stopColor="#14b8a6" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M6 4h12v6h-6v3h4v4h-4v3H6Z" fill="url(#fitcraft-logo-gradient-footer)" />
+                </svg>
+              </div>
+              <span>FITCRAFT <em>3D</em></span>
             </div>
-            <span>FITCRAFT <em>3D</em></span>
+            <p className="footer-tagline">Rancang pakaian kustom premium untuk startup dan tim kreatif Anda secara instan dari browser dengan presisi visualisasi 3D real-time.</p>
+            <div className="footer-socials">
+              <a href="#" className="social-link" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              </a>
+              <a href="#" className="social-link" aria-label="Twitter">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+              </a>
+              <a href="#" className="social-link" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+              </a>
+            </div>
           </div>
+
+          {/* Navigation links */}
+          <div className="footer-links-col">
+            <h3>Navigasi</h3>
+            <ul className="footer-links-list">
+              <li><a href="#hero" onClick={(e) => handleScrollTo(e, 'hero')}>Beranda</a></li>
+              <li><a href="#features" onClick={(e) => handleScrollTo(e, 'features')}>Fitur</a></li>
+              <li><a href="#how-it-works" onClick={(e) => handleScrollTo(e, 'how-it-works')}>Cara Kerja</a></li>
+              <li><a href="#showcase" onClick={(e) => handleScrollTo(e, 'showcase')}>Showcase</a></li>
+            </ul>
+          </div>
+
+          {/* Contact Details */}
+          <div className="footer-links-col">
+            <h3>Kontak Kami</h3>
+            <ul className="footer-contact-list">
+              <li>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <span>support@fitcraft3d.com</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <span>+62 (21) 500-3D-CRAFT</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span>Level 24, Premium Tower, Jakarta, Indonesia</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Quick Subscribe / Contact Form */}
+          <div className="footer-links-col newsletter-col">
+            <h3>Hubungi Kami</h3>
+            <p className="newsletter-text">Punya pertanyaan tentang pesanan kustom? Tinggalkan pesan Anda.</p>
+            <form className="footer-contact-form" onSubmit={(e) => { e.preventDefault(); alert('Pesan Anda telah dikirim! Tim support kami akan menghubungi Anda segera.'); e.target.reset(); }}>
+              <input type="email" placeholder="Email Anda" required />
+              <textarea placeholder="Pesan Anda..." required rows="2"></textarea>
+              <button type="submit" className="btn-footer-send">Kirim</button>
+            </form>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
           <p className="footer-copy">© 2026 FitCraft 3D — Studio Kustomisasi Pakaian Premium. Dibuat dengan Three.js & React.</p>
+          <div className="footer-bottom-links">
+            <a href="#">Kebijakan Privasi</a>
+            <a href="#">Syarat & Ketentuan</a>
+          </div>
         </div>
       </footer>
 
@@ -905,8 +1019,14 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
             <div className="auth-modal-header">
               <div className="auth-modal-logo">
                 <div className="nav-logo-icon">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="fitcraft-logo-gradient-auth" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#2de295" />
+                        <stop offset="100%" stopColor="#14b8a6" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M6 4h12v6h-6v3h4v4h-4v3H6Z" fill="url(#fitcraft-logo-gradient-auth)" />
                   </svg>
                 </div>
                 <span>FitCraft 3D</span>

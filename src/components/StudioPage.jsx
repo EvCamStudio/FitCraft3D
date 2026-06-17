@@ -35,6 +35,22 @@ const modelOptions = [
   }
 ];
 
+const designTips = [
+  "Gunakan file PNG transparan beresolusi tinggi untuk hasil kustomisasi stiker yang paling tajam.",
+  "Pilihlah warna logo/teks yang kontras dengan warna dasar pakaian agar desain Anda lebih menonjol.",
+  "Gunakan tombol kamera (Depan, Belakang, Samping) untuk memantau letak logo dari berbagai sudut.",
+  "Pilih bahan Heavy Fleece untuk ketebalan ekstra dan kehangatan optimal pada Hoodie/Sweater.",
+  "Klik dan geser logo langsung di permukaan model 3D untuk memposisikannya secara fleksibel."
+];
+
+const getActiveColorName = (hex) => {
+  const match = presetColorOptions.find(c => c.hex.toLowerCase() === hex.toLowerCase());
+  if (match) {
+    return match.name.split(' (')[0];
+  }
+  return hex;
+};
+
 export default function StudioPage({ onNavigate, initialModel = 'hoodie', onReady, onProgress }) {
   // Theme state
   const [darkTheme, setDarkTheme] = useState(() => {
@@ -85,11 +101,15 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
 
   // Studio configuration states
   const [lightingPreset, setLightingPreset] = useState('studio');
-  const [autoRotate, setAutoRotate] = useState(true);
+  const [autoRotate, setAutoRotate] = useState(false);
   const [isScaleView, setIsScaleView] = useState(false);
   const [isLightIntensityExtra, setIsLightIntensityExtra] = useState(false);
-  const [cameraAngle, setCameraAngle] = useState('depan');
   const [activeTab, setActiveTab] = useState('tab-right-design');
+  const [currentTipIndex, setCurrentTipIndex] = useState(0);
+
+  const handleNextTip = () => {
+    setCurrentTipIndex((prev) => (prev + 1) % designTips.length);
+  };
 
   // Local storage gallery state
   const [savedDesigns, setSavedDesigns] = useState(() => {
@@ -161,13 +181,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
   };
 
 
-  // Camera angles triggers
-  const handleCameraAngle = (angle) => {
-    setCameraAngle(angle);
-    if (angle !== 'depan') {
-      setAutoRotate(false);
-    }
-  };
+
 
   // Upload handler
   const handleFileUpload = (e) => {
@@ -310,11 +324,17 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
             </svg>
           </button>
           <div className="header-brand-logo-container" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#528c66" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-              <polyline points="2 17 12 22 22 17"></polyline>
-              <polyline points="2 12 12 17 22 12"></polyline>
-            </svg>
+            <div className="nav-logo-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="fitcraft-logo-gradient-studio" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#2de295" />
+                    <stop offset="100%" stopColor="#14b8a6" />
+                  </linearGradient>
+                </defs>
+                <path d="M6 4h12v6h-6v3h4v4h-4v3H6Z" fill="url(#fitcraft-logo-gradient-studio)" />
+              </svg>
+            </div>
             <span className="header-brand-name">FitCraft 3D</span>
           </div>
         </div>
@@ -420,7 +440,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
             </div>
 
             {/* Size Select pills & Size Guide */}
-            <div className="sidebar-block" style={{ borderBottom: 'none' }}>
+            <div className="sidebar-block">
               <div className="sidebar-block-label">Pilih Ukuran</div>
               <div style={{ display: 'flex', gap: '6px', width: '100%', marginBottom: '10px' }}>
                 {['S', 'M', 'L', 'XL', 'XXL'].map((sz) => (
@@ -438,6 +458,56 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 📏 Lihat Panduan Ukuran (Size Guide)
               </button>
             </div>
+
+            {/* Ringkasan Desain */}
+            <div className="sidebar-block">
+              <div className="sidebar-block-label">Ringkasan Desain</div>
+              <div className="design-summary-card">
+                <div className="summary-item">
+                  <span className="summary-item-label">Model</span>
+                  <span className="summary-item-value">{activeModel.name}</span>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-item-label">Bahan</span>
+                  <span className="summary-item-value">{fabric === 'cotton' ? 'Cotton Premium' : 'Heavy Fleece'}</span>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-item-label">Ukuran</span>
+                  <span className="summary-item-value">Size {size}</span>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-item-label">Warna Dasar</span>
+                  <div className="summary-item-value-color">
+                    <span className="color-swatch-dot" style={{ backgroundColor: colors.body }}></span>
+                    <span>{getActiveColorName(colors.body)}</span>
+                  </div>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-item-label">Kustomisasi</span>
+                  <span className="summary-item-value">
+                    {decal.type === 'preset' ? `Logo Preset (${decal.presetName.toUpperCase()})` :
+                     decal.type === 'custom' ? 'Logo Kustom' : 'Tanpa Logo'}
+                    {decal.text ? ' + Teks' : ''}
+                  </span>
+                </div>
+                <div className="summary-item-price">
+                  <span className="price-label">Estimasi Harga</span>
+                  <span className="price-value">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalPrice)}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Tips Desain */}
+            <div className="sidebar-block" style={{ borderBottom: 'none' }}>
+              <div className="sidebar-block-label">Tips Kustomisasi</div>
+              <div className="design-tips-card" onClick={handleNextTip} title="Klik untuk tips selanjutnya">
+                <div className="tips-icon">💡</div>
+                <div className="tips-content">
+                  <p className="tips-text">{designTips[currentTipIndex]}</p>
+                  <span className="tips-action">Klik kartu untuk tips berikutnya ➔</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Footer Assistance */}
@@ -453,64 +523,6 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
         <section className="viewport-section">
           <div className="canvas-wrapper">
             
-            {/* Camera Angle strip */}
-            <div className="camera-angle-strip">
-              <button className={`cam-angle-btn ${cameraAngle === 'depan' ? 'active' : ''}`} onClick={() => handleCameraAngle('depan')}>
-                <div className="cam-thumb-box">
-                  <svg viewBox="0 0 200 240" width="36" height="44" fill="none">
-                    <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill="currentColor" opacity="0.4"/>
-                    <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill="currentColor" opacity="0.3"/>
-                  </svg>
-                </div>
-                <span className="cam-label">Depan</span>
-              </button>
-
-              <button className={`cam-angle-btn ${cameraAngle === 'belakang' ? 'active' : ''}`} onClick={() => handleCameraAngle('belakang')}>
-                <div className="cam-thumb-box">
-                  <svg viewBox="0 0 200 240" width="36" height="44" fill="none">
-                    <path d="M45 85 L30 210 L170 210 L155 85 L130 75 C125 95 115 105 100 105 C85 105 75 95 70 75 Z" fill="currentColor" opacity="0.2"/>
-                    <rect x="75" y="90" width="50" height="30" rx="4" fill="currentColor" opacity="0.15"/>
-                  </svg>
-                </div>
-                <span className="cam-label">Belakang</span>
-              </button>
-
-              <button className={`cam-angle-btn ${cameraAngle === 'kanan' ? 'active' : ''}`} onClick={() => handleCameraAngle('kanan')}>
-                <div className="cam-thumb-box">
-                  <svg viewBox="0 0 200 240" width="36" height="44" fill="none">
-                    <path d="M80 70 L70 210 L130 210 L120 70 C115 75 110 80 100 80 C90 80 85 75 80 70Z" fill="currentColor" opacity="0.35"/>
-                    <path d="M80 70 L100 60 L95 80 L60 110 L55 140 Z" fill="currentColor" opacity="0.3"/>
-                  </svg>
-                </div>
-                <span className="cam-label">Kanan</span>
-              </button>
-
-              <button className={`cam-angle-btn ${cameraAngle === 'kiri' ? 'active' : ''}`} onClick={() => handleCameraAngle('kiri')}>
-                <div className="cam-thumb-box">
-                  <svg viewBox="0 0 200 240" width="36" height="44" fill="none">
-                    <path d="M80 70 L70 210 L130 210 L120 70 C115 75 110 80 100 80 C90 80 85 75 80 70Z" fill="currentColor" opacity="0.35"/>
-                    <path d="M120 70 L100 60 L105 80 L140 110 L145 140 Z" fill="currentColor" opacity="0.3"/>
-                  </svg>
-                </div>
-                <span className="cam-label">Kiri</span>
-              </button>
-
-              <button className={`cam-angle-btn ${cameraAngle === 'hood' ? 'active' : ''}`} onClick={() => handleCameraAngle('hood')}>
-                <div className="cam-thumb-box">
-                  <svg viewBox="0 0 200 240" width="36" height="44" fill="none">
-                    <path d="M72 72 C72 45 82 25 100 22 C118 25 128 45 128 72 C120 68 115 60 100 58 C85 60 80 68 72 72Z" fill="currentColor" opacity="0.5"/>
-                  </svg>
-                </div>
-                <span className="cam-label">Hood</span>
-              </button>
-
-              <button className={`cam-angle-btn ${cameraAngle === 'detail' ? 'active' : ''}`} onClick={() => handleCameraAngle('detail')}>
-                <div className="cam-thumb-box">
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="6"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                </div>
-                <span className="cam-label">Detail</span>
-              </button>
-            </div>
 
             {/* Visualizer Canvas View */}
             <div id="canvas-container" className="canvas-container">
@@ -629,7 +641,6 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                   className="toolbar-btn"
                   onClick={() => {
                     setIsScaleView(false);
-                    setCameraAngle('depan');
                     setAutoRotate(true);
                   }}
                   title="Atur Ulang Kamera"
@@ -749,7 +760,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 <div className="desain-section-title" style={{ marginBottom: '8px' }}>Pilih Warna Pakaian</div>
                 <div className="color-zone-row" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                   <span className="color-zone-name" style={{ minWidth: '45px', fontSize: '11px', fontWeight: 'bold', color: '#8c9692' }}>Warna</span>
-                  <div className="color-dots-inline" style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div className="color-dots-inline" style={{ display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'nowrap' }}>
                     {presetColorOptions.map((opt, idx) => (
                       <button
                         key={idx}

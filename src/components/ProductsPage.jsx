@@ -107,6 +107,7 @@ function ProductVisualizer({ activeIndex }) {
 
   const prevIndexRef = useRef(activeIndex);
   const initialIndexRef = useRef(activeIndex);
+  const cancelTransitionRef = useRef(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -197,71 +198,88 @@ function ProductVisualizer({ activeIndex }) {
       gltfLoader.load(
         glbPath,
         (gltf) => {
-          const model = gltf.scene;
+          try {
+            const model = gltf.scene;
 
-          const box = new THREE.Box3().setFromObject(model);
-          const sizeVec = box.getSize(new THREE.Vector3());
-          const centerVec = box.getCenter(new THREE.Vector3());
+            const box = new THREE.Box3().setFromObject(model);
+            const sizeVec = box.getSize(new THREE.Vector3());
+            const centerVec = box.getCenter(new THREE.Vector3());
 
-          model.position.x += (model.position.x - centerVec.x);
-          model.position.y += (model.position.y - centerVec.y);
-          model.position.z += (model.position.z - centerVec.z);
+            // Center the model's geometry inside the wrapper group
+            model.position.set(-centerVec.x, -centerVec.y, -centerVec.z);
+            model.rotation.y = -Math.PI / 2;
 
-          const targetHeight = 2.1;
-          const scaleFactor = targetHeight / sizeVec.y;
-          model.scale.set(scaleFactor, scaleFactor, scaleFactor);
+            // Create wrapper parent group to act as the centered model
+            const modelParent = new THREE.Group();
+            modelParent.add(model);
 
-          model.rotation.y = -Math.PI / 2;
-          model.updateMatrixWorld(true);
+            // Scale the parent group instead of raw model
+            const targetHeight = 2.1;
+            const scaleFactor = targetHeight / sizeVec.y;
+            modelParent.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-          model.traverse((child) => {
-            if (child.isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
+            modelParent.updateMatrixWorld(true);
 
-              if (child.material) {
-                const originalMaterial = child.material.clone();
-                const name = (child.name || child.material.name || '').toLowerCase();
-                
-                // Color based on pre-set brand colors
-                const cfg = colorConfigs[type];
-                let targetColor = cfg.body;
-                
-                if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
-                  targetColor = cfg.sleeves;
-                } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
-                  targetColor = cfg.collar;
+            model.traverse((child) => {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+
+                if (child.material) {
+                  const assignMaterial = (mat) => {
+                    if (!mat) return mat;
+                    const originalMaterial = mat.clone();
+                    const name = (child.name || mat.name || '').toLowerCase();
+
+                    // Color based on pre-set brand colors
+                    const cfg = colorConfigs[type];
+                    let targetColor = cfg.body;
+
+                    if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
+                      targetColor = cfg.sleeves;
+                    } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
+                      targetColor = cfg.collar;
+                    }
+
+                    originalMaterial.color.set(new THREE.Color(targetColor));
+                    originalMaterial.roughness = 0.85;
+                    originalMaterial.metalness = 0.05;
+                    originalMaterial.side = THREE.DoubleSide;
+
+                    if (originalMaterial.map) {
+                      originalMaterial.map = processTshirtTexture(originalMaterial.map);
+                    }
+
+                    return originalMaterial;
+                  };
+
+                  if (Array.isArray(child.material)) {
+                    child.material = child.material.map(assignMaterial);
+                  } else {
+                    child.material = assignMaterial(child.material);
+                  }
                 }
-
-                originalMaterial.color.set(new THREE.Color(targetColor));
-                originalMaterial.roughness = 0.85;
-                originalMaterial.metalness = 0.05;
-                originalMaterial.side = THREE.DoubleSide;
-
-                if (originalMaterial.map) {
-                  originalMaterial.map = processTshirtTexture(originalMaterial.map);
-                }
-
-                child.material = originalMaterial;
               }
+            });
+
+            // Set visibility to false initially unless it matches initial index
+            const initialType = types[initialIndexRef.current];
+            modelParent.visible = (type === initialType);
+            modelParent.position.set(0, 0, 0);
+
+            modelsRef.current[type] = modelParent;
+            garmentGroup.add(modelParent);
+
+            if (type === initialType) {
+              threeRef.current.activeModel = modelParent;
             }
-          });
-
-          // Set visibility to false initially unless it matches initial index
-          const initialType = types[initialIndexRef.current];
-          model.visible = (type === initialType);
-          model.position.set(0, 0, 0);
-
-          modelsRef.current[type] = model;
-          garmentGroup.add(model);
-
-          if (type === initialType) {
-            threeRef.current.activeModel = model;
-          }
-
-          loadedCount++;
-          if (loadedCount === 3) {
-            setLoading(false);
+          } catch (err) {
+            console.error(`Error processing GLB for ${type}:`, err);
+          } finally {
+            loadedCount++;
+            if (loadedCount === 3) {
+              setLoading(false);
+            }
           }
         },
         undefined,
@@ -288,7 +306,7 @@ function ProductVisualizer({ activeIndex }) {
           }
         });
       }
-      
+
       controls.update();
       renderer.render(scene, camera);
     };
@@ -314,7 +332,17 @@ function ProductVisualizer({ activeIndex }) {
 
   // Handle active index changes with smooth slide & cross-fade transition animations
   useEffect(() => {
-    if (prevIndexRef.current === activeIndex) return;
+    console.log(`Transition Effect: activeIndex changed to ${activeIndex}. prevIndexRef.current = ${prevIndexRef.current}`);
+    if (prevIndexRef.current === activeIndex) {
+      console.log("activeIndex equals prevIndexRef.current. Skipping transition.");
+      return;
+    }
+
+    // 1. Cancel/instantly complete any ongoing transition
+    if (cancelTransitionRef.current) {
+      console.log("Cancelling ongoing transition.");
+      cancelTransitionRef.current();
+    }
 
     const types = ['hoodie', 'tshirt', 'sweater'];
     const prevType = types[prevIndexRef.current];
@@ -323,23 +351,9 @@ function ProductVisualizer({ activeIndex }) {
     const oldModel = modelsRef.current[prevType];
     const newModel = modelsRef.current[nextType];
 
-    if (!oldModel || !newModel) {
-      // Fallback: If not preloaded yet, switch immediately
-      prevIndexRef.current = activeIndex;
-      return;
-    }
-
-    const direction = (activeIndex - prevIndexRef.current + 3) % 3 === 1 ? 'next' : 'prev';
-
-    // Start transition
-    threeRef.current.isTransitioning = true;
-    newModel.visible = true;
-
-    // Match rotation of incoming model with outgoing model so transition looks seamless
-    newModel.rotation.y = oldModel.rotation.y;
-
     // Helper functions for opacity cross-fade
     const enableTransparency = (model, enable) => {
+      if (!model) return;
       model.traverse((child) => {
         if (child.isMesh && child.material) {
           const mats = Array.isArray(child.material) ? child.material : [child.material];
@@ -357,6 +371,7 @@ function ProductVisualizer({ activeIndex }) {
     };
 
     const setOpacity = (model, opacityVal) => {
+      if (!model) return;
       model.traverse((child) => {
         if (child.isMesh && child.material) {
           const mats = Array.isArray(child.material) ? child.material : [child.material];
@@ -366,6 +381,45 @@ function ProductVisualizer({ activeIndex }) {
         }
       });
     };
+
+    if (!oldModel || !newModel) {
+      console.log(`Fallback: Models not fully loaded yet. Switching visibility directly.`);
+      types.forEach((type) => {
+        const m = modelsRef.current[type];
+        if (m) {
+          m.visible = (type === nextType);
+          m.position.set(0, 0, 0);
+          enableTransparency(m, false);
+          setOpacity(m, 1.0);
+        }
+      });
+      if (newModel) {
+        threeRef.current.activeModel = newModel;
+      }
+      prevIndexRef.current = activeIndex;
+      return;
+    }
+
+    const direction = (activeIndex - prevIndexRef.current + 3) % 3 === 1 ? 'next' : 'prev';
+
+    // Ensure all other models are hidden and reset to prevent overlap
+    types.forEach((type) => {
+      const m = modelsRef.current[type];
+      if (m && m !== oldModel && m !== newModel) {
+        m.visible = false;
+        m.position.x = 0;
+        enableTransparency(m, false);
+        setOpacity(m, 1.0);
+      }
+    });
+
+    // Start transition
+    console.log(`Starting transition animation from ${prevType} to ${nextType}`);
+    threeRef.current.isTransitioning = true;
+    newModel.visible = true;
+
+    // Match rotation of incoming model with outgoing model so transition looks seamless
+    newModel.rotation.y = oldModel.rotation.y;
 
     // Initialize cross-fade opacities
     enableTransparency(oldModel, true);
@@ -380,14 +434,37 @@ function ProductVisualizer({ activeIndex }) {
 
     const startTime = performance.now();
     const duration = 650; // 650ms for a buttery-smooth, cinematic drift
+    let animationFrameId;
+
+    const cancelTransition = () => {
+      cancelAnimationFrame(animationFrameId);
+
+      // Instantly position and render solidly
+      if (oldModel) {
+        oldModel.visible = false;
+        oldModel.position.x = 0;
+        enableTransparency(oldModel, false);
+        setOpacity(oldModel, 1.0);
+      }
+      if (newModel) {
+        newModel.visible = true;
+        newModel.position.x = 0;
+        enableTransparency(newModel, false);
+        setOpacity(newModel, 1.0);
+      }
+      threeRef.current.activeModel = newModel;
+      threeRef.current.isTransitioning = false;
+      prevIndexRef.current = activeIndex;
+    };
+    cancelTransitionRef.current = cancelTransition;
 
     const slideAnimation = () => {
       const elapsed = performance.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // ease-in-out cubic easing (gradual acceleration & deceleration)
-      const ease = progress < 0.5 
-        ? 4 * progress * progress * progress 
+      const ease = progress < 0.5
+        ? 4 * progress * progress * progress
         : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
       oldModel.position.x = startXOld + (endXOld - startXOld) * ease;
@@ -398,11 +475,12 @@ function ProductVisualizer({ activeIndex }) {
       setOpacity(newModel, progress);
 
       if (progress < 1) {
-        requestAnimationFrame(slideAnimation);
+        animationFrameId = requestAnimationFrame(slideAnimation);
       } else {
+        console.log(`Transition animation from ${prevType} to ${nextType} completed successfully.`);
         oldModel.visible = false;
         oldModel.position.x = 0; // reset old position
-        
+
         // Restore standard solid rendering properties
         enableTransparency(oldModel, false);
         enableTransparency(newModel, false);
@@ -410,10 +488,17 @@ function ProductVisualizer({ activeIndex }) {
         threeRef.current.activeModel = newModel;
         threeRef.current.isTransitioning = false;
         prevIndexRef.current = activeIndex;
+        cancelTransitionRef.current = null;
       }
     };
 
     slideAnimation();
+
+    return () => {
+      if (cancelTransitionRef.current) {
+        cancelTransitionRef.current();
+      }
+    };
   }, [activeIndex]);
 
   return (
@@ -519,32 +604,14 @@ export default function ProductsPage({ onNavigate, onReady, onProgress }) {
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="nav-bar scrolled" id="navbar">
-        <div className="nav-inner">
-          <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('landing'); }} className="nav-logo">
-            <div className="nav-logo-icon">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
-              </svg>
-            </div>
-            <span className="nav-logo-text">FITCRAFT <em>3D</em></span>
-          </a>
-
-          <div className="nav-links">
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('landing'); }} className="nav-link">Fitur</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('landing'); }} className="nav-link">Cara Kerja</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('landing'); }} className="nav-link">Showcase</a>
-          </div>
-
-          <button onClick={() => onNavigate('studio')} className="btn-nav-cta">
-            <span>Buka Studio</span>
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-        </div>
-      </nav>
+      {/* Floating Back Button */}
+      <button onClick={() => onNavigate('landing')} className="btn-products-back-floating">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Kembali</span>
+      </button>
 
       {/* PRODUCTS SECTION */}
       <main className="products-section">
@@ -560,7 +627,7 @@ export default function ProductsPage({ onNavigate, onReady, onProgress }) {
 
         {/* Unified Premium Showcase Card */}
         <div className="showcase-container" onMouseMove={handleMouseMove}>
-          
+
           {/* Active visual container */}
           <div className="showcase-visual">
             <ProductVisualizer activeIndex={activeIndex} />
@@ -582,9 +649,9 @@ export default function ProductsPage({ onNavigate, onReady, onProgress }) {
 
           {/* Bottom-Right Arrow Switcher Controls */}
           <div className="showcase-nav">
-            <button 
-              onClick={() => setActiveIndex((prev) => (prev - 1 + products.length) % products.length)} 
-              className="showcase-nav-btn" 
+            <button
+              onClick={() => setActiveIndex((prev) => (prev - 1 + products.length) % products.length)}
+              className="showcase-nav-btn"
               title="Model Sebelumnya"
             >
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -592,9 +659,9 @@ export default function ProductsPage({ onNavigate, onReady, onProgress }) {
                 <polyline points="12 19 5 12 12 5"></polyline>
               </svg>
             </button>
-            <button 
-              onClick={() => setActiveIndex((prev) => (prev + 1) % products.length)} 
-              className="showcase-nav-btn" 
+            <button
+              onClick={() => setActiveIndex((prev) => (prev + 1) % products.length)}
+              className="showcase-nav-btn"
               title="Model Berikutnya"
             >
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -617,21 +684,6 @@ export default function ProductsPage({ onNavigate, onReady, onProgress }) {
 
         </div>
       </main>
-
-      {/* FOOTER */}
-      <footer className="site-footer">
-        <div className="footer-inner">
-          <div className="footer-logo">
-            <div className="nav-logo-icon">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20.38 3.46L16 6a2 2 0 0 1-2.12-.13l-1.42-1a2 2 0 0 0-2.38 0l-1.42 1A2 2 0 0 1 6.54 6L2.12 3.46a.5.5 0 0 0-.75.43V8a2 2 0 0 0 1.63 2H5v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10h1.88A2 2 0 0 0 22.5 8V3.89a.5.5 0 0 0-.75-.43z"/>
-              </svg>
-            </div>
-            <span>FITCRAFT <em>3D</em></span>
-          </div>
-          <p className="footer-copy">© 2026 FitCraft 3D — Studio Kustomisasi Pakaian Premium. Dibuat dengan Three.js & React.</p>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -15,7 +15,20 @@ const getLoadingStatusMessage = (progress) => {
 };
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  const shouldShowIntro = (() => {
+    const params = new URLSearchParams(window.location.search);
+    const modelParam = params.get('model');
+    if (modelParam && ['hoodie', 'tshirt', 'sweater'].includes(modelParam.toLowerCase())) {
+      return false;
+    }
+    const savedView = localStorage.getItem('fitcraft_active_view');
+    if (savedView && savedView !== 'landing') {
+      return false;
+    }
+    return true;
+  })();
+
+  const [showSplash, setShowSplash] = useState(shouldShowIntro);
 
   const [initialModel, setInitialModel] = useState(() => {
     const params = new URLSearchParams(window.location.search);
@@ -43,14 +56,22 @@ function App() {
     return 'landing';
   });
 
-  const [appStyle, setAppStyle] = useState({ opacity: 0, pointerEvents: 'none' });
+  const [appStyle, setAppStyle] = useState(shouldShowIntro ? { opacity: 0, pointerEvents: 'none' } : {});
+  const [introFinished, setIntroFinished] = useState(!shouldShowIntro);
   const [loadProgress, setLoadProgress] = useState(0);
   const [actualProgress, setActualProgress] = useState(0);
   const [isReady, setIsReady] = useState(false);
 
-  const startTime = React.useRef(Date.now());
+  const startTime = React.useRef(null);
   const isReadyRef = React.useRef(false);
   const actualProgressRef = React.useRef(0);
+
+  useEffect(() => {
+    startTime.current = Date.now();
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  }, []);
 
   // Sync state to refs for use in animation loop
   useEffect(() => {
@@ -117,6 +138,7 @@ function App() {
             opacity: 1,
             transition: 'opacity 1.0s ease-in-out'
           });
+          setIntroFinished(true);
 
           // After transition finishes, remove override style and deactivate splash
           setTimeout(() => {
@@ -208,7 +230,7 @@ function App() {
         </div>
       )}
       <div className="app-content-wrapper" style={appStyle}>
-        {view === 'landing' && <LandingPage onNavigate={navigate} onReady={handleAppReady} onProgress={setActualProgress} />}
+        {view === 'landing' && <LandingPage onNavigate={navigate} onReady={handleAppReady} onProgress={setActualProgress} introFinished={introFinished} />}
         {view === 'products' && <ProductsPage onNavigate={navigate} onReady={handleAppReady} onProgress={setActualProgress} />}
         {view === 'studio' && <StudioPage onNavigate={navigate} initialModel={initialModel} onReady={handleAppReady} onProgress={setActualProgress} />}
       </div>
