@@ -602,13 +602,6 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
               <div className="card-viewport">
                 {/* Interactive 3D T-Shirt GLB Canvas */}
                 <LandingVisualizer colors={hoodieColors} onReady={onReady} onProgress={onProgress} />
-
-                {/* Color orbit rings (animated) */}
-                <div className="orbit-rings" aria-hidden="true">
-                  <div className="orbit-ring ring-1"></div>
-                  <div className="orbit-ring ring-2"></div>
-                  <div className="orbit-ring ring-3"></div>
-                </div>
               </div>
               {/* Color swatches below card */}
               <div className="card-swatches">
@@ -630,31 +623,6 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
                 ))}
               </div>
             </div>
-
-            {/* Floating Info Cards */}
-            <div className="float-card float-card-1">
-              <div className="float-icon">🧵</div>
-              <div className="float-info">
-                <span className="float-label">Bahan</span>
-                <span className="float-value">PBR Cotton Premium</span>
-              </div>
-            </div>
-
-            <div className="float-card float-card-2">
-              <div className="float-icon">🎨</div>
-              <div className="float-info">
-                <span className="float-label">Zona Warna</span>
-                <span className="float-value">3 area kustom</span>
-              </div>
-            </div>
-
-            <div className="float-card float-card-3">
-              <div className="float-icon">💾</div>
-              <div className="float-info">
-                <span className="float-label">Simpan Desain</span>
-                <span className="float-value">Galeri lokal</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -672,7 +640,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
           </div>
 
           <div className="features-grid">
-            <div className="feature-card feature-large">
+            <div className="feature-card">
               <div className="feature-icon-bg">
                 <svg viewBox="0 0 48 48" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M24 4 L8 12 V24 C8 33.5 14.5 42.3 24 46 C33.5 42.3 40 33.5 40 24 V12 Z"/>
@@ -691,8 +659,9 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
                   <path d="M24 4 V8 M24 40 V44 M4 24 H8 M40 24 H44"/>
                 </svg>
               </div>
-              <h3>3 Zona Warna Kustom</h3>
-              <p>Atur warna Badan, Lengan, dan Detail secara terpisah dengan 8 warna kurator + picker tak terbatas.</p>
+              <h3>Kustomisasi Warna &amp; Tema</h3>
+              <p>Atur warna detail (Badan, Lengan, Kerah) secara presisi dengan picker warna tak terbatas serta 4 preset tema kurator instan.</p>
+              <div className="feature-tag">Color Zone &amp; Presets</div>
             </div>
 
             <div className="feature-card">
@@ -702,31 +671,12 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
                   <path d="M16 24 H32 M24 16 V32"/>
                 </svg>
               </div>
-              <h3>Upload Logo Brand</h3>
-              <p>Unggah logo startup Anda (PNG/JPG/WEBP) dan lihat langsung pada model 3D. Atur ukuran dan posisi dengan slider.</p>
+              <h3>Upload Logo &amp; Brand</h3>
+              <p>Unggah identitas logo startup Anda (PNG/JPG/WEBP) secara instan ke model 3D lengkap dengan pengaturan ukuran dan inisial teks kustom.</p>
+              <div className="feature-tag">Interactive Branding</div>
             </div>
 
             <div className="feature-card">
-              <div className="feature-icon-bg">
-                <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M8 40 L40 8 M16 8 H40 V32"/>
-                </svg>
-              </div>
-              <h3>Teks & Tipografi Kustom</h3>
-              <p>Tambahkan slogan atau inisial startup dengan pilihan 3 font premium dan kontrol warna teks yang fleksibel.</p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon-bg">
-                <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M24 4 L28 16 H40 L30 24 L34 36 L24 28 L14 36 L18 24 L8 16 H20 Z"/>
-                </svg>
-              </div>
-              <h3>Tema Warna Instan</h3>
-              <p>4 preset tema warna kurator — Earth Sage, Cyber Crimson, Minimal Cream, SaaS Coral — terapkan dengan satu klik.</p>
-            </div>
-
-            <div className="feature-card feature-wide">
               <div className="feature-icon-bg">
                 <svg viewBox="0 0 48 48" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="8" y="8" width="14" height="14" rx="2"/>
@@ -736,7 +686,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
                 </svg>
               </div>
               <h3>Galeri Desain Lokal</h3>
-              <p>Simpan multiple variasi desain Anda dengan snapshot thumbnail otomatis. Bandingkan, muat ulang, atau hapus kapan saja — tersimpan di browser Anda.</p>
+              <p>Simpan multiple variasi desain Anda dengan snapshot thumbnail otomatis untuk dibandingkan atau dimuat ulang kapan saja.</p>
               <div className="feature-tag">localStorage Gallery</div>
             </div>
           </div>
@@ -791,44 +741,84 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
           </div>
 
           <div className="showcase-grid">
-            <div className="showcase-card" style={{ '--card-color': '#1b2e3c' }}>
-              <div className="showcase-garment">
-                <span className="sc-label">Tech Navy</span>
-                <div className="sc-swatch" style={{ background: '#1b2e3c' }}></div>
+            {/* Card 1: Hoodie */}
+            <div className="showcase-card" style={{ 
+              '--card-color': '#1b2e3c', 
+              '--glow-color': 'rgba(27, 46, 60, 0.45)', 
+              '--glow-accent': 'rgba(99, 102, 241, 0.25)', 
+              '--glow-hover-color': 'rgba(27, 46, 60, 0.35)',
+              '--border-glow': 'rgba(99, 102, 241, 0.08)',
+              '--border-glow-hover': 'rgba(99, 102, 241, 0.45)'
+            }}>
+              <div className="sc-card-meta">
+                <span className="sc-card-category">Outerwear</span>
+                <div className="sc-card-color-indicator">
+                  <span className="sc-color-dot"></span>
+                  <span className="sc-color-name">Tech Navy</span>
+                </div>
+              </div>
+              <div className="showcase-garment-preview">
+                <div className="sc-image-container">
+                  <div className="sc-glass-disc"></div>
+                  <img src="./assets/models/product-1.png" alt="Hoodie Startup" className="sc-image" />
+                </div>
               </div>
               <div className="showcase-info">
                 <span className="sc-name">Hoodie Startup</span>
-                <span className="sc-brand">Nexus AI</span>
               </div>
             </div>
-            <div className="showcase-card" style={{ '--card-color': '#3b6352' }}>
-              <div className="showcase-garment">
-                <span className="sc-label">Eco Sage</span>
-                <div className="sc-swatch" style={{ background: '#3b6352' }}></div>
+
+            {/* Card 2: Kaos */}
+            <div className="showcase-card" style={{ 
+              '--card-color': '#3b6352', 
+              '--glow-color': 'rgba(59, 99, 82, 0.45)', 
+              '--glow-accent': 'rgba(234, 179, 8, 0.2)', 
+              '--glow-hover-color': 'rgba(59, 99, 82, 0.35)',
+              '--border-glow': 'rgba(59, 120, 99, 0.08)',
+              '--border-glow-hover': 'rgba(59, 120, 99, 0.45)'
+            }}>
+              <div className="sc-card-meta">
+                <span className="sc-card-category">Atasan</span>
+                <div className="sc-card-color-indicator">
+                  <span className="sc-color-dot"></span>
+                  <span className="sc-color-name">Eco Sage</span>
+                </div>
               </div>
-              <div className="showcase-info">
-                <span className="sc-name">Sweater Crewneck</span>
-                <span className="sc-brand">GreenTech</span>
-              </div>
-            </div>
-            <div className="showcase-card" style={{ '--card-color': '#7f1d1d' }}>
-              <div className="showcase-garment">
-                <span className="sc-label">Cyber Crimson</span>
-                <div className="sc-swatch" style={{ background: '#7f1d1d' }}></div>
+              <div className="showcase-garment-preview">
+                <div className="sc-image-container">
+                  <div className="sc-glass-disc"></div>
+                  <img src="./assets/models/product-2.png" alt="Kaos Kinerja" className="sc-image" />
+                </div>
               </div>
               <div className="showcase-info">
                 <span className="sc-name">Kaos Kinerja</span>
-                <span className="sc-brand">Apex Tech</span>
               </div>
             </div>
-            <div className="showcase-card" style={{ '--card-color': '#f7f4eb', '--text-dark': '#1e2522' }}>
-              <div className="showcase-garment">
-                <span className="sc-label" style={{ color: '#1e2522' }}>Minimal Cream</span>
-                <div className="sc-swatch" style={{ background: '#f7f4eb', border: '1px solid #e0ddd4' }}></div>
+
+            {/* Card 3: Sweater */}
+            <div className="showcase-card" style={{ 
+              '--card-color': '#7f1d1d', 
+              '--glow-color': 'rgba(127, 29, 29, 0.45)', 
+              '--glow-accent': 'rgba(217, 70, 239, 0.25)', 
+              '--glow-hover-color': 'rgba(127, 29, 29, 0.35)',
+              '--border-glow': 'rgba(217, 70, 239, 0.08)',
+              '--border-glow-hover': 'rgba(217, 70, 239, 0.45)'
+            }}>
+              <div className="sc-card-meta">
+                <span className="sc-card-category">Outerwear</span>
+                <div className="sc-card-color-indicator">
+                  <span className="sc-color-dot"></span>
+                  <span className="sc-color-name">Cyber Crimson</span>
+                </div>
+              </div>
+              <div className="showcase-garment-preview">
+                <div className="sc-image-container">
+                  <div className="sc-glass-disc"></div>
+                  <img src="./assets/models/product-3.png" alt="Sweater Crewneck" className="sc-image" />
+                </div>
               </div>
               <div className="showcase-info">
-                <span className="sc-name" style={{ color: '#1e2522' }}>Hoodie Minimalis</span>
-                <span className="sc-brand" style={{ color: '#5a6460' }}>Quantum Labs</span>
+                <span className="sc-name">Sweater Crewneck</span>
               </div>
             </div>
           </div>

@@ -3,6 +3,17 @@ import LandingPage from './components/LandingPage'
 import ProductsPage from './components/ProductsPage'
 import StudioPage from './components/StudioPage'
 
+const getLoadingStatusMessage = (progress) => {
+  if (progress < 15) return "Initializing core 3D systems...";
+  if (progress < 30) return "Configuring ambient lighting & dynamic shadow maps...";
+  if (progress < 50) return "Loading PBR fabric textures and material maps...";
+  if (progress < 70) return "Parsing garment mesh data and polygon structures...";
+  if (progress < 85) return "Compiling custom WebGL shaders & procedural normal maps...";
+  if (progress < 95) return "Optimizing real-time cloth physics constraints...";
+  if (progress < 100) return "Finalizing environment settings and camera rigs...";
+  return "System initialized. Launching FitCraft 3D Studio.";
+};
+
 function App() {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -32,7 +43,7 @@ function App() {
     return 'landing';
   });
 
-  const [appStyle, setAppStyle] = useState({ transform: 'translateY(100vh)', pointerEvents: 'none' });
+  const [appStyle, setAppStyle] = useState({ opacity: 0, pointerEvents: 'none' });
   const [loadProgress, setLoadProgress] = useState(0);
   const [actualProgress, setActualProgress] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -103,16 +114,16 @@ function App() {
         // Wait a brief moment at 100% before sliding up for aesthetic impact
         setTimeout(() => {
           setAppStyle({
-            transform: 'translateY(0)',
-            transition: 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)'
+            opacity: 1,
+            transition: 'opacity 1.0s ease-in-out'
           });
 
-          // After slide-up finishes, remove transform and deactivate splash
+          // After transition finishes, remove override style and deactivate splash
           setTimeout(() => {
             setAppStyle({});
             setShowSplash(false);
-          }, 800);
-        }, 400);
+          }, 1200);
+        }, 300);
       }
     };
 
@@ -141,12 +152,58 @@ function App() {
     }
   };
 
+  const brandProgress = Math.min(100, (loadProgress / 80) * 100);
+  const progress3d = Math.max(0, ((loadProgress - 80) / 20) * 100);
+  const isGlowActive = loadProgress >= 80;
+
   return (
     <div className="app-root">
       {showSplash && (
         <div className={`global-splash-screen ${loadProgress === 100 ? 'loaded' : ''}`}>
+          {/* Animated Ambient Background Glows */}
+          <div className="splash-bg-glows">
+            <div className="splash-glow-orb orb-1"></div>
+            <div className="splash-glow-orb orb-2"></div>
+          </div>
+          
+          {/* Dynamic Dotted Grid Mesh */}
+          <div className="splash-grid-overlay"></div>
+
+
+          {/* Cinematic Geometric Tech Rings */}
+          <div className="splash-tech-rings">
+            <div className="tech-ring ring-1"></div>
+            <div className="tech-ring ring-2"></div>
+            <div className="tech-ring ring-3"></div>
+          </div>
+
+          {/* Core preloader layout */}
           <div className="splash-content">
-            <h1 className="splash-text-loader" data-text="FITCRAFT 3D" style={{ '--progress': `${loadProgress}%` }}>FITCRAFT 3D</h1>
+            <div className="splash-brand-container">
+              <h1 className="splash-text-loader">
+                <span className="splash-text-brand" data-text="FITCRAFT" style={{ '--progress': `${brandProgress}%` }}>
+                  FITCRAFT
+                </span>
+                <span className={`splash-text-3d ${isGlowActive ? 'glow-active' : ''}`} data-text="3D" style={{ '--progress': `${progress3d}%` }}>
+                  3D
+                </span>
+              </h1>
+              
+              {/* Sleek Progress Bar */}
+              <div className="splash-loader-bar-container">
+                <div className="splash-loader-bar" style={{ width: `${loadProgress}%` }}></div>
+              </div>
+              
+              {/* Dynamic Status Log and Percentage Info */}
+              <div className="splash-meta-row">
+                <span className="splash-status-log">
+                  <span className="status-terminal-symbol">&gt;</span> {getLoadingStatusMessage(loadProgress)}
+                </span>
+                <span className="splash-percentage">
+                  {Math.round(loadProgress)}%
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -3035,60 +3035,416 @@ body.dark-theme .sidebar-tab-btn.active {
 .global-splash-screen {
     position: fixed;
     inset: 0;
-    z-index: 1;
+    z-index: 1000; /* Ensure it lies on top of everything during load */
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(ellipse at center, #111e27 0%, #070b0e 100%);
-    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-    will-change: opacity;
+    background-color: #06080b; /* Even darker obsidian base */
+    transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1), opacity 1.2s ease;
+    will-change: transform, opacity;
+    overflow: hidden;
+    animation: bg-glitch-flicker 12s infinite;
+}
+
+@keyframes bg-glitch-flicker {
+    0%, 94%, 98%, 100% {
+        background-color: #06080b;
+    }
+    95% {
+        background-color: #0c080b; /* brief subtle purple tint */
+    }
+    96% {
+        background-color: #050a09; /* brief subtle green tint */
+    }
+    97% {
+        background-color: #080a0d; /* brief blue-dark tint */
+    }
+}
+
+/* Deep cinematic vignette dropoff */
+.global-splash-screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 15%, rgba(3, 5, 7, 0.95) 100%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .global-splash-screen.loaded {
     opacity: 0;
+    transform: translate3d(0, -100%, 0);
     pointer-events: none;
 }
 
+/* Ambient Glowing Background Orbs */
+.splash-bg-glows {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -3;
+}
+
+.splash-glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.7;
+    will-change: transform;
+}
+
+.splash-glow-orb.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(82, 140, 102, 0.18) 0%, rgba(82, 140, 102, 0) 70%);
+    top: -10%;
+    left: -10%;
+    animation: float-glow-1 16s infinite alternate ease-in-out;
+}
+
+.splash-glow-orb.orb-2 {
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(27, 46, 60, 0.4) 0%, rgba(27, 46, 60, 0) 70%);
+    bottom: -15%;
+    right: -10%;
+    animation: float-glow-2 20s infinite alternate ease-in-out;
+}
+
+@keyframes float-glow-1 {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        transform: translate(120px, 60px) scale(1.15);
+    }
+}
+
+@keyframes float-glow-2 {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        transform: translate(-140px, -80px) scale(0.9);
+    }
+}
+
+/* Subtle Blueprint Dot Grid Mesh & Scanning Laser */
+.splash-grid-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    opacity: 0.15;
+    background-size: 32px 32px;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.2px, transparent 1.2px);
+    mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
+    animation: grid-glitch 7s infinite ease-in-out;
+}
+
+.splash-grid-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(82, 140, 102, 0) 45%,
+        rgba(82, 140, 102, 0.25) 50%,
+        rgba(82, 140, 102, 0) 55%,
+        transparent 100%
+    );
+    background-size: 100% 200%;
+    animation: scan-laser 6s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes grid-glitch {
+    0%, 94%, 96%, 100% {
+        opacity: 0.15;
+        transform: translate(0, 0) scale(1) skew(0deg);
+    }
+    95% {
+        opacity: 0.35;
+        transform: translate(-4px, 3px) scale(1.03) skew(2deg);
+        filter: hue-rotate(60deg) contrast(1.2);
+    }
+    97% {
+        opacity: 0.28;
+        transform: translate(3px, -2px) scale(0.98) skew(-1deg);
+        filter: hue-rotate(-30deg);
+    }
+}
+
+@keyframes scan-laser {
+    0% { background-position: 0% -100%; }
+    100% { background-position: 0% 100%; }
+}
+
+/* Cinematic Geometric Tech Rings */
+.splash-tech-rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px;
+    height: 480px;
+    pointer-events: none;
+    z-index: -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.22;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    will-change: opacity, transform;
+}
+
+.global-splash-screen.loaded .splash-tech-rings {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+}
+
+.tech-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(82, 140, 102, 0.12);
+    will-change: transform;
+}
+
+.tech-ring.ring-1 {
+    width: 440px;
+    height: 440px;
+    border-style: dashed;
+    animation: spin-clockwise 40s linear infinite;
+}
+
+.tech-ring.ring-2 {
+    width: 370px;
+    height: 370px;
+    border: 1.5px solid rgba(255, 255, 255, 0.03);
+    border-top-color: rgba(82, 140, 102, 0.35);
+    border-bottom-color: rgba(82, 140, 102, 0.35);
+    animation: spin-counter 25s linear infinite;
+}
+
+.tech-ring.ring-3 {
+    width: 300px;
+    height: 300px;
+    border: 1px dotted rgba(82, 140, 102, 0.15);
+    animation: spin-clockwise 15s linear infinite;
+}
+
+@keyframes spin-clockwise {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes spin-counter {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+}
+
+/* Content Container */
 .splash-content {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
-.splash-text-loader {
+.splash-brand-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 480px;
+    align-items: stretch;
+    justify-content: center;
+    padding: 32px;
     position: relative;
-    font-size: clamp(32px, 5vw, 64px);
-    font-weight: 800;
-    letter-spacing: 6px;
-    font-family: 'Space Grotesk', sans-serif;
-    color: rgba(255, 255, 255, 0.05); /* very faint outline base */
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
-    margin: 0;
-    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: opacity 0.8s ease, transform 0.8s ease;
     will-change: opacity, transform;
 }
 
-.global-splash-screen.loaded .splash-text-loader {
+.global-splash-screen.loaded .splash-brand-container {
     opacity: 0;
-    transform: translateY(-40px);
+    transform: translateY(-20px);
 }
 
-.splash-text-loader::before {
+/* Text Logo Loading styling */
+.splash-text-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2vw, 20px);
+    margin: 0 auto;
+    width: 100%;
+    animation: logo-breathe 8s infinite ease-in-out;
+    will-change: transform, filter;
+}
+
+@keyframes logo-breathe {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.015); filter: brightness(1.12); }
+}
+
+.splash-text-brand, .splash-text-3d {
+    position: relative;
+    font-size: clamp(28px, 5vw, 60px);
+    font-weight: 900;
+    letter-spacing: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    color: rgba(255, 255, 255, 0.04); /* very faint outline base */
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.16);
+    text-shadow: 0 0 30px rgba(82, 140, 102, 0.05);
+}
+
+.splash-text-brand::before, .splash-text-3d::before {
     content: attr(data-text);
     position: absolute;
-    top: 0; left: 0;
-    color: var(--primary, #528c66);
+    top: 0; left: 0; right: 0;
     -webkit-text-stroke: 0px;
     white-space: nowrap;
     overflow: hidden;
     width: var(--progress, 0%);
-    transition: width 0.3s ease;
+    transition: width 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+.splash-text-brand::before {
+    color: var(--primary, #528c66);
+    text-shadow: 0 0 20px rgba(82, 140, 102, 0.5), 0 0 40px rgba(82, 140, 102, 0.2);
+}
+
+/* 3D text styling: no box container, pure text glow */
+.splash-text-3d {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.splash-text-3d::before {
+    color: #ffffff; /* Brilliant white for the 3D text fill */
+    left: 0; /* Align perfectly with text edge */
+    text-shadow: 0 0 15px rgba(82, 140, 102, 0.9), 
+                 0 0 30px rgba(82, 140, 102, 0.7), 
+                 0 0 60px rgba(82, 140, 102, 1);
+}
+
+/* Glow activation when progress >= 80% with digital glitching */
+.splash-text-3d.glow-active {
+    animation: text-3d-glitch 2.5s infinite steps(1);
+}
+
+@keyframes text-3d-glitch {
+    0%, 85%, 89%, 93%, 97%, 100% {
+        opacity: 1;
+        transform: translate(0, 0) skewX(0deg);
+        text-shadow: 0 0 15px rgba(82, 140, 102, 0.9), 
+                     0 0 30px rgba(82, 140, 102, 0.7), 
+                     0 0 60px rgba(82, 140, 102, 1);
+    }
+    86% {
+        opacity: 0.85;
+        transform: translate(-3px, 1px) skewX(-12deg);
+        text-shadow: -3px 0 rgba(255, 0, 80, 0.8), 2px 0 rgba(0, 243, 255, 0.8);
+    }
+    88% {
+        opacity: 0.9;
+        transform: translate(3px, -2px) skewX(15deg);
+        text-shadow: 3px 0 rgba(255, 0, 80, 0.8), -2px 0 rgba(0, 243, 255, 0.8);
+    }
+    90% {
+        opacity: 0.7;
+        text-shadow: none;
+    }
+    94% {
+        opacity: 0.95;
+        transform: translate(-1px, 2px) scaleY(1.05);
+        text-shadow: -2px -2px rgba(82, 140, 102, 0.8), 2px 2px rgba(255, 255, 255, 0.9);
+    }
+    96% {
+        opacity: 0.8;
+        transform: translate(2px, -1px);
+        text-shadow: 0 0 20px rgba(82, 140, 102, 0.9);
+    }
+}
+
+/* Sleek Minimal Progress Bar */
+.splash-loader-bar-container {
+    height: 2px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 999px;
+    margin: 32px 0 20px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.01);
+}
+
+.splash-loader-bar {
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(82, 140, 102, 0.3) 0%, 
+        rgba(82, 140, 102, 1) 70%, 
+        rgba(255, 255, 255, 0.9) 100%
+    );
+    transition: width 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
+    box-shadow: 0 0 10px rgba(82, 140, 102, 0.8);
+}
+
+/* Dynamic status log and percentage indicators */
+.splash-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-family: var(--font-sans);
+    letter-spacing: 0.5px;
+    color: var(--text-secondary, #8a9892);
+}
+
+.splash-status-log {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.status-terminal-symbol {
+    color: var(--primary, #528c66);
+    font-weight: 700;
+    font-family: monospace;
+    animation: terminal-blink 1s infinite alternate;
+}
+
+@keyframes terminal-blink {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.splash-percentage {
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary, #528c66);
+    background: rgba(82, 140, 102, 0.08);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(82, 140, 102, 0.15);
+    letter-spacing: 0.5px;
 }
 
 .app-content-wrapper {
     position: relative;
     z-index: 2; /* Above the splash screen */
     min-height: 100vh;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
 }
 
 /* Disable scroll snap and smooth scroll behavior during loading to prevent visual jumps, locking body scroll */
