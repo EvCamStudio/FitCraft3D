@@ -59,19 +59,22 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
     colorsRef.current = colors;
   }, [colors]);
 
-  // Handle color updates dynamically
+  // Handle color updates dynamically, supporting both single material and array materials safely
   useEffect(() => {
     if (!modelRef.current) return;
     modelRef.current.traverse((child) => {
       if (child.isMesh && child.material) {
-        const name = (child.name || child.material.name || '').toLowerCase();
-        let targetColor = colors.body;
-        if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
-          targetColor = colors.sleeve;
-        } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
-          targetColor = colors.collar;
-        }
-        child.material.color.set(new THREE.Color(targetColor));
+        const mats = Array.isArray(child.material) ? child.material : [child.material];
+        mats.forEach((mat) => {
+          const name = (child.name || mat.name || '').toLowerCase();
+          let targetColor = colors.body;
+          if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
+            targetColor = colors.sleeve;
+          } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
+            targetColor = colors.collar;
+          }
+          mat.color.set(new THREE.Color(targetColor));
+        });
       }
     });
   }, [colors]);
@@ -174,33 +177,40 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
         model.rotation.y = -Math.PI / 2;
         model.updateMatrixWorld(true);
 
-        // Traverse to apply cloned material and initial colors
+        // Traverse to apply cloned material and initial colors, handling multi-materials safely
         model.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
 
             if (child.material) {
-              const originalMaterial = child.material.clone();
-              const name = (child.name || child.material.name || '').toLowerCase();
-              
-              let targetColor = colorsRef.current.body;
-              if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
-                targetColor = colorsRef.current.sleeve;
-              } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
-                targetColor = colorsRef.current.collar;
+              const assignMaterial = (mat) => {
+                const originalMaterial = mat.clone();
+                const name = (child.name || mat.name || '').toLowerCase();
+                
+                let targetColor = colorsRef.current.body;
+                if (name.includes('sleeve') || name.includes('lengan') || name.includes('arm') || name.includes('hand') || name.includes('cuff')) {
+                  targetColor = colorsRef.current.sleeve;
+                } else if (name.includes('collar') || name.includes('kerah') || name.includes('rib') || name.includes('neck') || name.includes('detail') || name.includes('drawstring') || name.includes('pocket')) {
+                  targetColor = colorsRef.current.collar;
+                }
+
+                originalMaterial.color.set(new THREE.Color(targetColor));
+                originalMaterial.roughness = 0.85;
+                originalMaterial.metalness = 0.05;
+                originalMaterial.side = THREE.DoubleSide;
+
+                if (originalMaterial.map) {
+                  originalMaterial.map = processTshirtTexture(originalMaterial.map);
+                }
+                return originalMaterial;
+              };
+
+              if (Array.isArray(child.material)) {
+                child.material = child.material.map(assignMaterial);
+              } else {
+                child.material = assignMaterial(child.material);
               }
-
-              originalMaterial.color.set(new THREE.Color(targetColor));
-              originalMaterial.roughness = 0.85;
-              originalMaterial.metalness = 0.05;
-              originalMaterial.side = THREE.DoubleSide;
-
-              if (originalMaterial.map) {
-                originalMaterial.map = processTshirtTexture(originalMaterial.map);
-              }
-
-              child.material = originalMaterial;
             }
           }
         });
@@ -230,6 +240,14 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
     );
 
     // 7. Animation loop (includes slow auto-rotation and smooth slide/fly-in transition)
+    let isInteracting = false;
+    const canvasDom = renderer.domElement;
+    const handlePointerDown = () => { isInteracting = true; };
+    const handlePointerUp = () => { isInteracting = false; };
+    
+    canvasDom.addEventListener('pointerdown', handlePointerDown);
+    window.addEventListener('pointerup', handlePointerUp);
+
     let animationFrameId;
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
@@ -246,9 +264,9 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
         }
       }
 
-      // Auto-rotate when user is not actively interacting/dragging
-      if (modelRef.current && controls.state === -1) {
-        modelRef.current.rotation.y += 0.005;
+      // Auto-rotate the garment group when user is not actively interacting/dragging
+      if (garmentGroup && !loadingRef.current && !isInteracting) {
+        garmentGroup.rotation.y += 0.005;
       }
 
       controls.update();
@@ -268,6 +286,8 @@ function LandingVisualizer({ colors, onReady, onProgress }) {
     return () => {
       cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
+      canvasDom.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointerup', handlePointerUp);
       scene.clear();
       renderer.dispose();
     };
