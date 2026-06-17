@@ -42,18 +42,28 @@ html {
 }
 
 /* ---------- PPT-STYLE SCROLL SNAP ---------- */
-html:has(body.landing-page) {
-    scroll-snap-type: y proximity;
-    scroll-padding-top: 0;
+html.landing-page-html {
+    height: 100%;
+    overflow: hidden;
 }
 
 body.landing-page {
     font-family: var(--font-sans);
     background-color: var(--obsidian);
     color: var(--text-primary);
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+    overflow: hidden;
+}
+
+.landing-page-wrapper {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: 72px; /* offset fixed header height */
+    overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 /* Each full-screen "slide" snaps into view */

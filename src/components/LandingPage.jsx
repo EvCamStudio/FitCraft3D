@@ -322,6 +322,9 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
 
   useEffect(() => {
     document.body.classList.add('landing-page');
+    document.documentElement.classList.add('landing-page-html');
+
+    const wrapper = containerRef.current;
 
     // 2. Navbar scrolled background class
     const navObs = new IntersectionObserver(
@@ -334,7 +337,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
           }
         }
       },
-      { threshold: 0.1 }
+      { root: wrapper, threshold: 0.1 }
     );
 
     if (heroRef.current) {
@@ -360,7 +363,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
           }
         });
       },
-      { threshold: 0.1 }
+      { root: wrapper, threshold: 0.1 }
     );
 
     revealEls.forEach((el) => revealObs.observe(el));
@@ -382,7 +385,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
           }
         });
       },
-      { threshold: 0.5 }
+      { root: wrapper, threshold: 0.5 }
     );
 
     sections.forEach((sec) => sectionObs.observe(sec));
@@ -399,7 +402,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
           }
         });
       },
-      { threshold: 0.35 }
+      { root: wrapper, threshold: 0.35 }
     );
 
     snapSections.forEach((sec) => slideObs.observe(sec));
@@ -408,6 +411,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
 
     return () => {
       document.body.classList.remove('landing-page');
+      document.documentElement.classList.remove('landing-page-html');
       navObs.disconnect();
       revealObs.disconnect();
       sectionObs.disconnect();
@@ -424,18 +428,18 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          wrapper.style.setProperty('--scroll-y', window.scrollY);
+          wrapper.style.setProperty('--scroll-y', wrapper.scrollTop);
           ticking = false;
         });
         ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    wrapper.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      wrapper.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -501,6 +505,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }) {
           </a>
 
           <div className="nav-links">
+            <a href="#hero" onClick={(e) => handleScrollTo(e, 'hero')} className="nav-link">Beranda</a>
             <a href="#features" onClick={(e) => handleScrollTo(e, 'features')} className="nav-link">Fitur</a>
             <a href="#how-it-works" onClick={(e) => handleScrollTo(e, 'how-it-works')} className="nav-link">Cara Kerja</a>
             <a href="#showcase" onClick={(e) => handleScrollTo(e, 'showcase')} className="nav-link">Showcase</a>
