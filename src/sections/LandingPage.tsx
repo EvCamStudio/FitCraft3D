@@ -39,6 +39,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
   const [scrolled, setScrolled] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -94,6 +95,12 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
+    setMobileMenuOpen(false);
+  };
+
+  const handleMobileNavigate = (view: string, model?: string) => {
+    setMobileMenuOpen(false);
+    onNavigate(view, model);
   };
 
   return (
@@ -159,7 +166,56 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
             <polyline points="9 18 15 12 9 6" />
           </svg>
         </button>
+
+        {/* Mobile Hamburger */}
+        <button className={`mobile-menu-toggle ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+          <span className="hamburger-line line-1" />
+          <span className="hamburger-line line-2" />
+          <span className="hamburger-line line-3" />
+        </button>
       </nav>
+
+      {/* Mobile Navigation Drawer */}
+      <div className={`mobile-nav-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)} />
+      <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className="mobile-nav-header">
+          <div className="nav-logo">
+            <div className="nav-logo-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="mobileLogoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#00e5a0" />
+                    <stop offset="100%" stopColor="#00b874" />
+                  </linearGradient>
+                </defs>
+                <path d="M6 4h12v6h-6v3h4v4h-4v3H6Z" fill="url(#mobileLogoGrad)" />
+              </svg>
+            </div>
+            <span className="nav-logo-text">
+              FITCRAFT <span>3D</span>
+            </span>
+          </div>
+          <button className="mobile-nav-close" onClick={() => setMobileMenuOpen(false)}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div className="mobile-nav-links">
+          <a className="mobile-nav-link" onClick={() => scrollToSection('hero')}>Home</a>
+          <a className="mobile-nav-link" onClick={() => scrollToSection('products')}>Catalog</a>
+          <a className="mobile-nav-link" onClick={() => handleMobileNavigate('studio')}>Studio</a>
+          <a className="mobile-nav-link" onClick={() => scrollToSection('about')}>About</a>
+          <a className="mobile-nav-link" onClick={() => scrollToSection('contact')}>Contact</a>
+        </div>
+        <button className="mobile-nav-cta" onClick={() => handleMobileNavigate('studio')}>
+          <span>Mulai Desain</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      </div>
 
       {/* Hero Section */}
       <section className="hero-section" id="hero">
@@ -181,7 +237,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
             secara instan langsung dari browser — dengan presisi visualisasi 3D PBR real-time.
           </p>
           <div className="hero-cta-group">
-            <button className="btn-primary" onClick={() => onNavigate('studio')}>
+            <button className="btn-primary" onClick={() => onNavigate('products')}>
               <span>EXPLORE NOW</span>
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <line x1="5" y1="12" x2="19" y2="12" />
@@ -265,11 +321,44 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
 
         <div className="gallery-grid">
           {galleryImages.map((img, idx) => (
-            <div key={idx} className={`gallery-item reveal reveal-scale reveal-delay-${idx + 1}`} ref={addRef}>
+            <div 
+              key={idx} 
+              className={`gallery-item gallery-item-${idx + 1} reveal reveal-scale reveal-delay-${idx + 1}`} 
+              ref={addRef}
+              onClick={() => onNavigate('products')}
+            >
+              {/* Stylized Serial Number */}
+              <div className="gallery-num">0{idx + 1}</div>
+              
               <img src={img.src} alt={img.caption} />
-              <div className="gallery-caption">{img.caption}</div>
+              
+              <div className="gallery-caption">
+                <span>{img.caption}</span>
+                <div className="gallery-caption-arrow">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
+                  </svg>
+                </div>
+              </div>
             </div>
           ))}
+        </div>
+
+        {/* Gallery Action Footer */}
+        <div className="gallery-footer reveal reveal-up" ref={addRef}>
+          <div className="gallery-footer-info">
+            <span className="gallery-footer-badge">TRENDING</span>
+            <h3 className="gallery-footer-title">Explore More Collections</h3>
+            <p className="gallery-footer-desc">250+ pilihan preset & model siap kustomisasi di dalam studio editor kami.</p>
+          </div>
+          <button className="gallery-footer-btn" onClick={() => onNavigate('products')}>
+            <span>Lihat Semua Kanva</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </button>
         </div>
       </section>
 
@@ -346,10 +435,10 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
           <div className="about-visual-center reveal reveal-scale" ref={addRef}>
             <div className="about-hoodie-wrapper">
               <img
-                src="/assets/hoodie-3d.png"
+                src="/assets/hoodie-transparent.png"
                 alt="FitCraft 3D Hoodie"
                 className="about-hoodie-img"
-                onError={(e) => { (e.target as HTMLImageElement).src = '/assets/hero-hoodie.png'; }}
+                onError={(e) => { (e.target as HTMLImageElement).src = '/assets/hoodie-3d.png'; }}
               />
             </div>
             {/* Holographic Ring Platform */}

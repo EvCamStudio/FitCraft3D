@@ -310,7 +310,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
 
       {/* Navbar */}
       <nav className="relative z-50 border-b border-white/[0.06] bg-[#08090a]/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <button
               onClick={() => onNavigate('landing')}
@@ -319,7 +319,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="15 18 9 12 15 6" />
               </svg>
-              Kembali
+              <span className="hidden sm:inline">Kembali</span>
             </button>
           </div>
 
@@ -335,7 +335,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
                 <path d="M6 4h12v6h-6v3h4v4h-4v3H6Z" fill="url(#logoGradProd)" />
               </svg>
             </div>
-            <span className="font-[var(--font-display)] font-bold text-white">
+            <span className="font-[var(--font-display)] font-bold text-white text-sm sm:text-base">
               FITCRAFT <span className="text-[#2de295]">3D</span>
             </span>
           </div>
@@ -355,12 +355,12 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
       </nav>
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-8 pb-16" ref={sectionRef}>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-10 sm:pb-16" ref={sectionRef}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="text-center mb-8"
+          className="text-center mb-6 sm:mb-8"
         >
           <div className="label-text mb-2 flex items-center justify-center gap-2">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2de295" strokeWidth="2.5">
@@ -371,7 +371,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           <h1 className="heading-lg text-white">
             Kanvas <span className="neon-text">Desain Anda</span>
           </h1>
-          <p className="text-[#9ba3af] mt-2 max-w-lg mx-auto">
+          <p className="text-[#9ba3af] mt-2 max-w-lg mx-auto text-sm sm:text-base px-2 sm:px-0">
             Mulai kustomisasi dari koleksi model dasar premium kami. Tiap model dirancang dengan presisi 3D PBR.
           </p>
         </motion.div>
@@ -381,10 +381,10 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2 }}
-          className="relative glass-panel rounded-3xl overflow-hidden mb-8"
+          className="relative glass-panel rounded-2xl sm:rounded-3xl overflow-hidden mb-6 sm:mb-8"
         >
           {/* Top tag */}
-          <div className="absolute top-6 left-6 z-20">
+          <div className="absolute top-3 left-3 sm:top-6 sm:left-6 z-20">
             <div className="glass-panel rounded-full px-4 py-2 flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2de295" strokeWidth="2">
                 <path d="M20.38 3.46L16 7.83l-1-1 4.38-4.37a1 1 0 011 1z" />
@@ -394,8 +394,8 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           </div>
 
           {/* Control Panel - Top Right */}
-          <div className="absolute top-6 right-6 z-20 w-44">
-            <div className="glass-panel rounded-2xl p-4">
+          <div className="absolute top-3 right-3 sm:top-6 sm:right-6 z-20 w-36 sm:w-44">
+            <div className="glass-panel rounded-xl sm:rounded-2xl p-3 sm:p-4">
               <div className="text-xs font-bold text-[#9ba3af] mb-3 font-[var(--font-display)] flex items-center justify-between">
                 Warna
                 <span className="text-[10px] bg-[#2de295]/10 text-[#2de295] px-2 py-0.5 rounded-full">Solid</span>
@@ -435,7 +435,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           </div>
 
           {/* 3D Product Display */}
-          <div className="relative min-h-[500px] lg:min-h-[550px] flex items-center justify-center bg-gradient-to-b from-[#0c0f12] to-[#08090a]">
+          <div className="relative min-h-[360px] sm:min-h-[450px] lg:min-h-[550px] flex items-center justify-center bg-gradient-to-b from-[#0c0f12] to-[#08090a]">
             {/* Particle effect */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               {Array.from({ length: 20 }).map((_, i) => (
@@ -454,24 +454,24 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
             </div>
 
             {/* 3D Canvas Visualizer */}
-            <div className="w-full h-[500px] lg:h-[550px]">
+            <div className="w-full h-[360px] sm:h-[450px] lg:h-[550px]">
               <ProductVisualizer activeIndex={activeIndex} customColor={selectedColor.hex} />
             </div>
 
             {/* Product Info - Bottom Left */}
-            <div className="absolute bottom-8 left-8 z-20 max-w-xs pointer-events-none">
+            <div className="absolute bottom-20 sm:bottom-8 left-4 sm:left-8 z-20 max-w-[200px] sm:max-w-xs pointer-events-none">
               <div className="label-text mb-2">MODEL PRODUK AKTIF</div>
-              <h2 className="font-[var(--font-display)] font-bold text-3xl lg:text-4xl leading-tight mb-3 text-white">
+              <h2 className="font-[var(--font-display)] font-bold text-xl sm:text-3xl lg:text-4xl leading-tight mb-2 sm:mb-3 text-white">
                 {activeProduct.name.split(' ').slice(0, 2).join(' ')}
                 <br />
                 <span className="text-[#2de295]">{activeProduct.name.split(' ').slice(2).join(' ')}</span>
               </h2>
-              <p className="text-sm text-[#9ba3af] leading-relaxed mb-4">
+              <p className="hidden sm:block text-sm text-[#9ba3af] leading-relaxed mb-4">
                 {activeProduct.description}
               </p>
 
               {/* Mini Features */}
-              <div className="flex gap-6">
+              <div className="hidden sm:flex gap-6">
                 {[
                   { icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5', label: '3D Real-Time', sub: 'PBR Rendering' },
                   { icon: 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z', label: 'Area Cetak', sub: 'Luas' },
@@ -491,10 +491,10 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
             </div>
 
             {/* Navigation Arrows - Bottom Right */}
-            <div className="absolute bottom-8 right-8 z-20 flex gap-3">
+            <div className="absolute bottom-20 sm:bottom-8 right-4 sm:right-8 z-20 flex gap-2 sm:gap-3">
               <button
                 onClick={prevProduct}
-                className="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:border-[#2de295]/50 transition-all group cursor-pointer bg-transparent"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center hover:border-[#2de295]/50 transition-all group cursor-pointer bg-transparent"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#9ba3af] group-hover:text-[#2de295] transition-colors">
                   <polyline points="15 18 9 12 15 6" />
@@ -502,7 +502,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
               </button>
               <button
                 onClick={nextProduct}
-                className="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:border-[#2de295]/50 transition-all group cursor-pointer bg-transparent"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full glass-panel flex items-center justify-center hover:border-[#2de295]/50 transition-all group cursor-pointer bg-transparent"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#9ba3af] group-hover:text-[#2de295] transition-colors">
                   <polyline points="9 18 15 12 9 6" />
@@ -512,7 +512,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           </div>
 
           {/* CTA Button */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+          <div className="absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2 z-20">
             <button
               onClick={() => onNavigate('studio', activeProduct.id)}
               className="btn-primary shadow-[0_0_40px_rgba(45,226,149,0.3)] cursor-pointer"
@@ -530,7 +530,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.4 }}
-          className="glass-panel rounded-2xl p-6"
+          className="glass-panel rounded-xl sm:rounded-2xl p-4 sm:p-6"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[

@@ -72,6 +72,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
   const [showSuccess, setShowSuccess] = useState(false);
   const [checkoutForm, setCheckoutForm] = useState({ name: '', startup: '', email: '' });
   const [invoiceCode, setInvoiceCode] = useState('');
+  const [mobilePanel, setMobilePanel] = useState<'left' | 'right' | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const activeModel = modelOptions.find(m => m.id === garmentType) || modelOptions[0];
@@ -200,9 +201,9 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
   return (
     <div className="h-screen flex flex-col bg-[#08090a] overflow-hidden">
       {/* Header */}
-      <header className="h-14 flex items-center justify-between px-5 border-b border-[#2de295]/20 bg-[#08090a]/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(45,226,149,0.04)] z-50 shrink-0">
+      <header className="h-12 sm:h-14 flex items-center justify-between px-3 sm:px-5 border-b border-[#2de295]/20 bg-[#08090a]/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(45,226,149,0.04)] z-50 shrink-0">
         <div className="flex items-center gap-4">
-          <button onClick={() => onNavigate('landing')} className="flex items-center gap-2 text-sm text-[#9ba3af] hover:text-[#2de295] transition-colors bg-transparent border-none cursor-pointer">
+          <button onClick={() => onNavigate('landing')} className="flex items-center gap-1 sm:gap-2 text-sm text-[#9ba3af] hover:text-[#2de295] transition-colors bg-transparent border-none cursor-pointer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg>
           </button>
           <div className="flex items-center gap-2.5">
@@ -221,14 +222,15 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
           </div>
         </div>
 
-        <div className="absolute left-1/2 -translate-x-1/2 text-xs font-bold tracking-[0.2em] text-[#2de295]/70 font-[var(--font-display)]">
+        <div className="absolute left-1/2 -translate-x-1/2 text-[10px] sm:text-xs font-bold tracking-[0.2em] text-[#2de295]/70 font-[var(--font-display)] hidden sm:block">
           3D REAL-TIME STUDIO
         </div>
 
         <div className="flex items-center gap-3">
-          <button onClick={() => setShowCheckout(true)} className="btn-primary text-xs py-2 px-4 cursor-pointer">
+          <button onClick={() => setShowCheckout(true)} className="btn-primary text-[10px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 cursor-pointer">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" /></svg>
-            BAYAR SEKARANG
+            <span className="hidden sm:inline">BAYAR SEKARANG</span>
+            <span className="sm:hidden">BAYAR</span>
           </button>
           <button className="w-8 h-8 rounded-lg border border-white/[0.08] flex items-center justify-center text-[#9ba3af] hover:text-[#2de295] hover:border-[#2de295]/30 transition-all bg-transparent cursor-pointer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
@@ -247,8 +249,8 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
 
       {/* Main Workspace */}
       <div className="flex-1 flex overflow-hidden min-h-0">
-        {/* LEFT SIDEBAR */}
-        <aside className="w-[260px] shrink-0 border-r border-[#2de295]/20 bg-[#0c0f12] shadow-[5px_0_30px_rgba(45,226,149,0.05)] flex flex-col overflow-hidden">
+        {/* LEFT SIDEBAR - Hidden on mobile */}
+        <aside className="w-[260px] shrink-0 border-r border-[#2de295]/20 bg-[#0c0f12] shadow-[5px_0_30px_rgba(45,226,149,0.05)] flex-col overflow-hidden hidden lg:flex">
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {/* Model Aktif */}
             <div>
@@ -381,7 +383,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
           <RingPlatform />
 
           {/* Floating info */}
-          <div className="absolute top-5 right-5 z-20 glass-panel rounded-xl px-4 py-3 text-white">
+          <div className="absolute top-3 sm:top-5 right-3 sm:right-5 z-20 glass-panel rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-white hidden sm:block">
             <div className="text-xs font-bold font-[var(--font-display)]">{activeModel.name}</div>
             <div className="flex gap-4 mt-1 text-[10px] text-[#9ba3af]">
               <span>PBR v4</span>
@@ -390,14 +392,14 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
           </div>
 
           {/* View toggle */}
-          <div className="absolute top-5 left-1/2 -translate-x-1/2 z-20 glass-panel rounded-full px-2 py-1.5 flex gap-1">
+          <div className="absolute top-3 sm:top-5 left-1/2 -translate-x-1/2 z-20 glass-panel rounded-full px-1.5 sm:px-2 py-1 sm:py-1.5 flex gap-0.5 sm:gap-1">
             {[
               { icon: 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z', label: 'Depan' },
               { icon: 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z', label: 'Belakang' },
               { icon: 'M12 3v18M3 12h18', label: 'Samping' },
               { icon: 'M12 2a10 10 0 100 20 10 10 0 000-20z', label: '360°' },
             ].map((view, i) => (
-              <button key={i} className={`w-8 h-8 rounded-full flex items-center justify-center transition-all bg-transparent border-none cursor-pointer ${i === 0 ? 'bg-[#2de295]/20 text-[#2de295]' : 'text-[#4b5563] hover:text-[#9ba3af]'}`} title={view.label}>
+              <button key={i} className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all bg-transparent border-none cursor-pointer ${i === 0 ? 'bg-[#2de295]/20 text-[#2de295]' : 'text-[#4b5563] hover:text-[#9ba3af]'}`} title={view.label}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d={view.icon} /></svg>
               </button>
             ))}
@@ -423,8 +425,8 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
           </div>
 
           {/* Bottom Toolbar */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2">
-            <div className="glass-panel rounded-2xl px-3 py-2 flex items-center gap-1">
+          <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 w-full px-3 sm:px-0 sm:w-auto">
+            <div className="glass-panel rounded-2xl px-2 sm:px-3 py-1.5 sm:py-2 flex items-center gap-0.5 sm:gap-1 overflow-x-auto max-w-full scrollbar-hide">
               {[
                 { id: 'studio', label: 'Studio', icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
                 { id: 'sunset', label: 'Sunset', icon: 'M17 18a5 5 0 0 0-10 0M12 2v7M4.22 10.22l1.42 1.42M1 18h2M21 18h2M18.36 10.22l-1.42 1.42' },
@@ -433,7 +435,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 <button
                   key={preset.id}
                   onClick={() => setLightingPreset(preset.id as 'studio' | 'sunset' | 'industrial')}
-                  className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all border-none bg-transparent cursor-pointer ${lightingPreset === preset.id
+                  className={`flex flex-col items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl transition-all border-none bg-transparent cursor-pointer shrink-0 ${lightingPreset === preset.id
                     ? 'bg-[#2de295]/10 text-[#2de295]'
                     : 'text-[#9ba3af] hover:text-[#f0f2f5] hover:bg-white/[0.04]'
                     }`}
@@ -455,7 +457,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 <button
                   key={tool.id}
                   onClick={tool.action}
-                  className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all border-none bg-transparent cursor-pointer ${tool.active
+                  className={`flex flex-col items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl transition-all border-none bg-transparent cursor-pointer shrink-0 ${tool.active
                     ? 'bg-[#2de295]/10 text-[#2de295]'
                     : 'text-[#9ba3af] hover:text-[#f0f2f5] hover:bg-white/[0.04]'
                     }`}
@@ -471,14 +473,32 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 </button>
               ))}
             </div>
-            <div className="glass-panel rounded-full px-3 py-1 text-[10px] text-[#9ba3af]">
+            <div className="glass-panel rounded-full px-3 py-1 text-[9px] sm:text-[10px] text-[#9ba3af] hidden sm:block">
               Tarik langsung logomu pada visualisator 3D untuk menyesuaikan posisi
             </div>
           </div>
+
+          {/* Mobile Panel Toggle Buttons */}
+          <div className="absolute top-3 left-3 z-20 flex gap-2 lg:hidden">
+            <button
+              onClick={() => setMobilePanel(mobilePanel === 'left' ? null : 'left')}
+              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border cursor-pointer ${mobilePanel === 'left' ? 'bg-[#2de295]/20 border-[#2de295]/40 text-[#2de295]' : 'glass-panel text-[#9ba3af]'}`}
+              title="Model & Ukuran"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.38 3.46L16 7.83l-1-1 4.38-4.37a1 1 0 011 1z" /></svg>
+            </button>
+            <button
+              onClick={() => setMobilePanel(mobilePanel === 'right' ? null : 'right')}
+              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border cursor-pointer ${mobilePanel === 'right' ? 'bg-[#2de295]/20 border-[#2de295]/40 text-[#2de295]' : 'glass-panel text-[#9ba3af]'}`}
+              title="Desain & Warna"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
+            </button>
+          </div>
         </section>
 
-        {/* RIGHT SIDEBAR */}
-        <aside className="w-[300px] shrink-0 border-l border-[#2de295]/20 bg-[#0c0f12] shadow-[-5px_0_30px_rgba(45,226,149,0.05)] flex flex-col overflow-hidden text-white">
+        {/* RIGHT SIDEBAR - Hidden on mobile */}
+        <aside className="w-[300px] shrink-0 border-l border-[#2de295]/20 bg-[#0c0f12] shadow-[-5px_0_30px_rgba(45,226,149,0.05)] flex-col overflow-hidden text-white hidden lg:flex">
           {/* Tabs */}
           <div className="flex gap-1 p-2 border-b border-[#2de295]/15 bg-white/[0.02]">
             {[
@@ -744,6 +764,129 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
           </div>
         </aside>
       </div>
+
+      {/* Mobile Bottom Drawer */}
+      {mobilePanel && (
+        <div className="fixed inset-0 z-[90] lg:hidden" onClick={() => setMobilePanel(null)}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <div
+            className="absolute bottom-0 left-0 right-0 max-h-[70vh] bg-[#0c0f12] border-t border-[#2de295]/20 rounded-t-2xl overflow-hidden flex flex-col"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Drawer Handle */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] shrink-0">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setMobilePanel('left')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border-none cursor-pointer ${mobilePanel === 'left' ? 'bg-[#2de295]/10 text-[#2de295]' : 'text-[#9ba3af] bg-transparent'}`}
+                >
+                  Model & Ukuran
+                </button>
+                <button
+                  onClick={() => setMobilePanel('right')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border-none cursor-pointer ${mobilePanel === 'right' ? 'bg-[#2de295]/10 text-[#2de295]' : 'text-[#9ba3af] bg-transparent'}`}
+                >
+                  Desain & Warna
+                </button>
+              </div>
+              <button onClick={() => setMobilePanel(null)} className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-[#9ba3af] hover:text-white transition-colors border-none cursor-pointer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 text-white">
+              {mobilePanel === 'left' && (
+                <>
+                  {/* Model Aktif */}
+                  <div>
+                    <div className="label-text mb-2">Model Aktif</div>
+                    <div className="glass-card rounded-xl p-3 flex items-center gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-bold truncate text-white">{activeModel.name}</div>
+                        <div className="text-[10px] text-[#9ba3af]">PBR v4 · {activeModel.category}</div>
+                      </div>
+                      <button onClick={() => { setMobilePanel(null); onNavigate('products'); }} className="text-[10px] font-bold text-[#2de295] bg-[#2de295]/10 px-2 py-1 rounded-md hover:bg-[#2de295]/20 transition-colors border-none cursor-pointer">
+                        Ubah
+                      </button>
+                    </div>
+                  </div>
+                  {/* Bahan */}
+                  <div>
+                    <div className="label-text mb-2">Bahan Kain</div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[{ id: 'cotton' as const, name: 'Cotton Premium', price: 'Termasuk' }, { id: 'fleece' as const, name: 'Heavy Fleece', price: '+Rp 75.000' }].map(mat => (
+                        <button key={mat.id} onClick={() => setFabric(mat.id)} className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${fabric === mat.id ? 'border-[#2de295]/40 bg-[#2de295]/10 text-white' : 'border-white/[0.06] bg-white/[0.02] text-[#9ba3af]'}`}>
+                          <div className="text-xs font-bold">{mat.name}</div>
+                          <div className={`text-[10px] mt-0.5 ${fabric === mat.id ? 'text-[#2de295]' : 'text-[#4b5563]'}`}>{mat.price}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Ukuran */}
+                  <div>
+                    <div className="label-text mb-2">Ukuran</div>
+                    <div className="flex gap-1.5">
+                      {['S', 'M', 'L', 'XL', 'XXL'].map(sz => (
+                        <button key={sz} onClick={() => setSize(sz)} className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer border-none ${size === sz ? 'bg-[#2de295] text-[#08090a]' : 'bg-white/[0.04] text-[#9ba3af]'}`}>{sz}</button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Total */}
+                  <div className="glass-card rounded-xl p-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-[#9ba3af]">Total</span>
+                      <span className="text-sm font-bold text-[#2de295]">Rp {totalPrice.toLocaleString('id-ID')}</span>
+                    </div>
+                  </div>
+                  <button onClick={() => { setMobilePanel(null); setShowCheckout(true); }} className="w-full btn-primary justify-center py-3 cursor-pointer">
+                    PESAN DESAIN INI
+                  </button>
+                </>
+              )}
+              {mobilePanel === 'right' && (
+                <>
+                  {/* Upload */}
+                  <button onClick={() => fileInputRef.current?.click()} className="w-full btn-primary justify-center cursor-pointer">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" /></svg>
+                    Upload Gambar
+                  </button>
+                  <input type="file" ref={fileInputRef} className="hidden" accept="image/png,image/jpeg,image/webp" onChange={handleFileUpload} />
+                  {/* Preset Logo */}
+                  <div>
+                    <div className="text-xs font-bold text-[#9ba3af] mb-2">Preset Logo Startup</div>
+                    <div className="grid grid-cols-4 gap-2">
+                      {[{ id: 'fitcraft', label: 'FitCraft' }, { id: 'nexus', label: 'Nexus' }, { id: 'quantum', label: 'Quantum' }, { id: 'apex', label: 'Apex' }].map(preset => (
+                        <button key={preset.id} onClick={() => setDecal(prev => ({ ...prev, type: 'preset', presetName: preset.id }))} className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all cursor-pointer ${decal.type === 'preset' && decal.presetName === preset.id ? 'border-[#2de295]/40 bg-[#2de295]/10 text-[#2de295]' : 'border-white/[0.06] bg-white/[0.02] text-[#9ba3af]'}`}>
+                          <span className="text-[9px] font-bold">{preset.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Warna */}
+                  <div>
+                    <div className="text-xs font-bold text-[#9ba3af] mb-2">Pilih Warna Pakaian</div>
+                    <div className="flex flex-wrap gap-2">
+                      {presetColorOptions.map(opt => (
+                        <button key={opt.hex} onClick={() => handleColorSelect(opt.hex, opt.name)} className={`w-8 h-8 rounded-full border-2 transition-all cursor-pointer ${colors.body === opt.hex ? 'border-[#2de295] scale-110' : 'border-white/10'}`} style={{ backgroundColor: opt.hex }} title={opt.name} />
+                      ))}
+                    </div>
+                    <div className="text-[10px] text-[#9ba3af] mt-1.5">{colorsName.body}</div>
+                  </div>
+                  {/* Sliders */}
+                  <div>
+                    <div className="text-xs font-bold text-[#9ba3af] mb-2">Atur Posisi & Ukuran</div>
+                    {[{ label: 'Ukuran', value: decal.scale, min: 0.3, max: 2.0, step: 0.05, key: 'scale' as const }, { label: 'Vertikal', value: decal.vertical, min: -0.6, max: 0.6, step: 0.02, key: 'vertical' as const }, { label: 'Horizontal', value: decal.horizontal, min: -0.5, max: 0.5, step: 0.02, key: 'horizontal' as const }].map(slider => (
+                      <div key={slider.key} className="mb-2">
+                        <div className="flex justify-between text-[10px] mb-1"><span className="text-[#9ba3af]">{slider.label}</span><span className="text-[#2de295] font-bold">{slider.value.toFixed(2)}</span></div>
+                        <input type="range" min={slider.min} max={slider.max} step={slider.step} value={slider.value} onChange={e => handleDecalSlider(slider.key, e.target.value)} className="w-full h-1 bg-white/[0.08] rounded-full appearance-none cursor-pointer accent-[#2de295]" />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Checkout Modal */}
       <AnimatePresence>
