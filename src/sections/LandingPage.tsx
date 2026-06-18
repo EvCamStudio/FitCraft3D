@@ -40,7 +40,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
   const [showContact, setShowContact] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
-  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Signal ready immediately since the landing page doesn't need to load 3D assets
   useEffect(() => {
@@ -57,28 +57,29 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('revealed');
-            observer.unobserve(entry.target);
+            observerRef.current?.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { 
+        threshold: 0.1,
+        rootMargin: '0px 0px -60px 0px'
+      }
     );
 
-    sectionRefs.current.forEach((el) => {
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
+    return () => {
+      observerRef.current?.disconnect();
+    };
   }, []);
 
   const addRef = (el: HTMLElement | null) => {
-    if (el && !sectionRefs.current.includes(el)) {
-      sectionRefs.current.push(el);
+    if (el) {
+      observerRef.current?.observe(el);
     }
   };
 
@@ -216,7 +217,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
 
       {/* Featured Products */}
       <section className="featured-section" id="products">
-        <div className="section-header reveal" ref={addRef}>
+        <div className="section-header reveal reveal-up" ref={addRef}>
           <span className="section-eyebrow">KOLEKSI UNGGULAN</span>
           <h2 className="section-title">
             Pilih Kanvas<br />Desain Anda
@@ -227,7 +228,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
           {products.map((product, idx) => (
             <div
               key={product.id}
-              className={`product-card reveal reveal-delay-${idx + 1}`}
+              className={`product-card reveal reveal-scale reveal-delay-${idx + 1}`}
               ref={addRef}
             >
               <div className="product-image">
@@ -255,7 +256,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
 
       {/* Gallery */}
       <section className="gallery-section" id="gallery">
-        <div className="section-header reveal" ref={addRef}>
+        <div className="section-header reveal reveal-up" ref={addRef}>
           <span className="section-eyebrow">SHOWCASE</span>
           <h2 className="section-title">
             Inspirasi<br />Desain Terbaik
@@ -264,7 +265,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
 
         <div className="gallery-grid">
           {galleryImages.map((img, idx) => (
-            <div key={idx} className={`gallery-item reveal reveal-delay-${idx + 1}`} ref={addRef}>
+            <div key={idx} className={`gallery-item reveal reveal-scale reveal-delay-${idx + 1}`} ref={addRef}>
               <img src={img.src} alt={img.caption} />
               <div className="gallery-caption">{img.caption}</div>
             </div>
@@ -278,7 +279,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
         <div className="about-bg-glow" />
 
         {/* Section Header */}
-        <div className="about-header reveal" ref={addRef}>
+        <div className="about-header reveal reveal-up" ref={addRef}>
           <span className="section-eyebrow">DI BALIK FITCRAFT 3D</span>
           <h2 className="about-hero-title">
             Merevolusi Desain Pakaian Dengan<br />
@@ -292,7 +293,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
         {/* 3-Column Layout: Features | Visual | Stats */}
         <div className="about-showcase-grid">
           {/* Left Column: Feature Checklist */}
-          <div className="about-features-col reveal" ref={addRef}>
+          <div className="about-features-col reveal reveal-left" ref={addRef}>
             {[
               {
                 icon: (
@@ -342,7 +343,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
           </div>
 
           {/* Center Column: 3D Hoodie Visual with Holographic Ring */}
-          <div className="about-visual-center reveal" ref={addRef}>
+          <div className="about-visual-center reveal reveal-scale" ref={addRef}>
             <div className="about-hoodie-wrapper">
               <img
                 src="/assets/hoodie-3d.png"
@@ -360,11 +361,11 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
           </div>
 
           {/* Right Column: Stats */}
-          <div className="about-stats-col reveal" ref={addRef}>
+          <div className="about-stats-col reveal reveal-right" ref={addRef}>
             <div className="about-stat-card">
               <div className="about-stat-num">99.9%</div>
               <div className="about-stat-lbl">Keakuratan Warna</div>
-              <p className="about-stat-txt">Rendering PBR dengan presisi pencahayaan sRGB dan ACES Filmic Tone Mapping.</p>
+              <p className="about-stat-txt">Rendering PBR dengan presisi pencahayaan sRGB and ACES Filmic Tone Mapping.</p>
               <div className="about-stat-bar-wrap">
                 <div className="about-stat-bar-track"><div className="about-stat-bar-fill" style={{ width: '99.9%' }} /></div>
               </div>
@@ -407,7 +408,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
 
       {/* CTA Section */}
       <section className="cta-section">
-        <div className="cta-content reveal" ref={addRef}>
+        <div className="cta-content reveal reveal-scale" ref={addRef}>
           <h2 className="cta-title">
             Siap Wujudkan<br />Identitas Brand Anda?
           </h2>

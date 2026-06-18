@@ -105,18 +105,39 @@ body {
 /* Reveal on scroll */
 .reveal {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s var(--ease-expo), transform 0.8s var(--ease-expo);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
 }
+
+/* Animations by direction/type */
+.reveal-up {
+  transform: translateY(60px);
+}
+.reveal-down {
+  transform: translateY(-60px);
+}
+.reveal-left {
+  transform: translateX(-60px);
+}
+.reveal-right {
+  transform: translateX(60px);
+}
+.reveal-scale {
+  transform: scale(0.92) translateY(20px);
+}
+
+/* End state for all reveals */
 .reveal.revealed {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) translateX(0) scale(1);
 }
+
 .reveal-delay-1 { transition-delay: 0.1s; }
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
 .reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
 
 /* ====== LANDING PAGE ====== */
 .landing-page {
