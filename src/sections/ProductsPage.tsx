@@ -291,6 +291,23 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
       {/* Background glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#2de295]/5 rounded-full blur-[150px] pointer-events-none" />
 
+      {/* Floating Star-like Particles (Bintang di Angkasa) */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+        {Array.from({ length: 60 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-0.5 h-0.5 bg-[#2de295] rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              opacity: Math.random() * 0.7 + 0.1,
+              animation: `particleGlow ${3 + Math.random() * 5}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 4}s`,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Navbar */}
       <nav className="relative z-50 border-b border-white/[0.06] bg-[#08090a]/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -307,9 +324,15 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#2de295] to-[#14b8a6] flex items-center justify-center">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#08090a" strokeWidth="2.5">
-                <path d="M6 4h12v6h-6v3h4v4h-4v3H6z" />
+            <div className="w-8 h-8 rounded-lg bg-[#0c0f12] border border-white/[0.08] flex items-center justify-center shadow-md">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="logoGradProd" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#00e5a0" />
+                    <stop offset="100%" stopColor="#00b874" />
+                  </linearGradient>
+                </defs>
+                <path d="M6 4h12v6h-6v3h4v4h-4v3H6Z" fill="url(#logoGradProd)" />
               </svg>
             </div>
             <span className="font-[var(--font-display)] font-bold text-white">

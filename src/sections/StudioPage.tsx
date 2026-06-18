@@ -200,14 +200,22 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
   return (
     <div className="h-screen flex flex-col bg-[#08090a] overflow-hidden">
       {/* Header */}
-      <header className="h-14 flex items-center justify-between px-5 border-b border-white/[0.06] bg-[#08090a]/95 backdrop-blur-xl z-50 shrink-0">
+      <header className="h-14 flex items-center justify-between px-5 border-b border-[#2de295]/20 bg-[#08090a]/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(45,226,149,0.04)] z-50 shrink-0">
         <div className="flex items-center gap-4">
           <button onClick={() => onNavigate('landing')} className="flex items-center gap-2 text-sm text-[#9ba3af] hover:text-[#2de295] transition-colors bg-transparent border-none cursor-pointer">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg>
           </button>
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md bg-gradient-to-br from-[#2de295] to-[#14b8a6] flex items-center justify-center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#08090a" strokeWidth="2.5"><path d="M6 4h12v6h-6v3h4v4h-4v3H6z" /></svg>
+            <div className="w-8 h-8 rounded-lg bg-[#0c0f12] border border-white/[0.08] flex items-center justify-center shadow-md">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="logoGradStudio" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#00e5a0" />
+                    <stop offset="100%" stopColor="#00b874" />
+                  </linearGradient>
+                </defs>
+                <path d="M6 4h12v6h-6v3h4v4h-4v3H6Z" fill="url(#logoGradStudio)" />
+              </svg>
             </div>
             <span className="font-[var(--font-display)] font-bold text-sm tracking-tight text-white">FITCRAFT <span className="text-[#2de295]">3D</span></span>
           </div>
@@ -219,11 +227,11 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
 
         <div className="flex items-center gap-3">
           <button onClick={() => setShowCheckout(true)} className="btn-primary text-xs py-2 px-4 cursor-pointer">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" /></svg>
             BAYAR SEKARANG
           </button>
           <button className="w-8 h-8 rounded-lg border border-white/[0.08] flex items-center justify-center text-[#9ba3af] hover:text-[#2de295] hover:border-[#2de295]/30 transition-all bg-transparent cursor-pointer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
           </button>
           <div className="flex items-center gap-2 pl-3 border-l border-white/[0.06]">
             <div className="text-right hidden sm:block">
@@ -240,7 +248,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
       {/* Main Workspace */}
       <div className="flex-1 flex overflow-hidden min-h-0">
         {/* LEFT SIDEBAR */}
-        <aside className="w-[260px] shrink-0 border-r border-white/[0.06] bg-[#0c0f12] flex flex-col overflow-hidden">
+        <aside className="w-[260px] shrink-0 border-r border-[#2de295]/20 bg-[#0c0f12] shadow-[5px_0_30px_rgba(45,226,149,0.05)] flex flex-col overflow-hidden">
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {/* Model Aktif */}
             <div>
@@ -272,11 +280,10 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                   <button
                     key={mat.id}
                     onClick={() => setFabric(mat.id)}
-                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                      fabric === mat.id
-                        ? 'border-[#2de295]/40 bg-[#2de295]/10 text-white'
-                        : 'border-white/[0.06] bg-white/[0.02] text-[#9ba3af] hover:border-white/[0.12]'
-                    }`}
+                    className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${fabric === mat.id
+                      ? 'border-[#2de295]/40 bg-[#2de295]/10 text-white'
+                      : 'border-white/[0.06] bg-white/[0.02] text-[#9ba3af] hover:border-white/[0.12]'
+                      }`}
                   >
                     <div className="text-xs font-bold">{mat.name}</div>
                     <div className={`text-[10px] mt-0.5 ${fabric === mat.id ? 'text-[#2de295]' : 'text-[#4b5563]'}`}>{mat.price}</div>
@@ -293,18 +300,17 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                   <button
                     key={sz}
                     onClick={() => setSize(sz)}
-                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer border-none ${
-                      size === sz
-                        ? 'bg-[#2de295] text-[#08090a]'
-                        : 'bg-white/[0.04] text-[#9ba3af] border border-white/[0.06] hover:border-white/[0.12]'
-                    }`}
+                    className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer border-none ${size === sz
+                      ? 'bg-[#2de295] text-[#08090a]'
+                      : 'bg-white/[0.04] text-[#9ba3af] border border-white/[0.06] hover:border-white/[0.12]'
+                      }`}
                   >
                     {sz}
                   </button>
                 ))}
               </div>
               <button onClick={() => setShowSizeGuide(true)} className="mt-2 w-full py-2 text-[10px] font-bold text-[#9ba3af] border border-dashed border-white/[0.08] rounded-lg hover:border-[#2de295]/30 hover:text-[#2de295] transition-all bg-transparent cursor-pointer">
-                📏 Lihat Panduan Ukuran
+                Lihat Panduan Ukuran
               </button>
             </div>
 
@@ -350,7 +356,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 className="w-full glass-card rounded-xl p-3 text-left hover:border-[#2de295]/30 transition-all group bg-transparent cursor-pointer"
               >
                 <div className="flex gap-2">
-                  <span className="text-lg">💡</span>
+                  <span className="text-lg"></span>
                   <div>
                     <p className="text-xs text-[#9ba3af] leading-relaxed group-hover:text-[#f0f2f5] transition-colors">{designTips[currentTipIndex]}</p>
                     <span className="text-[10px] text-[#2de295] mt-1 inline-block">Klik untuk tips berikutnya →</span>
@@ -361,9 +367,9 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
           </div>
 
           {/* Footer */}
-          <div className="p-3 border-t border-white/[0.06]">
+          <div className="p-3 border-t border-[#2de295]/15">
             <button onClick={() => setShowSizeGuide(true)} className="flex items-center gap-2 text-xs text-[#9ba3af] hover:text-[#2de295] transition-colors bg-transparent border-none cursor-pointer">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" /></svg>
               Bantuan
             </button>
           </div>
@@ -427,11 +433,10 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 <button
                   key={preset.id}
                   onClick={() => setLightingPreset(preset.id as 'studio' | 'sunset' | 'industrial')}
-                  className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all border-none bg-transparent cursor-pointer ${
-                    lightingPreset === preset.id
-                      ? 'bg-[#2de295]/10 text-[#2de295]'
-                      : 'text-[#9ba3af] hover:text-[#f0f2f5] hover:bg-white/[0.04]'
-                  }`}
+                  className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all border-none bg-transparent cursor-pointer ${lightingPreset === preset.id
+                    ? 'bg-[#2de295]/10 text-[#2de295]'
+                    : 'text-[#9ba3af] hover:text-[#f0f2f5] hover:bg-white/[0.04]'
+                    }`}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={preset.icon} /></svg>
                   <span className="text-[9px] font-bold">{preset.label}</span>
@@ -441,7 +446,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
               <div className="w-px h-8 bg-white/[0.08] mx-1" />
 
               {[
-                { id: 'light', label: 'Cahaya', action: () => {} },
+                { id: 'light', label: 'Cahaya', action: () => { } },
                 { id: 'rotate', label: 'Putar', action: () => setAutoRotate(!autoRotate), active: autoRotate },
                 { id: 'zoom', label: 'Zoom', action: () => setIsScaleView(!isScaleView), active: isScaleView },
                 { id: 'reset', label: 'Reset', action: () => { setIsScaleView(false); setAutoRotate(true); } },
@@ -450,11 +455,10 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 <button
                   key={tool.id}
                   onClick={tool.action}
-                  className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all border-none bg-transparent cursor-pointer ${
-                    tool.active
-                      ? 'bg-[#2de295]/10 text-[#2de295]'
-                      : 'text-[#9ba3af] hover:text-[#f0f2f5] hover:bg-white/[0.04]'
-                  }`}
+                  className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all border-none bg-transparent cursor-pointer ${tool.active
+                    ? 'bg-[#2de295]/10 text-[#2de295]'
+                    : 'text-[#9ba3af] hover:text-[#f0f2f5] hover:bg-white/[0.04]'
+                    }`}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     {tool.id === 'light' && <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />}
@@ -474,9 +478,9 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
         </section>
 
         {/* RIGHT SIDEBAR */}
-        <aside className="w-[300px] shrink-0 border-l border-white/[0.06] bg-[#0c0f12] flex flex-col overflow-hidden text-white">
+        <aside className="w-[300px] shrink-0 border-l border-[#2de295]/20 bg-[#0c0f12] shadow-[-5px_0_30px_rgba(45,226,149,0.05)] flex flex-col overflow-hidden text-white">
           {/* Tabs */}
-          <div className="flex gap-1 p-2 border-b border-white/[0.06] bg-white/[0.02]">
+          <div className="flex gap-1 p-2 border-b border-[#2de295]/15 bg-white/[0.02]">
             {[
               { id: 'design' as const, label: 'DESAIN' },
               { id: 'text' as const, label: 'TEKS' },
@@ -485,11 +489,10 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 py-2.5 rounded-lg text-[11px] font-bold transition-all border-none cursor-pointer ${
-                  activeTab === tab.id
-                    ? 'bg-white/[0.08] text-[#2de295] shadow-sm'
-                    : 'text-[#9ba3af] hover:text-[#f0f2f5] hover:bg-white/[0.02]'
-                }`}
+                className={`flex-1 py-2.5 rounded-lg text-[11px] font-bold transition-all border-none cursor-pointer ${activeTab === tab.id
+                  ? 'bg-white/[0.08] text-[#2de295] shadow-sm'
+                  : 'text-[#9ba3af] hover:text-[#f0f2f5] hover:bg-white/[0.02]'
+                  }`}
               >
                 {tab.label}
               </button>
@@ -504,7 +507,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                   onClick={() => fileInputRef.current?.click()}
                   className="w-full btn-primary justify-center cursor-pointer"
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" /></svg>
                   Upload Gambar
                 </button>
                 <input type="file" ref={fileInputRef} className="hidden" accept="image/png,image/jpeg,image/webp" onChange={handleFileUpload} />
@@ -530,11 +533,10 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                       <button
                         key={preset.id}
                         onClick={() => setDecal(prev => ({ ...prev, type: 'preset', presetName: preset.id }))}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all cursor-pointer ${
-                          decal.type === 'preset' && decal.presetName === preset.id
-                            ? 'border-[#2de295]/40 bg-[#2de295]/10 text-[#2de295]'
-                            : 'border-white/[0.06] bg-white/[0.02] text-[#9ba3af] hover:border-white/[0.12]'
-                        }`}
+                        className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all cursor-pointer ${decal.type === 'preset' && decal.presetName === preset.id
+                          ? 'border-[#2de295]/40 bg-[#2de295]/10 text-[#2de295]'
+                          : 'border-white/[0.06] bg-white/[0.02] text-[#9ba3af] hover:border-white/[0.12]'
+                          }`}
                       >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d={preset.icon} /></svg>
                         <span className="text-[9px] font-bold">{preset.label}</span>
@@ -553,17 +555,16 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                       <button
                         key={opt.hex}
                         onClick={() => handleColorSelect(opt.hex, opt.name)}
-                        className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer ${
-                          colors.body === opt.hex
-                            ? 'border-[#2de295] scale-110 shadow-[0_0_8px_rgba(45,226,149,0.3)]'
-                            : 'border-white/10 hover:border-white/30'
-                        }`}
+                        className={`w-7 h-7 rounded-full border-2 transition-all cursor-pointer ${colors.body === opt.hex
+                          ? 'border-[#2de295] scale-110 shadow-[0_0_8px_rgba(45,226,149,0.3)]'
+                          : 'border-white/10 hover:border-white/30'
+                          }`}
                         style={{ backgroundColor: opt.hex }}
                         title={opt.name}
                       />
                     ))}
                     <label className="w-7 h-7 rounded-full border-2 border-dashed border-[#4b5563] hover:border-[#2de295] flex items-center justify-center cursor-pointer transition-all">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4b5563" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
                       <input type="color" className="hidden" value={colors.body} onChange={e => handleColorSelect(e.target.value, `Kustom (${e.target.value.toUpperCase()})`)} />
                     </label>
                   </div>
@@ -640,11 +641,10 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                       <button
                         key={c.value}
                         onClick={() => handleDecalSlider('textColor', c.value)}
-                        className={`flex-1 py-2 rounded-lg text-[10px] font-bold transition-all border-none cursor-pointer ${
-                          decal.textColor === c.value
-                            ? 'ring-2 ring-[#2de295]'
-                            : ''
-                        } ${c.value === 'match' ? 'bg-white/[0.08] text-[#9ba3af]' : `${c.color} text-[#08090a]`}`}
+                        className={`flex-1 py-2 rounded-lg text-[10px] font-bold transition-all border-none cursor-pointer ${decal.textColor === c.value
+                          ? 'ring-2 ring-[#2de295]'
+                          : ''
+                          } ${c.value === 'match' ? 'bg-white/[0.08] text-[#9ba3af]' : `${c.color} text-[#08090a]`}`}
                       >
                         {c.label}
                       </button>
@@ -672,7 +672,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
                 {decal.type !== 'none' && (
                   <div className="glass-card rounded-xl p-3 flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-[#2de295]/10 flex items-center justify-center text-[#2de295]">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-bold">{decal.type === 'preset' ? decal.presetName.toUpperCase() : 'CUSTOM'}</div>
@@ -739,7 +739,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
             </div>
             <button onClick={() => setShowCheckout(true)} className="w-full btn-primary justify-center py-3 cursor-pointer">
               PESAN DESAIN INI
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
             </button>
           </div>
         </aside>
@@ -763,7 +763,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
               className="bg-[#0c0f12] border border-white/[0.08] rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto text-white"
             >
               <div className="flex items-center justify-between mb-4">
-                <h2 className="heading-md text-base">📦 Ringkasan Desain</h2>
+                <h2 className="heading-md text-base"> Ringkasan Desain</h2>
                 <button onClick={() => setShowCheckout(false)} className="w-8 h-8 rounded-lg bg-white/[0.04] flex items-center justify-center text-[#9ba3af] hover:text-[#f0f2f5] transition-colors border-none cursor-pointer">✕</button>
               </div>
 
@@ -890,7 +890,7 @@ export default function StudioPage({ onNavigate, initialModel = 'hoodie', onRead
               className="bg-[#0c0f12] border border-white/[0.08] rounded-2xl p-8 max-w-sm w-full text-center text-white"
             >
               <div className="w-16 h-16 rounded-full bg-[#2de295]/10 flex items-center justify-center mx-auto mb-4">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2de295" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2de295" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
               </div>
               <h2 className="heading-md text-lg mb-2 text-white font-[var(--font-display)]">Pesanan Berhasil!</h2>
               <p className="text-sm text-[#9ba3af] mb-4">Detail desain dan invoice dikirim ke <strong className="text-[#f0f2f5]">{checkoutForm.email}</strong></p>
