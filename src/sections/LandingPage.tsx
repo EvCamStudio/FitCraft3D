@@ -33,13 +33,15 @@ interface LandingPageProps {
   onReady?: () => void;
   onProgress?: (progress: number) => void;
   introFinished?: boolean;
+  heroReady?: boolean;
 }
 
-export default function LandingPage({ onNavigate, onReady, onProgress }: LandingPageProps) {
+export default function LandingPage({ onNavigate, onReady, onProgress, heroReady }: LandingPageProps) {
   const [scrolled, setScrolled] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [drawerReady, setDrawerReady] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', phone: '' });
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -103,8 +105,13 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
     onNavigate(view, model);
   };
 
+  const toggleMobileMenu = () => {
+    if (!drawerReady) setDrawerReady(true); // enable transition on first open
+    setMobileMenuOpen(prev => !prev);
+  };
+
   return (
-    <div className="landing-page">
+    <div className={`landing-page${heroReady ? ' hero-ready' : ''}`}>
       {/* Animated Background Mesh Orbs */}
       <div className="bg-gradient-mesh" aria-hidden="true">
         <div className="orb-parallax-wrapper orb-1-wrapper">
@@ -168,7 +175,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
         </button>
 
         {/* Mobile Hamburger */}
-        <button className={`mobile-menu-toggle ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
+        <button className={`mobile-menu-toggle ${mobileMenuOpen ? 'active' : ''}`} onClick={toggleMobileMenu} aria-label="Toggle menu">
           <span className="hamburger-line line-1" />
           <span className="hamburger-line line-2" />
           <span className="hamburger-line line-3" />
@@ -177,7 +184,7 @@ export default function LandingPage({ onNavigate, onReady, onProgress }: Landing
 
       {/* Mobile Navigation Drawer */}
       <div className={`mobile-nav-overlay ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(false)} />
-      <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'open' : ''}`}>
+      <div className={`mobile-nav-drawer${drawerReady ? ' drawer-ready' : ''}${mobileMenuOpen ? ' open' : ''}`}>
         <div className="mobile-nav-header">
           <div className="nav-logo">
             <div className="nav-logo-icon">

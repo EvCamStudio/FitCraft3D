@@ -42,6 +42,7 @@ function App() {
   });
   const [appStyle, setAppStyle] = useState<React.CSSProperties>(shouldShowIntro ? { opacity: 0, pointerEvents: 'none' } : {});
   const [introFinished, setIntroFinished] = useState(!shouldShowIntro);
+  const [heroReady, setHeroReady] = useState(!shouldShowIntro);
   const [loadProgress, setLoadProgress] = useState(0);
   const [actualProgress, setActualProgress] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -90,7 +91,12 @@ function App() {
         setTimeout(() => {
           setAppStyle({ opacity: 1, transition: 'opacity 1.0s ease-in-out' });
           setIntroFinished(true);
-          setTimeout(() => { setAppStyle({}); setShowSplash(false); }, 1200);
+          setTimeout(() => {
+            setAppStyle({});
+            setShowSplash(false);
+            // Small extra delay so opacity fade-in finishes before hero animations fire
+            setTimeout(() => setHeroReady(true), 80);
+          }, 1200);
         }, 300);
       }
     };
@@ -168,7 +174,7 @@ function App() {
       )}
       <div className="app-content-wrapper" style={appStyle}>
         <Suspense fallback={<div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ width: 32, height: 32, border: '3px solid rgba(0, 229, 160, 0.15)', borderTopColor: '#00e5a0', borderRadius: '50%', animation: 'spin 1s linear infinite' }} /></div>}>
-          {view === 'landing' && <LandingPage onNavigate={navigate} onReady={handleAppReady} onProgress={setActualProgress} introFinished={introFinished} />}
+          {view === 'landing' && <LandingPage onNavigate={navigate} onReady={handleAppReady} onProgress={setActualProgress} introFinished={introFinished} heroReady={heroReady} />}
           {view === 'products' && <ProductsPage onNavigate={navigate} onReady={handleAppReady} onProgress={setActualProgress} />}
           {view === 'studio' && <StudioPage onNavigate={navigate} initialModel={initialModel} onReady={handleAppReady} onProgress={setActualProgress} />}
         </Suspense>

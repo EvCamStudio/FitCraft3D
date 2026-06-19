@@ -275,6 +275,10 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scale(1.1);
+  transition: none;
+}
+.landing-page.hero-ready .hero-bg img {
   animation: heroZoom 8s ease-out forwards;
 }
 .hero-overlay {
@@ -313,7 +317,13 @@ body {
   letter-spacing: 4px;
   color: var(--color-primary);
   margin-bottom: 20px;
-  animation: fadeInUp 0.8s var(--ease-expo) 0.3s both;
+  /* Hold invisible until hero-ready — prevents partial animation on loading exit */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: none;
+}
+.landing-page.hero-ready .hero-subtitle {
+  animation: fadeInUp 0.8s var(--ease-expo) 0.05s both;
 }
 
 .hero-title {
@@ -324,7 +334,12 @@ body {
   color: #fff;
   letter-spacing: -2px;
   margin-bottom: 24px;
-  animation: fadeInUp 0.9s var(--ease-expo) 0.5s both;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: none;
+}
+.landing-page.hero-ready .hero-title {
+  animation: fadeInUp 0.9s var(--ease-expo) 0.18s both;
 }
 .hero-title .accent {
   color: var(--color-primary);
@@ -336,7 +351,12 @@ body {
   color: var(--color-text-secondary);
   max-width: 520px;
   margin: 0 auto 32px;
-  animation: fadeInUp 0.8s var(--ease-expo) 0.7s both;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: none;
+}
+.landing-page.hero-ready .hero-desc {
+  animation: fadeInUp 0.8s var(--ease-expo) 0.35s both;
 }
 
 .hero-cta-group {
@@ -344,7 +364,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  animation: fadeInUp 0.8s var(--ease-expo) 0.9s both;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: none;
+}
+.landing-page.hero-ready .hero-cta-group {
+  animation: fadeInUp 0.8s var(--ease-expo) 0.5s both;
 }
 
 .btn-primary {
@@ -403,7 +428,11 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  animation: fadeInUp 0.8s var(--ease-expo) 1.2s both;
+  opacity: 0;
+  transition: none;
+}
+.landing-page.hero-ready .hero-scroll {
+  animation: fadeInUp 0.8s var(--ease-expo) 0.75s both;
 }
 .hero-scroll span {
   font-size: 10px;
@@ -1157,7 +1186,7 @@ body {
 
 /* Mobile Nav Drawer */
 .mobile-nav-drawer {
-  display: none;
+  display: flex;
   position: fixed;
   top: 0;
   right: 0;
@@ -1171,12 +1200,20 @@ body {
   z-index: 200;
   flex-direction: column;
   padding: 24px;
+  /* Start hidden off-screen with NO transition — prevents flash on initial paint */
   transform: translateX(100%);
-  transition: transform 0.4s var(--ease-expo);
+  visibility: hidden;
+  transition: none;
   overflow-y: auto;
+}
+/* Only enable smooth transition after first user interaction (drawer-ready class) */
+.mobile-nav-drawer.drawer-ready {
+  transition: transform 0.4s var(--ease-expo), visibility 0s linear 0.4s;
 }
 .mobile-nav-drawer.open {
   transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.4s var(--ease-expo), visibility 0s linear 0s;
 }
 
 .mobile-nav-header {
@@ -1261,7 +1298,7 @@ body {
   .nav-cta { display: none; }
   .mobile-menu-toggle { display: flex; }
   .mobile-nav-overlay { display: block; }
-  .mobile-nav-drawer { display: flex; }
+  /* drawer is always display:flex now — visibility controls show/hide */
 
   .about-showcase-grid {
     grid-template-columns: 1fr 1fr;
@@ -2083,6 +2120,8 @@ body {
 /* Disable scroll snap and smooth scroll behavior during loading to prevent visual jumps, locking body scroll */
 html.loading-active {
     overflow: hidden !important;
+    /* Keep scrollbar gutter reserved so layout doesn't shift when scrollbar reappears */
+    scrollbar-gutter: stable !important;
     scroll-snap-type: none !important;
     scroll-behavior: auto !important;
 }
@@ -2094,6 +2133,8 @@ html.loading-active body {
 
 html {
     overflow-y: scroll;
+    /* Always reserve scrollbar space — prevents layout shift on any overflow change */
+    scrollbar-gutter: stable;
 }
 
 /* ====== ABOUT SECTION — IMMERSIVE REDESIGN ====== */
