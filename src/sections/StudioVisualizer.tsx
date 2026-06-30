@@ -535,8 +535,11 @@ export default function StudioVisualizer({
       sleevesMaterial.dispose();
       collarMaterial.dispose();
       Object.values(fabricBumpTextures).forEach(t => t.dispose());
-      if (engineRef.current.activeDecalTexture) {
-        engineRef.current.activeDecalTexture.dispose();
+      if (engineRef.current.activeLogoTexture) {
+        engineRef.current.activeLogoTexture.dispose();
+      }
+      if (engineRef.current.activeTextTexture) {
+        engineRef.current.activeTextTexture.dispose();
       }
     };
   }, []);
@@ -610,7 +613,7 @@ export default function StudioVisualizer({
 
     if (garmentGroup) {
       garmentGroup.traverse((child) => {
-        if (child instanceof THREE.Mesh && child.material && child !== engineRef.current.badgeMesh) {
+        if (child instanceof THREE.Mesh && child.material && child !== engineRef.current.logoMesh && child !== engineRef.current.textMesh) {
           const mats = Array.isArray(child.material) ? child.material : [child.material];
           mats.forEach((mat: THREE.Material) => {
             if (mat instanceof THREE.MeshStandardMaterial) {
@@ -630,7 +633,7 @@ export default function StudioVisualizer({
     const { garmentGroup } = engineRef.current;
     if (garmentGroup) {
       garmentGroup.traverse((child) => {
-        if (child instanceof THREE.Mesh && child.material && child !== engineRef.current.badgeMesh) {
+        if (child instanceof THREE.Mesh && child.material && child !== engineRef.current.logoMesh && child !== engineRef.current.textMesh) {
           const mats = Array.isArray(child.material) ? child.material : [child.material];
           mats.forEach((mat: THREE.Material) => {
             if (mat instanceof THREE.MeshStandardMaterial) {
